@@ -1,5 +1,5 @@
 
-package com.estafet.openshift.boost.console.api.feature.model.commit;
+package com.estafet.openshift.boost.console.api.feature.github;
 
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;

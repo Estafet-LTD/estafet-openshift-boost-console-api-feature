@@ -1,5 +1,5 @@
 
-package com.estafet.openshift.boost.console.api.feature.model.commit;
+package com.estafet.openshift.boost.console.api.feature.github;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -8,17 +8,14 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
     "sha",
-    "url",
-    "html_url"
+    "url"
 })
-public class Parent {
+public class Tree {
 
     @JsonProperty("sha")
     private String sha;
     @JsonProperty("url")
     private String url;
-    @JsonProperty("html_url")
-    private String htmlUrl;
 
     @JsonProperty("sha")
     public String getSha() {
@@ -38,16 +35,6 @@ public class Parent {
     @JsonProperty("url")
     public void setUrl(String url) {
         this.url = url;
-    }
-
-    @JsonProperty("html_url")
-    public String getHtmlUrl() {
-        return htmlUrl;
-    }
-
-    @JsonProperty("html_url")
-    public void setHtmlUrl(String htmlUrl) {
-        this.htmlUrl = htmlUrl;
     }
 
 }
