@@ -1,15 +1,13 @@
 package com.estafet.openshift.boost.console.api.feature.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-
-import com.estafet.openshift.boost.commons.lib.date.DateUtils;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "FEATURE")
@@ -24,17 +22,56 @@ public class Feature {
 
 	@Column(name = "DESCRIPTION", nullable = true)
 	private String description;
-	
+
 	@Column(name = "STATUS", nullable = true)
 	private String status;
 
 	@Column(name = "UPDATED_DATE", nullable = false)
 	private String updatedDate;
 
-	@JsonIgnore
-	@ManyToOne
-	@JoinColumn(name = "ENV_ID", nullable = false, referencedColumnName = "ENV_ID", foreignKey = @ForeignKey(name = "BUILD_APP_TO_BUILD_ENV_FK"))
-	private Env appEnv;
+	@Column(name = "DEPLOYED_DATE", nullable = false)
+	private String deployedDate;
+
+	@Column(name = "PROMOTED", nullable = false)
+	private boolean promoted = false;
+
+	@ManyToMany(mappedBy = "features")
+	private List<Env> envs = new ArrayList<Env>();
+
+	@ManyToMany(mappedBy = "features")
+	private List<Repo> repos = new ArrayList<Repo>();
+
+	public String getDeployedDate() {
+		return deployedDate;
+	}
+
+	public void setDeployedDate(String deployedDate) {
+		this.deployedDate = deployedDate;
+	}
+
+	public boolean isPromoted() {
+		return promoted;
+	}
+
+	public void setPromoted(boolean promoted) {
+		this.promoted = promoted;
+	}
+
+	public List<Repo> getRepos() {
+		return repos;
+	}
+
+	public void setRepos(List<Repo> repos) {
+		this.repos = repos;
+	}
+
+	public List<Env> getEnvs() {
+		return envs;
+	}
+
+	public void setEnvs(List<Env> envs) {
+		this.envs = envs;
+	}
 
 	public String getFeatureId() {
 		return featureId;
@@ -42,6 +79,14 @@ public class Feature {
 
 	public void setFeatureId(String featureId) {
 		this.featureId = featureId;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	public String getTitle() {
@@ -68,43 +113,29 @@ public class Feature {
 		this.updatedDate = updatedDate;
 	}
 
-	public Env getAppEnv() {
-		return appEnv;
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((featureId == null) ? 0 : featureId.hashCode());
+		return result;
 	}
 
-	public void setAppEnv(Env appEnv) {
-		this.appEnv = appEnv;
-	}
-
-	public boolean isEqualTo(Feature feature) {
-		if (description == null) {
-			if (feature.description != null)
-				return false;
-		} else if (!description.equals(feature.description))
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
 			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Feature other = (Feature) obj;
 		if (featureId == null) {
-			if (feature.featureId != null)
+			if (other.featureId != null)
 				return false;
-		} else if (!featureId.equals(feature.featureId))
-			return false;
-		if (status == null) {
-			if (feature.status != null)
-				return false;
-		} else if (!status.equals(feature.status))
-			return false;
-		if (title == null) {
-			if (feature.title != null)
-				return false;
-		} else if (!title.equals(feature.title))
+		} else if (!featureId.equals(other.featureId))
 			return false;
 		return true;
-	}
-
-	public void update(Feature recentApp) {
-		this.description = recentApp.description;
-		this.title = recentApp.title;
-		this.status = recentApp.status;
-		this.updatedDate = DateUtils.newDate();
 	}
 
 }

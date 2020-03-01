@@ -1,5 +1,5 @@
 
-package com.estafet.openshift.boost.console.api.feature.github;
+package com.estafet.openshift.boost.console.api.feature.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -26,7 +26,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "type",
     "site_admin"
 })
-public class Author_ {
+public class Committer_ {
 
     @JsonProperty("login")
     private String login;

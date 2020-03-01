@@ -77,7 +77,9 @@ objects:
         containers:
           - env:
               - name: PRODUCT
-                value: ${PRODUCT}          
+                value: ${PRODUCT}     
+              - name: GITHUB
+                value: ${GITHUB}                        
               - name: OPENSHIFT_HOST_PORT
                 value: ${OPENSHIFT_HOST_PORT}   
               - name: OPENSHIFT_USER

@@ -1,7 +1,9 @@
 
-package com.estafet.openshift.boost.console.api.feature.github;
+package com.estafet.openshift.boost.console.api.feature.model;
 
 import java.util.List;
+
+import com.estafet.openshift.boost.messages.model.CommitMessage;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -127,6 +129,14 @@ public class GitCommit {
     @JsonProperty("parents")
     public void setParents(List<Parent> parents) {
         this.parents = parents;
+    }
+    
+    public CommitMessage createCommitMessage(String repo) {
+    	return CommitMessage.builder()
+    			.setCommitId(sha)
+    			.setMessage(commit.getMessage())
+    			.setRepo(repo)
+    			.build();
     }
 
 }
