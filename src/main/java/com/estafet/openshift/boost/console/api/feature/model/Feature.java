@@ -1,13 +1,22 @@
 package com.estafet.openshift.boost.console.api.feature.model;
 
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.estafet.openshift.boost.commons.lib.date.DateUtils;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "FEATURE")
@@ -29,17 +38,39 @@ public class Feature {
 	@Column(name = "UPDATED_DATE", nullable = false)
 	private String updatedDate;
 
-	@Column(name = "DEPLOYED_DATE", nullable = false)
+	@Column(name = "DEPLOYED_DATE", nullable = true)
 	private String deployedDate;
 
 	@Column(name = "PROMOTED", nullable = false)
 	private boolean promoted = false;
 
-	@ManyToMany(mappedBy = "features")
+	@JsonIgnore
+	@OneToMany(mappedBy = "feature", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private Set<RepoCommit> commits = new HashSet<RepoCommit>();
+	
+	@JsonIgnore
+	@ManyToMany(mappedBy = "envs")
 	private List<Env> envs = new ArrayList<Env>();
 
+	@JsonIgnore
 	@ManyToMany(mappedBy = "features")
 	private List<Repo> repos = new ArrayList<Repo>();
+
+	public List<Repo> getRepos() {
+		return repos;
+	}
+
+	public void setRepos(List<Repo> repos) {
+		this.repos = repos;
+	}
+
+	public String getFeatureId() {
+		return featureId;
+	}
+
+	public void setFeatureId(String featureId) {
+		this.featureId = featureId;
+	}
 
 	public String getDeployedDate() {
 		return deployedDate;
@@ -55,30 +86,6 @@ public class Feature {
 
 	public void setPromoted(boolean promoted) {
 		this.promoted = promoted;
-	}
-
-	public List<Repo> getRepos() {
-		return repos;
-	}
-
-	public void setRepos(List<Repo> repos) {
-		this.repos = repos;
-	}
-
-	public List<Env> getEnvs() {
-		return envs;
-	}
-
-	public void setEnvs(List<Env> envs) {
-		this.envs = envs;
-	}
-
-	public String getFeatureId() {
-		return featureId;
-	}
-
-	public void setFeatureId(String featureId) {
-		this.featureId = featureId;
 	}
 
 	public String getStatus() {
@@ -113,6 +120,14 @@ public class Feature {
 		this.updatedDate = updatedDate;
 	}
 
+	public List<Env> getEnvs() {
+		return envs;
+	}
+
+	public void setEnvs(List<Env> envs) {
+		this.envs = envs;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -136,6 +151,22 @@ public class Feature {
 		} else if (!featureId.equals(other.featureId))
 			return false;
 		return true;
+	}
+
+	public void update(Feature recent) {
+		this.updatedDate = recent.updatedDate;
+		this.status = recent.status;
+		try {
+			if (DateUtils.dateFormat.parse(this.deployedDate).after(DateUtils.dateFormat.parse(recent.deployedDate))) {
+				this.deployedDate = recent.deployedDate;
+			}
+		} catch (ParseException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public static FeatureBuilder builder() {
+		return new FeatureBuilder();
 	}
 
 }

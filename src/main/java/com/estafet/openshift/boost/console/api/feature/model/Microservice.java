@@ -1,6 +1,7 @@
 package com.estafet.openshift.boost.console.api.feature.model;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -8,33 +9,58 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+@Entity
+@Table(name = "MICROSERVICE")
 public class Microservice {
 
 	@Id
 	@SequenceGenerator(name = "MICROSERVICE_ID_SEQ", sequenceName = "MICROSERVICE_ID_SEQ", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "MICROSERVICE_ID_SEQ")
 	@Column(name = "MICROSERVICE_ID")
-	private Integer id;
+	private Long id;
 
 	@Column(name = "NAME", nullable = false)
 	private String name;
 
 	@Column(name = "VERSION", nullable = false)
 	private String version;
+
+	@Column(name = "REPO", nullable = false)
+	private String repo;
 	
+	@Column(name = "DEPLOYED_DATE", nullable = false)
+	private String deployedDate;
+
 	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "ENV_ID", nullable = false, referencedColumnName = "ENV_ID", foreignKey = @ForeignKey(name = "MICROSERVICE_TO_ENV_FK"))
 	private Env microserviceEnv;
 
-	public Integer getId() {
+	public String getDeployedDate() {
+		return deployedDate;
+	}
+
+	public void setDeployedDate(String deployedDate) {
+		this.deployedDate = deployedDate;
+	}
+
+	public String getRepo() {
+		return repo;
+	}
+
+	public void setRepo(String repo) {
+		this.repo = repo;
+	}
+
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

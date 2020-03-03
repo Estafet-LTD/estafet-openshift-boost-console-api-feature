@@ -1,7 +1,7 @@
 package com.estafet.openshift.boost.console.api.feature.jms;
 
 import com.estafet.openshift.boost.console.api.feature.model.BuildEnv;
-import com.estafet.openshift.boost.console.api.feature.service.FeatureService;
+import com.estafet.openshift.boost.console.api.feature.service.EnvironmentService;
 import com.estafet.openshift.boost.console.api.feature.service.RepoService;
 
 import io.opentracing.Tracer;
@@ -21,14 +21,14 @@ public class BuildEnvConsumer {
 	private RepoService repoService;
 	
 	@Autowired
-	private FeatureService featureService;
+	private EnvironmentService environmentService;
 
 	@JmsListener(destination = TOPIC, containerFactory = "myFactory")
 	public void onMessage(String message) {
 		try {
 			BuildEnv buildEnv = BuildEnv.fromJSON(message);
 			repoService.updateRepo(buildEnv);
-			featureService.updateBuildEnv(buildEnv);
+			environmentService.updateEnv(buildEnv);
 		} finally {
 			if (tracer.activeSpan() != null) {
 				tracer.activeSpan().close();

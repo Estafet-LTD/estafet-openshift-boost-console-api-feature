@@ -7,12 +7,15 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "ENV")
@@ -25,18 +28,30 @@ public class Env {
 	@Column(name = "UPDATED_DATE", nullable = false)
 	private String updatedDate;
 
+	@Column(name = "LIVE", nullable = false)
+	private boolean live = false;
+
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-	@JoinTable(name = "ENV_FEATURE", joinColumns = @JoinColumn(name = "ENV_ID"), inverseJoinColumns = @JoinColumn(name = "FEATURE_ID"))
+	@JoinTable(name = "ENV_FEATURE", joinColumns = @JoinColumn(name = "ENV_ID", foreignKey = @ForeignKey(name = "ENV_FEATURE_ENV_ID_FK")), inverseJoinColumns = @JoinColumn(name = "FEATURE_ID", foreignKey = @ForeignKey(name = "ENV_FEATURE_FEATURE_ID_FK")))
 	private Set<Feature> features = new HashSet<Feature>();
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "microserviceEnv", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<Microservice> microservices = new HashSet<Microservice>();
+
+	public boolean isLive() {
+		return live;
+	}
+
+	public void setLive(boolean live) {
+		this.live = live;
+	}
 
 	public void addMicroservice(Microservice microservice) {
 		microservices.add(microservice);
 		microservice.setMicroserviceEnv(this);
 	}
-	
+
 	public Set<Microservice> getMicroservices() {
 		return microservices;
 	}
@@ -46,8 +61,21 @@ public class Env {
 	}
 
 	public void addFeature(Feature feature) {
-		features.add(feature);
-		feature.getEnvs().add(this);
+		if (!features.contains(feature)) {
+			features.add(feature);
+			feature.getEnvs().add(this);	
+		} else {
+			getFeature(feature.getFeatureId()).update(feature);
+		}
+	}
+	
+	public Feature getFeature(String name) {
+		for (Feature feature : features) {
+			if (feature.getFeatureId().equals(name)) {
+				return feature;
+			}
+		}
+		return null;
 	}
 
 	public String getName() {

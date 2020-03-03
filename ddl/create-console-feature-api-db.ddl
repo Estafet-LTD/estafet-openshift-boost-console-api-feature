@@ -1,0 +1,11 @@
+create sequence FEATURE_ID_SEQ start 1 increment 1;
+create sequence MICROSERVICE_ID_SEQ start 1 increment 1;
+create sequence UNMATCHED_ID_SEQ start 1 increment 1;
+create table ENV (ENV_ID varchar(255) not null, LIVE boolean not null, UPDATED_DATE varchar(255) not null, primary key (ENV_ID));
+create table FEATURE (FEATURE_ID int8 not null, DEPLOYED_DATE varchar(255), DESCRIPTION varchar(255), FEATURE varchar(255) not null, PROMOTED boolean not null, REPO varchar(255) not null, STATUS varchar(255), TITLE varchar(255), UPDATED_DATE varchar(255) not null, ENV_ID varchar(255) not null, primary key (FEATURE_ID));
+create table MICROSERVICE (MICROSERVICE_ID int8 not null, DEPLOYED_DATE varchar(255) not null, NAME varchar(255) not null, REPO varchar(255) not null, VERSION varchar(255) not null, ENV_ID varchar(255) not null, primary key (MICROSERVICE_ID));
+create table REPO (REPO_ID varchar(255) not null, MICROSERVICE varchar(255) not null, primary key (REPO_ID));
+create table UNMATCHED (UNMATCHED_ID int8 not null, COMMIT_ID varchar(255) not null, REPO_ID varchar(255) not null, primary key (UNMATCHED_ID));
+alter table FEATURE add constraint FEATURE_TO_ENV_FK foreign key (ENV_ID) references ENV;
+alter table MICROSERVICE add constraint MICROSERVICE_TO_ENV_FK foreign key (ENV_ID) references ENV;
+alter table UNMATCHED add constraint UNMATCHED_TO_REPO_FK foreign key (REPO_ID) references REPO;

@@ -1,9 +1,12 @@
 package com.estafet.openshift.boost.console.api.feature.model;
 
-public class Unmatched {
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 
-	private String commitId;
-	
+@Entity
+@DiscriminatorValue("UNMATCHED")
+public class Unmatched extends RepoCommit {
+
 	
 	
 }

@@ -1,0 +1,11 @@
+alter table FEATURE drop constraint FEATURE_TO_ENV_FK;
+alter table MICROSERVICE drop constraint MICROSERVICE_TO_ENV_FK;
+alter table UNMATCHED drop constraint UNMATCHED_TO_REPO_FK;
+drop table if exists ENV cascade;
+drop table if exists FEATURE cascade;
+drop table if exists MICROSERVICE cascade;
+drop table if exists REPO cascade;
+drop table if exists UNMATCHED cascade;
+drop sequence FEATURE_ID_SEQ;
+drop sequence MICROSERVICE_ID_SEQ;
+drop sequence UNMATCHED_ID_SEQ;
