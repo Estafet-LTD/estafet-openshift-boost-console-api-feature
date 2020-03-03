@@ -46,10 +46,10 @@ public class Feature {
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "feature", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private Set<RepoCommit> commits = new HashSet<RepoCommit>();
+	private Set<Matched> commits = new HashSet<Matched>();
 	
 	@JsonIgnore
-	@ManyToMany(mappedBy = "envs")
+	@ManyToMany(mappedBy = "features")
 	private List<Env> envs = new ArrayList<Env>();
 
 	@JsonIgnore

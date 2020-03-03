@@ -30,21 +30,21 @@ public class RepoService {
 	private RepoDAO repoDAO;
 	
 	@Transactional
-	public void updateRepo(BuildEnv buildEnv) {
+	public void updateRepos(BuildEnv buildEnv) {
 		for (BuildApp app : buildEnv.getBuildApps()) {
 			updateRepo("build", app.getName());
 		}
 	}
 	
 	@Transactional
-	public void updateRepo(TestEnv testEnv) {
+	public void updateRepos(TestEnv testEnv) {
 		for (TestApp app : testEnv.getTestApps()) {
 			updateRepo("test", app.getName());
 		}
 	}
 	
 	@Transactional
-	public void updateRepo(ProdEnv prodEnv) {
+	public void updateRepos(ProdEnv prodEnv) {
 		for (ProdApp app : prodEnv.getProdApps()) {
 			updateRepo("prod", app.getName());
 		}

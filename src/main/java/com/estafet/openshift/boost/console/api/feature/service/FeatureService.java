@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.estafet.openshift.boost.console.api.feature.dao.EnvDAO;
-import com.estafet.openshift.boost.console.api.feature.dao.FeatureDAO;
 import com.estafet.openshift.boost.console.api.feature.model.Env;
 import com.estafet.openshift.boost.console.api.feature.model.Feature;
 import com.estafet.openshift.boost.console.api.feature.model.Microservice;

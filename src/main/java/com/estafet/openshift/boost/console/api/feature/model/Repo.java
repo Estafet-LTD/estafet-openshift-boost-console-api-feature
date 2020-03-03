@@ -27,7 +27,11 @@ public class Repo {
 	private String microservice;
 
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-	@JoinTable(name = "REPO_FEATURE", joinColumns = @JoinColumn(name = "REPO_ID", foreignKey = @ForeignKey(name = "REPO_FEATURE_REPO_ID_FK")), inverseJoinColumns = @JoinColumn(name = "FEATURE_ID", foreignKey = @ForeignKey(name = "REPO_FEATURE_FEATURE_ID_FK")))
+	@JoinTable(
+		name = "REPO_FEATURE", 
+		joinColumns = @JoinColumn(name = "REPO_ID", foreignKey = @ForeignKey(name = "REPO_FEATURE_REPO_ID_FK")), 
+		inverseJoinColumns = @JoinColumn(name = "FEATURE_ID", foreignKey = @ForeignKey(name = "REPO_FEATURE_FEATURE_ID_FK"))
+	)
 	private Set<Feature> features = new HashSet<Feature>();
 	
 	@OneToMany(mappedBy = "repo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

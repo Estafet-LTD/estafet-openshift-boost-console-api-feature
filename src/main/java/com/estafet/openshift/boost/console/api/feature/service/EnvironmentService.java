@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.estafet.openshift.boost.commons.lib.date.DateUtils;
 import com.estafet.openshift.boost.console.api.feature.dao.EnvDAO;
+import com.estafet.openshift.boost.console.api.feature.model.BuildApp;
 import com.estafet.openshift.boost.console.api.feature.model.BuildEnv;
 import com.estafet.openshift.boost.console.api.feature.model.Env;
 
@@ -21,10 +23,18 @@ public class EnvironmentService {
 			env = new Env();
 			env.setLive(false);
 			env.setName("build");
-			//env.setUpdatedDate(updatedDate);
+			env.setUpdatedDate(DateUtils.newDate());
+		}
+		for (BuildApp app : buildEnv.getBuildApps()) {
+			updateMicroservice(env, app.getName(), app.getVersion());
 		}
 	}
 	
+	private void updateMicroservice(Env env, String microservice, String version) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	@Transactional(readOnly = true)
 	public Env getEnv(String env) {
 		return envDAO.getEnvByName(env);

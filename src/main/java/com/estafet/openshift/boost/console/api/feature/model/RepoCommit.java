@@ -21,9 +21,9 @@ import javax.persistence.Table;
 public abstract class RepoCommit {
 
 	@Id
-	@SequenceGenerator(name = "REO_COMMIT_ID_SEQ", sequenceName = "REO_COMMIT_ID_SEQ", allocationSize = 1)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "REO_COMMIT_ID_SEQ")
-	@Column(name = "REO_COMMIT_ID")
+	@SequenceGenerator(name = "REPO_COMMIT_ID_SEQ", sequenceName = "REPO_COMMIT_ID_SEQ", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "REPO_COMMIT_ID_SEQ")
+	@Column(name = "REPO_COMMIT_ID")
 	private Long id;
 
 	@Column(name = "SHA", nullable = false)

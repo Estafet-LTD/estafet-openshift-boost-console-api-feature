@@ -27,7 +27,7 @@ public class BuildEnvConsumer {
 	public void onMessage(String message) {
 		try {
 			BuildEnv buildEnv = BuildEnv.fromJSON(message);
-			repoService.updateRepo(buildEnv);
+			repoService.updateRepos(buildEnv);
 			environmentService.updateEnv(buildEnv);
 		} finally {
 			if (tracer.activeSpan() != null) {

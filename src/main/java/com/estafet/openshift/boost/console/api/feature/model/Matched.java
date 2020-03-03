@@ -11,7 +11,7 @@ import javax.persistence.ManyToOne;
 public class Matched extends RepoCommit {
 
 	@ManyToOne
-	@JoinColumn(name = "FEATURE_ID", nullable = false, referencedColumnName = "REPO_ID", foreignKey = @ForeignKey(name = "COMMIT_TO_FEATURE_FK"))
+	@JoinColumn(name = "FEATURE_ID", nullable = false, referencedColumnName = "FEATURE_ID", foreignKey = @ForeignKey(name = "COMMIT_TO_FEATURE_FK"))
 	private Feature feature;
 
 	public Feature getFeature() {

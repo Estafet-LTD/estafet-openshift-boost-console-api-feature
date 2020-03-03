@@ -38,7 +38,7 @@ public class Microservice {
 	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "ENV_ID", nullable = false, referencedColumnName = "ENV_ID", foreignKey = @ForeignKey(name = "MICROSERVICE_TO_ENV_FK"))
-	private Env microserviceEnv;
+	private Env env;
 
 	public String getDeployedDate() {
 		return deployedDate;
@@ -80,12 +80,12 @@ public class Microservice {
 		this.version = version;
 	}
 
-	public Env getMicroserviceEnv() {
-		return microserviceEnv;
+	public Env getEnv() {
+		return env;
 	}
 
-	public void setMicroserviceEnv(Env microserviceEnv) {
-		this.microserviceEnv = microserviceEnv;
+	public void setEnv(Env microserviceEnv) {
+		this.env = microserviceEnv;
 	}
 
 	@Override

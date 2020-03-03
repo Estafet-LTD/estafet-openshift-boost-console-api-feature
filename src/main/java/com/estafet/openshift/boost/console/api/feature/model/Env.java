@@ -36,7 +36,7 @@ public class Env {
 	private Set<Feature> features = new HashSet<Feature>();
 
 	@JsonIgnore
-	@OneToMany(mappedBy = "microserviceEnv", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "env", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<Microservice> microservices = new HashSet<Microservice>();
 
 	public boolean isLive() {
@@ -49,7 +49,7 @@ public class Env {
 
 	public void addMicroservice(Microservice microservice) {
 		microservices.add(microservice);
-		microservice.setMicroserviceEnv(this);
+		microservice.setEnv(this);
 	}
 
 	public Set<Microservice> getMicroservices() {

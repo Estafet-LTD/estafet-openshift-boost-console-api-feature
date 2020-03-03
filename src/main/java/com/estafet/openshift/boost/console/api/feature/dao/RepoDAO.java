@@ -1,5 +1,7 @@
 package com.estafet.openshift.boost.console.api.feature.dao;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -23,6 +25,11 @@ public class RepoDAO {
 
 	public void update(Repo repo) {
 		entityManager.merge(repo);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Repo> getRepos() {
+		return entityManager.createQuery("Select r from Repo r").getResultList();
 	}
 
 }
