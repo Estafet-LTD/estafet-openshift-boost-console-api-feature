@@ -1,9 +1,12 @@
 package com.estafet.openshift.boost.console.api.feature.dao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
 import org.springframework.stereotype.Repository;
 
@@ -30,6 +33,21 @@ public class RepoDAO {
 	@SuppressWarnings("unchecked")
 	public List<Repo> getRepos() {
 		return entityManager.createQuery("Select r from Repo r").getResultList();
+	}
+	
+	public Map<String, String> reposMap() {
+		Map<String, String> microservices = new HashMap<String, String>();
+		List<Repo> repos = getRepos();
+		for (Repo repo : repos) {
+			microservices.put(repo.getMicroservice(), repo.getName());
+		}
+		return microservices;
+	}
+	
+	public Repo getRepoByMicroservice(String microservice) {
+		TypedQuery<Repo> query = entityManager
+				.createQuery("select r from Repo r where r.microservice = ?1", Repo.class);
+		return query.setParameter(1, microservice).getSingleResult();
 	}
 
 }

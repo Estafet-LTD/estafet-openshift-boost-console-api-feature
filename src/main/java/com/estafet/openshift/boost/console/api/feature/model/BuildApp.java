@@ -1,35 +1,21 @@
 package com.estafet.openshift.boost.console.api.feature.model;
 
-public class BuildApp {
-
-	private String name;
-
-	private String version;
+public class BuildApp extends BaseApp {
 
 	private boolean canRelease;
 
-	private String deployedDate;
-
 	private String errors;
 
+	private String updatedDate;
+	
 	private boolean deployed;
 
-	private String updatedDate;
-
-	public String getName() {
-		return name;
+	public boolean isDeployed() {
+		return deployed;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getVersion() {
-		return version;
-	}
-
-	public void setVersion(String version) {
-		this.version = version;
+	public void setDeployed(boolean deployed) {
+		this.deployed = deployed;
 	}
 
 	public boolean isCanRelease() {
@@ -40,28 +26,12 @@ public class BuildApp {
 		this.canRelease = canRelease;
 	}
 
-	public String getDeployedDate() {
-		return deployedDate;
-	}
-
-	public void setDeployedDate(String deployedDate) {
-		this.deployedDate = deployedDate;
-	}
-
 	public String getErrors() {
 		return errors;
 	}
 
 	public void setErrors(String errors) {
 		this.errors = errors;
-	}
-
-	public boolean isDeployed() {
-		return deployed;
-	}
-
-	public void setDeployed(boolean deployed) {
-		this.deployed = deployed;
 	}
 
 	public String getUpdatedDate() {

@@ -112,5 +112,15 @@ public class Microservice {
 			return false;
 		return true;
 	}
+	
+	public static MicroserviceBuilder builder() {
+		return new MicroserviceBuilder();
+	}
+
+	public void update(Microservice microservice) {
+		this.version = microservice.version;
+		this.repo = microservice.repo;
+		this.deployedDate = microservice.deployedDate;
+	}
 
 }

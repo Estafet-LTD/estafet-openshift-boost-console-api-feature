@@ -48,8 +48,12 @@ public class Env {
 	}
 
 	public void addMicroservice(Microservice microservice) {
-		microservices.add(microservice);
-		microservice.setEnv(this);
+		if (!microservices.contains(microservice)) {
+			microservices.add(microservice);
+			microservice.setEnv(this);	
+		} else {
+			getMicroservice(microservice.getName()).update(microservice);
+		}
 	}
 
 	public Set<Microservice> getMicroservices() {
@@ -67,6 +71,15 @@ public class Env {
 		} else {
 			getFeature(feature.getFeatureId()).update(feature);
 		}
+	}
+	
+	public Microservice getMicroservice(String name) {
+		for (Microservice microservice : microservices) {
+			if (microservice.getName().equals(name)) {
+				return microservice;
+			}
+		}
+		return null;
 	}
 	
 	public Feature getFeature(String name) {

@@ -31,8 +31,11 @@ public class EnvDAO {
 	}
 
 	public void updateEnv(Env env) {
-		// TODO Auto-generated method stub
-		
+		entityManager.merge(env);
+	}
+
+	public void createEnv(Env env) {
+		entityManager.persist(env);	
 	}
 	
 }

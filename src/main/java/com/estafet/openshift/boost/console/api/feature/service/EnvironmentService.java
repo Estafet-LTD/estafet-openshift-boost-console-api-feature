@@ -1,14 +1,18 @@
 package com.estafet.openshift.boost.console.api.feature.service;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.estafet.openshift.boost.commons.lib.date.DateUtils;
 import com.estafet.openshift.boost.console.api.feature.dao.EnvDAO;
-import com.estafet.openshift.boost.console.api.feature.model.BuildApp;
-import com.estafet.openshift.boost.console.api.feature.model.BuildEnv;
+import com.estafet.openshift.boost.console.api.feature.dao.RepoDAO;
+import com.estafet.openshift.boost.console.api.feature.model.BaseApp;
 import com.estafet.openshift.boost.console.api.feature.model.Env;
+import com.estafet.openshift.boost.console.api.feature.model.Microservice;
+import com.estafet.openshift.boost.console.api.feature.model.BaseEnv;
 
 @Service
 public class EnvironmentService {
@@ -16,23 +20,30 @@ public class EnvironmentService {
 	@Autowired
 	private EnvDAO envDAO;
 	
+	@Autowired
+	private RepoDAO repoDAO;
+	
 	@Transactional
-	public void updateEnv(BuildEnv buildEnv) {
-		Env env = envDAO.getEnvByName("build");
+	public void updateEnv(BaseEnv envMessage) {
+		Map<String, String> reposMap = repoDAO.reposMap();
+		Env env = envDAO.getEnvByName(envMessage.getName());
 		if (env == null) {
 			env = new Env();
 			env.setLive(false);
-			env.setName("build");
+			env.setName(envMessage.getName());
 			env.setUpdatedDate(DateUtils.newDate());
+			envDAO.createEnv(env);
 		}
-		for (BuildApp app : buildEnv.getBuildApps()) {
-			updateMicroservice(env, app.getName(), app.getVersion());
+		for (BaseApp app : envMessage.getApps()) {
+			Microservice microservice = Microservice.builder()
+								.setDeployedDate(app.getDeployedDate())
+								.setName(app.getName())
+								.setRepo(reposMap.get(app.getName()))
+								.setVersion(app.getVersion())
+								.build();
+			env.addMicroservice(microservice);
 		}
-	}
-	
-	private void updateMicroservice(Env env, String microservice, String version) {
-		// TODO Auto-generated method stub
-		
+		envDAO.updateEnv(env);
 	}
 
 	@Transactional(readOnly = true)

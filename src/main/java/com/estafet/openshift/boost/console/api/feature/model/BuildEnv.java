@@ -1,33 +1,14 @@
 package com.estafet.openshift.boost.console.api.feature.model;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class BuildEnv {
+public class BuildEnv extends BaseEnv {
 
-	private String name;
-
-	private String updatedDate;
-
-	private List<BuildApp> buildApps;
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getUpdatedDate() {
-		return updatedDate;
-	}
-
-	public void setUpdatedDate(String updatedDate) {
-		this.updatedDate = updatedDate;
-	}
+	private List<BuildApp> buildApps = new ArrayList<BuildApp>();
 
 	public List<BuildApp> getBuildApps() {
 		return buildApps;
@@ -37,7 +18,12 @@ public class BuildEnv {
 		this.buildApps = buildApps;
 	}
 	
-    public static BuildEnv fromJSON(String message) {
+    @Override
+	public List<BaseApp> getApps() {
+		return new ArrayList<BaseApp>(buildApps);
+	}
+
+	public static BuildEnv fromJSON(String message) {
         try {
             return new ObjectMapper().readValue(message, BuildEnv.class);
         } catch (IOException e) {

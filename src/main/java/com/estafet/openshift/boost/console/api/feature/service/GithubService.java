@@ -1,7 +1,9 @@
 package com.estafet.openshift.boost.console.api.feature.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestTemplate;
@@ -33,22 +35,33 @@ public class GithubService {
 				"https://api.github.com/repos/" + EnvVars.getGithub() + "/" + repo + "/commits?page=" + page,
 				GitCommit.class);
 	}
-
-	public List<GitCommit> getVersionCommits(String repo, String version) {
-		List<GitCommit> commits = getRepoCommits(repo);
-		GitTag gitTag = getGitTag(repo, version);
-		for (int i = commits.size()-1; i >= 0; i--) {
-			if (commits.get(i).getSha().equals(gitTag.getCommit().getSha())) {
-				return commits.subList(0, i+1);
+	
+	public String getVersionForCommit(String repo, String commitId) {
+		Map<String, List<GitCommit>> commits = getGitCommitsByTags(repo);
+		for (String version : commits.keySet()) {
+			for (GitCommit commit : commits.get(version)) {
+				if (commit.getSha().equals(commitId)) {
+					return version;
+				}
 			}
 		}
 		return null;
 	}
-		
-	private GitTag getGitTag(String repo, String version) {
-		for (GitTag gitTag : getGitTags(repo)) {
-			if (gitTag.getName().equals(version)) {
-				return gitTag;
+	
+	public Map<String, List<GitCommit>> getGitCommitsByTags(String repo) {
+		Map<String, List<GitCommit>> map = new HashMap<String, List<GitCommit>>();
+		List<GitCommit> commits = getRepoCommits(repo);
+		List<GitTag> tags = getGitTags(repo);
+		for (GitTag tag : tags) {
+			map.put(tag.getName(), subList(tag, commits));
+		}
+		return map;
+	}
+	
+	private List<GitCommit> subList(GitTag tag, List<GitCommit> commits) {
+		for (int i=0; i < commits.size(); i++) {
+			if (commits.get(i).getSha().equals(tag.getCommit().getSha())) {
+				return commits.subList(i, commits.size());
 			}
 		}
 		return null;

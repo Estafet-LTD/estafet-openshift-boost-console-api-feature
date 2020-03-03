@@ -1,6 +1,5 @@
 package com.estafet.openshift.boost.console.api.feature.model;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -15,7 +14,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.estafet.openshift.boost.commons.lib.date.DateUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -35,33 +33,20 @@ public class Feature {
 	@Column(name = "STATUS", nullable = true)
 	private String status;
 
-	@Column(name = "UPDATED_DATE", nullable = false)
-	private String updatedDate;
-
-	@Column(name = "DEPLOYED_DATE", nullable = true)
-	private String deployedDate;
-
-	@Column(name = "PROMOTED", nullable = false)
-	private boolean promoted = false;
-
 	@JsonIgnore
 	@OneToMany(mappedBy = "feature", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private Set<Matched> commits = new HashSet<Matched>();
+	private Set<Matched> matched = new HashSet<Matched>();
 	
 	@JsonIgnore
 	@ManyToMany(mappedBy = "features")
 	private List<Env> envs = new ArrayList<Env>();
-
-	@JsonIgnore
-	@ManyToMany(mappedBy = "features")
-	private List<Repo> repos = new ArrayList<Repo>();
-
-	public List<Repo> getRepos() {
-		return repos;
+	
+	public Set<Matched> getMatched() {
+		return matched;
 	}
 
-	public void setRepos(List<Repo> repos) {
-		this.repos = repos;
+	public void setMatched(Set<Matched> matched) {
+		this.matched = matched;
 	}
 
 	public String getFeatureId() {
@@ -70,22 +55,6 @@ public class Feature {
 
 	public void setFeatureId(String featureId) {
 		this.featureId = featureId;
-	}
-
-	public String getDeployedDate() {
-		return deployedDate;
-	}
-
-	public void setDeployedDate(String deployedDate) {
-		this.deployedDate = deployedDate;
-	}
-
-	public boolean isPromoted() {
-		return promoted;
-	}
-
-	public void setPromoted(boolean promoted) {
-		this.promoted = promoted;
 	}
 
 	public String getStatus() {
@@ -110,14 +79,6 @@ public class Feature {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public String getUpdatedDate() {
-		return updatedDate;
-	}
-
-	public void setUpdatedDate(String updatedDate) {
-		this.updatedDate = updatedDate;
 	}
 
 	public List<Env> getEnvs() {
@@ -154,15 +115,7 @@ public class Feature {
 	}
 
 	public void update(Feature recent) {
-		this.updatedDate = recent.updatedDate;
 		this.status = recent.status;
-		try {
-			if (DateUtils.dateFormat.parse(this.deployedDate).after(DateUtils.dateFormat.parse(recent.deployedDate))) {
-				this.deployedDate = recent.deployedDate;
-			}
-		} catch (ParseException e) {
-			throw new RuntimeException(e);
-		}
 	}
 
 	public static FeatureBuilder builder() {

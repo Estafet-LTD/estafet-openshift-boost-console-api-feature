@@ -8,13 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.estafet.openshift.boost.console.api.feature.dao.RepoDAO;
-import com.estafet.openshift.boost.console.api.feature.model.BuildApp;
-import com.estafet.openshift.boost.console.api.feature.model.BuildEnv;
-import com.estafet.openshift.boost.console.api.feature.model.ProdApp;
-import com.estafet.openshift.boost.console.api.feature.model.ProdEnv;
+import com.estafet.openshift.boost.console.api.feature.model.BaseApp;
+import com.estafet.openshift.boost.console.api.feature.model.BaseEnv;
 import com.estafet.openshift.boost.console.api.feature.model.Repo;
-import com.estafet.openshift.boost.console.api.feature.model.TestApp;
-import com.estafet.openshift.boost.console.api.feature.model.TestEnv;
 import com.estafet.openshift.boost.console.api.feature.openshift.BuildConfigParser;
 import com.estafet.openshift.boost.console.api.feature.openshift.OpenShiftClient;
 import com.estafet.openshift.boost.console.api.feature.variables.EnvVars;
@@ -30,34 +26,20 @@ public class RepoService {
 	private RepoDAO repoDAO;
 	
 	@Transactional
-	public void updateRepos(BuildEnv buildEnv) {
-		for (BuildApp app : buildEnv.getBuildApps()) {
-			updateRepo("build", app.getName());
-		}
-	}
-	
-	@Transactional
-	public void updateRepos(TestEnv testEnv) {
-		for (TestApp app : testEnv.getTestApps()) {
-			updateRepo("test", app.getName());
-		}
-	}
-	
-	@Transactional
-	public void updateRepos(ProdEnv prodEnv) {
-		for (ProdApp app : prodEnv.getProdApps()) {
-			updateRepo("prod", app.getName());
+	public void updateRepos(BaseEnv env) {
+		for (BaseApp app : env.getApps()) {
+			updateRepo(env, app);
 		}
 	}
 
-	private void updateRepo(String env, String app) {
-		IBuildConfig buildConfig = client.getBuildConfig(env, app);
+	private void updateRepo(BaseEnv env, BaseApp app) {
+		IBuildConfig buildConfig = client.getBuildConfig(env.getName(), app.getName());
 		String repoId = getRepo(buildConfig);
 		Repo repo = repoDAO.getRepo(repoId);
 		if (repo == null) {
 			repo = new Repo();
 			repo.setName(repoId);
-			repo.setMicroservice(app);
+			repo.setMicroservice(app.getName());
 			repoDAO.create(repo);
 		}
 	}

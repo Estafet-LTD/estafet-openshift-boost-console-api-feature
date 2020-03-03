@@ -1,5 +1,7 @@
 package com.estafet.openshift.boost.console.api.feature.dao;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -19,9 +21,19 @@ public class FeatureDAO {
 				.createQuery("select f from Feature f where f.repo = ?1 and f.commitId = ?2", Feature.class);
 		return query.setParameter(1, repo).setParameter(2, sha).getSingleResult();
 	}
+	
+	public List<Feature> getFeaturesByRepo(String repo) {
+		TypedQuery<Feature> query = entityManager
+				.createQuery("select f from Feature f where f.repo = ?1", Feature.class);
+		return query.setParameter(1, repo).getResultList();
+	}
 
 	public Feature getFeatureById(String featureId) {
 		return entityManager.find(Feature.class, featureId);
+	}
+
+	public void create(Feature feature) {
+		entityManager.persist(feature);
 	}
 
 }

@@ -28,6 +28,9 @@ public abstract class RepoCommit {
 
 	@Column(name = "SHA", nullable = false)
 	private String sha;
+	
+	@Column(name = "VERSION", nullable = false)
+	private String version;
 
 	@ManyToOne
 	@JoinColumn(name = "REPO_ID", nullable = false, referencedColumnName = "REPO_ID", foreignKey = @ForeignKey(name = "COMMIT_TO_REPO_FK"))
@@ -47,6 +50,14 @@ public abstract class RepoCommit {
 
 	public void setSha(String sha) {
 		this.sha = sha;
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
 	}
 
 	public Repo getRepo() {
