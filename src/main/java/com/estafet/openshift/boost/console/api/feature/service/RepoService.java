@@ -48,7 +48,7 @@ public class RepoService {
 		String repoUrl = new BuildConfigParser(buildConfig).getGitRepository();
 		String githubUri = Pattern.quote("https://github.com/");
 		String githubOrg = Pattern.quote(EnvVars.getGithub() + "/");
-		Pattern r = Pattern.compile("(" + githubUri + ")(" + githubOrg + ")(*)");
+		Pattern r = Pattern.compile("(" + githubUri + ")(" + githubOrg + ")(*.)");
 		Matcher m = r.matcher(repoUrl); 
 		return m.group(2);
 	}
