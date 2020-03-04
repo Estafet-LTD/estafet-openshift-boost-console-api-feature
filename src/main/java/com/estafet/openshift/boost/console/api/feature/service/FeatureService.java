@@ -1,5 +1,7 @@
 package com.estafet.openshift.boost.console.api.feature.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +27,8 @@ import com.estafet.openshift.boost.messages.model.FeatureMessage;
 @Service
 public class FeatureService {
 
+	private static final Logger log = LoggerFactory.getLogger(FeatureService.class);
+	
 	@Autowired
 	private GithubService githubService;
 
@@ -70,6 +74,7 @@ public class FeatureService {
 	
 	@Transactional
 	public void processFeature(FeatureMessage featureMessage) {
+		log.info(featureMessage.toJSON());
 		Feature feature = featureDAO.getFeatureById(featureMessage.getFeatureId());
 		if (feature == null) {
 			feature = createFeature(featureMessage);
