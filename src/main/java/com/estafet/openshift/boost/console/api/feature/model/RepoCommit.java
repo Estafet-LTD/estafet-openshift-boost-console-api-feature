@@ -17,7 +17,7 @@ import javax.persistence.Table;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "MATCHED_TYPE")
-@Table(name = "REO_COMMIT")
+@Table(name = "REPO_COMMIT")
 public abstract class RepoCommit {
 
 	@Id
