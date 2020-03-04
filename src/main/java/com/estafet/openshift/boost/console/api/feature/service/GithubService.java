@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -16,6 +18,8 @@ import com.estafet.openshift.boost.console.api.feature.variables.EnvVars;
 
 @Service
 public class GithubService {
+
+	private static final Logger log = LoggerFactory.getLogger(GithubService.class);
 
 	@Autowired
 	private RestTemplate restTemplate;
@@ -33,9 +37,9 @@ public class GithubService {
 	}
 
 	private List<GitCommit> getRepoCommits(String repo, int page) {
-		GitCommit[] array = restTemplate.getForObject(
-				"https://api.github.com/repos/" + EnvVars.getGithub() + "/" + repo + "/commits?page=" + page, GitCommit[].class);
-		return Arrays.asList(array);
+		String url = "https://api.github.com/repos/" + EnvVars.getGithub() + "/" + repo + "/commits?page=" + page;
+		log.info(url);
+		return Arrays.asList(restTemplate.getForObject(url, GitCommit[].class));
 	}
 
 	public String getVersionForCommit(String repo, String commitId) {
@@ -70,9 +74,9 @@ public class GithubService {
 	}
 
 	private List<GitTag> getGitTags(String repo) {
-		GitTag[] arrays = restTemplate.getForObject(
-				"https://api.github.com/repos/" + EnvVars.getGithub() + "/" + repo + "/tags", GitTag[].class);
-		return Arrays.asList(arrays);
+		String url = "https://api.github.com/repos/" + EnvVars.getGithub() + "/" + repo + "/tags";
+		log.info(url);
+		return Arrays.asList(restTemplate.getForObject(url, GitTag[].class));
 	}
 
 }
