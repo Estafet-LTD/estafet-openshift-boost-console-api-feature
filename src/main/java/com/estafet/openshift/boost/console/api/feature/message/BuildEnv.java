@@ -1,4 +1,4 @@
-package com.estafet.openshift.boost.console.api.feature.model;
+package com.estafet.openshift.boost.console.api.feature.message;
 
 import java.io.IOException;
 import java.util.ArrayList;

@@ -16,11 +16,11 @@ public class Version {
 	}
 
 	public boolean isLessThanOrEqual(Version other) {
-		if (other.major > major) {
+		if (major > other.major) {
 			return false;
-		} else if (other.minor > minor) {
+		} else if (minor > other.minor) {
 			return false;
-		} else if (other.revision > revision) {
+		} else if (revision > other.revision) {
 			return false;
 		}
 		return true;

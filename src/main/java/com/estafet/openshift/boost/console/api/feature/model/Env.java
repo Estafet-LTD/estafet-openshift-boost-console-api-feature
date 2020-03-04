@@ -7,15 +7,9 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "ENV")
@@ -31,11 +25,9 @@ public class Env {
 	@Column(name = "LIVE", nullable = false)
 	private boolean live = false;
 
-	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-	@JoinTable(name = "ENV_FEATURE", joinColumns = @JoinColumn(name = "ENV_ID", foreignKey = @ForeignKey(name = "ENV_FEATURE_ENV_ID_FK")), inverseJoinColumns = @JoinColumn(name = "FEATURE_ID", foreignKey = @ForeignKey(name = "ENV_FEATURE_FEATURE_ID_FK")))
-	private Set<Feature> features = new HashSet<Feature>();
+	@OneToMany(mappedBy = "env", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private Set<EnvFeature> envFeatures = new HashSet<EnvFeature>();
 
-	@JsonIgnore
 	@OneToMany(mappedBy = "env", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<Microservice> microservices = new HashSet<Microservice>();
 
@@ -50,7 +42,7 @@ public class Env {
 	public void addMicroservice(Microservice microservice) {
 		if (!microservices.contains(microservice)) {
 			microservices.add(microservice);
-			microservice.setEnv(this);	
+			microservice.setEnv(this);
 		} else {
 			getMicroservice(microservice.getName()).update(microservice);
 		}
@@ -64,28 +56,25 @@ public class Env {
 		this.microservices = microservices;
 	}
 
-	public void addFeature(Feature feature) {
-		if (!features.contains(feature)) {
-			features.add(feature);
-			feature.getEnvs().add(this);	
-		} else {
-			getFeature(feature.getFeatureId()).update(feature);
+	public Set<Feature> getFeatures() {
+		Set<Feature> features = new HashSet<Feature>();
+		for (EnvFeature envFeature : envFeatures) {
+			features.add(envFeature.getFeature());
+		}
+		return features;
+	}
+
+	public void addEnvFeature(EnvFeature envFeature) {
+		if (!getFeatures().contains(envFeature.getFeature())) {
+			envFeatures.add(envFeature);
+			envFeature.setEnv(this);
 		}
 	}
-	
+
 	public Microservice getMicroservice(String name) {
 		for (Microservice microservice : microservices) {
 			if (microservice.getName().equals(name)) {
 				return microservice;
-			}
-		}
-		return null;
-	}
-	
-	public Feature getFeature(String name) {
-		for (Feature feature : features) {
-			if (feature.getFeatureId().equals(name)) {
-				return feature;
 			}
 		}
 		return null;
@@ -99,20 +88,12 @@ public class Env {
 		this.name = name;
 	}
 
-	public void setFeatures(Set<Feature> features) {
-		this.features = features;
-	}
-
 	public String getUpdatedDate() {
 		return updatedDate;
 	}
 
 	public void setUpdatedDate(String updatedDate) {
 		this.updatedDate = updatedDate;
-	}
-
-	public Set<Feature> getFeatures() {
-		return features;
 	}
 
 	@Override

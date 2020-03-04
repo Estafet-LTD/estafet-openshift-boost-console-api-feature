@@ -9,10 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.estafet.openshift.boost.commons.lib.date.DateUtils;
 import com.estafet.openshift.boost.console.api.feature.dao.EnvDAO;
 import com.estafet.openshift.boost.console.api.feature.dao.RepoDAO;
-import com.estafet.openshift.boost.console.api.feature.model.BaseApp;
+import com.estafet.openshift.boost.console.api.feature.message.BaseApp;
+import com.estafet.openshift.boost.console.api.feature.message.BaseEnv;
 import com.estafet.openshift.boost.console.api.feature.model.Env;
 import com.estafet.openshift.boost.console.api.feature.model.Microservice;
-import com.estafet.openshift.boost.console.api.feature.model.BaseEnv;
 
 @Service
 public class EnvironmentService {

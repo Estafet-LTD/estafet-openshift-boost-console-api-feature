@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestTemplate;
 
 import com.estafet.openshift.boost.commons.lib.rest.RestHelper;
-import com.estafet.openshift.boost.console.api.feature.model.GitCommit;
-import com.estafet.openshift.boost.console.api.feature.model.GitTag;
+import com.estafet.openshift.boost.console.api.feature.message.GitCommit;
+import com.estafet.openshift.boost.console.api.feature.message.GitTag;
 import com.estafet.openshift.boost.console.api.feature.variables.EnvVars;
 
 public class GithubService {

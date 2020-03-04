@@ -1,8 +1,6 @@
 package com.estafet.openshift.boost.console.api.feature.model;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -10,11 +8,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "FEATURE")
@@ -33,13 +28,21 @@ public class Feature {
 	@Column(name = "STATUS", nullable = true)
 	private String status;
 
-	@JsonIgnore
 	@OneToMany(mappedBy = "feature", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<Matched> matched = new HashSet<Matched>();
 	
-	@JsonIgnore
-	@ManyToMany(mappedBy = "features")
-	private List<Env> envs = new ArrayList<Env>();
+	@OneToMany(mappedBy = "feature", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private Set<EnvFeature> envFeatures = new HashSet<EnvFeature>();
+	
+	public void addMatched(Matched matched) {
+		this.matched.add(matched);
+		matched.setFeature(this);
+	}
+	
+	public void addEnvFeature(EnvFeature envFeature) {
+		this.envFeatures.add(envFeature);
+		envFeature.setFeature(this);
+	}
 	
 	public Set<Matched> getMatched() {
 		return matched;
@@ -79,14 +82,6 @@ public class Feature {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public List<Env> getEnvs() {
-		return envs;
-	}
-
-	public void setEnvs(List<Env> envs) {
-		this.envs = envs;
 	}
 
 	@Override

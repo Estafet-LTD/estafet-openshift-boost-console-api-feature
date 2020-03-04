@@ -25,7 +25,7 @@ public class MatchedBuilder {
 	
 	public Matched build() {
 		Matched matched = new Matched();
-		matched.setFeature(feature);
+		feature.addMatched(matched);
 		matched.setSha(sha);
 		matched.setVersion(version);
 		return matched;

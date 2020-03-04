@@ -1,5 +1,5 @@
-alter table ENV_FEATURE drop constraint ENV_FEATURE_FEATURE_ID_FK;
-alter table ENV_FEATURE drop constraint ENV_FEATURE_ENV_ID_FK;
+alter table ENV_FEATURE drop constraint ENV_FEATURE_TO_ENV_FK;
+alter table ENV_FEATURE drop constraint ENV_FEATURE_TO_FEATURE_FK;
 alter table MICROSERVICE drop constraint MICROSERVICE_TO_ENV_FK;
 alter table REO_COMMIT drop constraint COMMIT_TO_REPO_FK;
 alter table REO_COMMIT drop constraint COMMIT_TO_FEATURE_FK;
@@ -9,5 +9,6 @@ drop table if exists FEATURE cascade;
 drop table if exists MICROSERVICE cascade;
 drop table if exists REO_COMMIT cascade;
 drop table if exists REPO cascade;
+drop sequence ENV_FEATURE_SEQ;
 drop sequence MICROSERVICE_ID_SEQ;
 drop sequence REPO_COMMIT_ID_SEQ;

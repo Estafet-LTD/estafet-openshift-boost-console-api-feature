@@ -1,6 +1,8 @@
-package com.estafet.openshift.boost.console.api.feature.model;
+package com.estafet.openshift.boost.console.api.feature.message;
 
 import java.util.Map;
+
+import com.estafet.openshift.boost.console.api.feature.model.Microservice;
 
 public class BaseApp {
 
@@ -10,27 +12,27 @@ public class BaseApp {
 
 	private String deployedDate;
 
-	public String getName() {
+	public final String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
+	public final void setName(String name) {
 		this.name = name;
 	}
 
-	public String getVersion() {
+	public final String getVersion() {
 		return version;
 	}
 
-	public void setVersion(String version) {
+	public final void setVersion(String version) {
 		this.version = version;
 	}
 
-	public String getDeployedDate() {
+	public final String getDeployedDate() {
 		return deployedDate;
 	}
 
-	public void setDeployedDate(String deployedDate) {
+	public final void setDeployedDate(String deployedDate) {
 		this.deployedDate = deployedDate;
 	}
 		

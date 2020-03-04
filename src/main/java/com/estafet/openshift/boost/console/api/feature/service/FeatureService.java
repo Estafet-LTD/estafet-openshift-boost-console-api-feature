@@ -6,10 +6,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.estafet.openshift.boost.console.api.feature.dao.EnvDAO;
 import com.estafet.openshift.boost.console.api.feature.dao.FeatureDAO;
 import com.estafet.openshift.boost.console.api.feature.dao.RepoDAO;
-import com.estafet.openshift.boost.console.api.feature.model.BaseEnv;
+import com.estafet.openshift.boost.console.api.feature.message.BaseEnv;
+import com.estafet.openshift.boost.console.api.feature.message.GitCommit;
 import com.estafet.openshift.boost.console.api.feature.model.Env;
+import com.estafet.openshift.boost.console.api.feature.model.EnvFeature;
 import com.estafet.openshift.boost.console.api.feature.model.Feature;
-import com.estafet.openshift.boost.console.api.feature.model.GitCommit;
 import com.estafet.openshift.boost.console.api.feature.model.Matched;
 import com.estafet.openshift.boost.console.api.feature.model.MatchedBuilder;
 import com.estafet.openshift.boost.console.api.feature.model.Microservice;
@@ -41,13 +42,20 @@ public class FeatureService {
 						Version matchedVersion = new Version(matched.getVersion());
 						Version microserviceVersion = new Version(microservice.getVersion());
 						if (matchedVersion.isLessThanOrEqual(microserviceVersion)) {
-							env.addFeature(feature);
+							env.addEnvFeature(createEnvFeature(microservice, feature));
 						}
 					}
 				}
 			}
 		}
 		envDAO.updateEnv(env);
+	}
+
+	private EnvFeature createEnvFeature(Microservice microservice, Feature feature) {
+		return EnvFeature.builder()
+				.setFeature(feature)
+				.setDeployedDate(microservice.getDeployedDate())
+				.build();
 	}
 	
 	@Transactional

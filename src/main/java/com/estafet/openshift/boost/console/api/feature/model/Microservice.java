@@ -11,8 +11,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Entity
 @Table(name = "MICROSERVICE")
 public class Microservice {
@@ -35,7 +33,6 @@ public class Microservice {
 	@Column(name = "DEPLOYED_DATE", nullable = false)
 	private String deployedDate;
 
-	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "ENV_ID", nullable = false, referencedColumnName = "ENV_ID", foreignKey = @ForeignKey(name = "MICROSERVICE_TO_ENV_FK"))
 	private Env env;

@@ -1,4 +1,4 @@
-package com.estafet.openshift.boost.console.api.feature.model;
+package com.estafet.openshift.boost.console.api.feature.message;
 
 public class BuildApp extends BaseApp {
 

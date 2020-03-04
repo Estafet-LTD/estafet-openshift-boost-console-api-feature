@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.estafet.openshift.boost.console.api.feature.dao.RepoDAO;
-import com.estafet.openshift.boost.console.api.feature.model.BaseApp;
-import com.estafet.openshift.boost.console.api.feature.model.BaseEnv;
+import com.estafet.openshift.boost.console.api.feature.message.BaseApp;
+import com.estafet.openshift.boost.console.api.feature.message.BaseEnv;
 import com.estafet.openshift.boost.console.api.feature.model.Repo;
 import com.estafet.openshift.boost.console.api.feature.openshift.BuildConfigParser;
 import com.estafet.openshift.boost.console.api.feature.openshift.OpenShiftClient;
