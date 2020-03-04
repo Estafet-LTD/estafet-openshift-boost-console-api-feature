@@ -56,7 +56,7 @@ public class RepoService {
 		Pattern r = Pattern.compile("(" + githubUri + ")(" + githubOrg + ")(.+)");
 		log.info("pattern - " + r.pattern());
 		Matcher m = r.matcher(repoUrl); 
-		return m.group(2);
+		return m.group(3);
 	}
 
 }
