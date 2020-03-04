@@ -1,6 +1,7 @@
 package com.estafet.openshift.boost.console.api.feature.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.estafet.openshift.boost.commons.lib.rest.RestHelper;
 import com.estafet.openshift.boost.console.api.feature.message.GitCommit;
 import com.estafet.openshift.boost.console.api.feature.message.GitTag;
 import com.estafet.openshift.boost.console.api.feature.variables.EnvVars;
@@ -33,11 +33,11 @@ public class GithubService {
 	}
 
 	private List<GitCommit> getRepoCommits(String repo, int page) {
-		return RestHelper.getRestQuery(restTemplate,
-				"https://api.github.com/repos/" + EnvVars.getGithub() + "/" + repo + "/commits?page=" + page,
-				GitCommit.class);
+		GitCommit[] array = restTemplate.getForObject(
+				"https://api.github.com/repos/" + EnvVars.getGithub() + "/" + repo + "/commits?page=" + page, GitCommit[].class);
+		return Arrays.asList(array);
 	}
-	
+
 	public String getVersionForCommit(String repo, String commitId) {
 		Map<String, List<GitCommit>> commits = getGitCommitsByTags(repo);
 		for (String version : commits.keySet()) {
@@ -49,7 +49,7 @@ public class GithubService {
 		}
 		return null;
 	}
-	
+
 	public Map<String, List<GitCommit>> getGitCommitsByTags(String repo) {
 		Map<String, List<GitCommit>> map = new HashMap<String, List<GitCommit>>();
 		List<GitCommit> commits = getRepoCommits(repo);
@@ -59,20 +59,20 @@ public class GithubService {
 		}
 		return map;
 	}
-	
+
 	private List<GitCommit> subList(GitTag tag, List<GitCommit> commits) {
-		for (int i=0; i < commits.size(); i++) {
+		for (int i = 0; i < commits.size(); i++) {
 			if (commits.get(i).getSha().equals(tag.getCommit().getSha())) {
 				return commits.subList(i, commits.size());
 			}
 		}
 		return null;
 	}
-	
+
 	private List<GitTag> getGitTags(String repo) {
-		return RestHelper.getRestQuery(restTemplate,
-				"https://api.github.com/repos/" + EnvVars.getGithub() + "/" + repo + "/tags",
-				GitTag.class);
+		GitTag[] arrays = restTemplate.getForObject(
+				"https://api.github.com/repos/" + EnvVars.getGithub() + "/" + repo + "/tags", GitTag[].class);
+		return Arrays.asList(arrays);
 	}
 
 }
