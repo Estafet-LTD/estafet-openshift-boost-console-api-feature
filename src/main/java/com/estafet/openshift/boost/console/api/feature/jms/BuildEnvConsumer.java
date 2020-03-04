@@ -14,7 +14,7 @@ import io.opentracing.Tracer;
 @Component
 public class BuildEnvConsumer {
 
-	public final static String TOPIC = "buildenv-topic";
+	public final static String TOPIC = "buildenv.topic";
 
 	@Autowired
 	private Tracer tracer;

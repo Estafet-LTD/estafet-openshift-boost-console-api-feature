@@ -41,6 +41,9 @@ parameters:
 - description: Defines the openshift admin password
   name: OPENSHIFT_PASSWORD
   required: true        
+- description: Defines the github organisation
+  name: GITHUB
+  required: true        
 objects:
 - apiVersion: v1
   kind: DeploymentConfig
@@ -100,11 +103,11 @@ objects:
                 value: 'tcp://broker-amq-tcp.${NAMESPACE}.svc:61616'
               - name: JBOSS_A_MQ_BROKER_USER
                 value: amq                  
-              - name: CONSOLE_BUILD_API_DB_PASSWORD
+              - name: CONSOLE_FEATURE_API_DB_PASSWORD
                 value: welcome1
-              - name: CONSOLE_BUILD_API_DB_USER
+              - name: CONSOLE_FEATURE_API_DB_USER
                 value: postgres
-              - name: CONSOLE_BUILD_API_JDBC_URL
+              - name: CONSOLE_FEATURE_API_JDBC_URL
                 value: jdbc:postgresql://postgresql.${NAMESPACE}.svc:5432/${NAMESPACE}-${MICROSERVICE}                                
             image: ${DOCKER_REGISTRY}/${DOCKER_NAMESPACE}/${MICROSERVICE}:${DOCKER_IMAGE_LABEL}
             imagePullPolicy: Always

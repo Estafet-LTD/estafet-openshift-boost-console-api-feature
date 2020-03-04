@@ -3,10 +3,13 @@ package com.estafet.openshift.boost.console.api.feature.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.estafet.openshift.boost.commons.lib.date.DateUtils;
 import com.estafet.openshift.boost.console.api.feature.dao.EnvDAO;
 import com.estafet.openshift.boost.console.api.feature.dao.FeatureDAO;
 import com.estafet.openshift.boost.console.api.feature.dao.RepoDAO;
+import com.estafet.openshift.boost.console.api.feature.jms.NewEnvironmentFeatureProducer;
 import com.estafet.openshift.boost.console.api.feature.message.BaseEnv;
+import com.estafet.openshift.boost.console.api.feature.message.EnvFeatureMessage;
 import com.estafet.openshift.boost.console.api.feature.message.GitCommit;
 import com.estafet.openshift.boost.console.api.feature.model.Env;
 import com.estafet.openshift.boost.console.api.feature.model.EnvFeature;
@@ -31,6 +34,9 @@ public class FeatureService {
 	
 	@Autowired
 	private RepoDAO repoDAO;
+	
+	@Autowired
+	private NewEnvironmentFeatureProducer newEnvFeatureProducer;
 
 	@Transactional
 	public void updateFeatures(BaseEnv baseEnv) {
@@ -42,13 +48,15 @@ public class FeatureService {
 						Version matchedVersion = new Version(matched.getVersion());
 						Version microserviceVersion = new Version(microservice.getVersion());
 						if (matchedVersion.isLessThanOrEqual(microserviceVersion)) {
-							env.addEnvFeature(createEnvFeature(microservice, feature));
+							EnvFeature envFeature = createEnvFeature(microservice, feature);
+							env.addEnvFeature(envFeature);
+							envDAO.updateEnv(env);
+							newEnvFeatureProducer.sendMessage(envFeature.getEnvFeatureMessage());
 						}
 					}
 				}
 			}
 		}
-		envDAO.updateEnv(env);
 	}
 
 	private EnvFeature createEnvFeature(Microservice microservice, Feature feature) {
@@ -89,6 +97,18 @@ public class FeatureService {
 				.setStatus(featureMessage.getStatus().getValue())
 				.setTitle(featureMessage.getTitle())
 				.build();
+	}
+
+	@Transactional
+	public void processEnvFeature(EnvFeatureMessage envFeatureMessage) {
+		if (!envFeatureMessage.getEnvironment().equals("build")) {
+			Env env = envDAO.getEnv(envFeatureMessage.getEnvironment());
+			Env prevEnv =  envDAO.getEnv(env.getPreviousEnv());
+			prevEnv.setUpdatedDate(DateUtils.newDate());
+			EnvFeature envFeature = prevEnv.getEnvFeature(envFeatureMessage.getFeatureId());
+			envFeature.setMigratedDate(envFeatureMessage.getDeployedDate());
+			envDAO.updateEnv(prevEnv);
+		}
 	}
 
 

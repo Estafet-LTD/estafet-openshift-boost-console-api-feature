@@ -14,6 +14,6 @@ public class CommitProducer {
 	
 	public void sendMessage(CommitMessage message) {
 		jmsTemplate.setPubSubDomain(true);
-		jmsTemplate.convertAndSend("commit-topic", message.toJSON());
+		jmsTemplate.convertAndSend("commit.topic", message.toJSON());
 	}
 }

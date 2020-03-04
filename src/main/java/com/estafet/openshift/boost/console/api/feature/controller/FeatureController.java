@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.estafet.openshift.boost.commons.lib.model.API;
-import com.estafet.openshift.boost.console.api.feature.model.Env;
+import com.estafet.openshift.boost.console.api.feature.dto.EnvironmentDTO;
 import com.estafet.openshift.boost.console.api.feature.service.EnvironmentService;
 
 @RestController
@@ -25,7 +25,7 @@ public class FeatureController {
 	}
 	
 	@GetMapping("/environment/{env}")
-	public Env getEnvironment(@PathVariable String env) {
+	public EnvironmentDTO getEnvironment(@PathVariable String env) {
 		return environmentService.getEnv(env);
 	}
 	

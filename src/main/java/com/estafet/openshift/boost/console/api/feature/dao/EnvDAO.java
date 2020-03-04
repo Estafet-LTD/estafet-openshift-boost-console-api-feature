@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 
 import org.springframework.stereotype.Repository;
 
@@ -19,13 +18,7 @@ public class EnvDAO {
 	public Env getEnv(String envId) {
 		return entityManager.find(Env.class, envId);
 	}
-	
-	public Env getEnvByName(String name) {
-		TypedQuery<Env> query = entityManager
-				.createQuery("select e from Env e INNER JOIN FETCH e.features f where e.name = ?1", Env.class);
-		return query.setParameter(1, name).getSingleResult();
-	}
-	
+		
 	public List<Env> getEnvs() {
 		return null;
 	}

@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.estafet.openshift.boost.commons.lib.date.DateUtils;
 import com.estafet.openshift.boost.console.api.feature.dao.EnvDAO;
 import com.estafet.openshift.boost.console.api.feature.dao.RepoDAO;
+import com.estafet.openshift.boost.console.api.feature.dto.EnvironmentDTO;
 import com.estafet.openshift.boost.console.api.feature.message.BaseApp;
 import com.estafet.openshift.boost.console.api.feature.message.BaseEnv;
 import com.estafet.openshift.boost.console.api.feature.model.Env;
@@ -26,7 +27,7 @@ public class EnvironmentService {
 	@Transactional
 	public void updateEnv(BaseEnv envMessage) {
 		Map<String, String> reposMap = repoDAO.reposMap();
-		Env env = envDAO.getEnvByName(envMessage.getName());
+		Env env = envDAO.getEnv(envMessage.getName());
 		if (env == null) {
 			env = new Env();
 			env.setLive(false);
@@ -47,8 +48,8 @@ public class EnvironmentService {
 	}
 
 	@Transactional(readOnly = true)
-	public Env getEnv(String env) {
-		return envDAO.getEnvByName(env);
+	public EnvironmentDTO getEnv(String env) {
+		return envDAO.getEnv(env).getEnvironmentDTO();
 	}
 	
 }

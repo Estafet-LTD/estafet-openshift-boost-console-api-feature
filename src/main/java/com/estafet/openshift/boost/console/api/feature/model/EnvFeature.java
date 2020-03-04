@@ -11,6 +11,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.estafet.openshift.boost.console.api.feature.dto.FeatureDTO;
+import com.estafet.openshift.boost.console.api.feature.message.EnvFeatureMessage;
+
 @Entity
 @Table(name = "ENV_FEATURE")
 public class EnvFeature {
@@ -74,8 +77,6 @@ public class EnvFeature {
 	public void setEnv(Env env) {
 		this.env = env;
 	}
-	
-	
 
 	@Override
 	public int hashCode() {
@@ -104,6 +105,30 @@ public class EnvFeature {
 	
 	public static EnvFeatureBuilder builder() {
 		return new EnvFeatureBuilder();
+	}
+	
+	public EnvFeatureMessage getEnvFeatureMessage() {
+		return EnvFeatureMessage.builder()
+				.setDeployedDate(deployedDate)
+				.setDescription(feature.getDescription())
+				.setDeployedDate(deployedDate)
+				.setEnvironment(env.getName())
+				.setFeatureId(feature.getFeatureId())
+				.setMigratedDate(migratedDate)
+				.setStatus(feature.getStatus())
+				.setTitle(feature.getTitle())
+				.build();
+	}
+	
+	public FeatureDTO getFeatureDTO() {
+		return FeatureDTO.builder()
+				.setDescription(feature.getDescription())
+				.setFeatureId(feature.getFeatureId())
+				.setStatus(feature.getStatus())
+				.setTitle(feature.getTitle())
+				.setPromoted(migratedDate != null)
+				.setUnpromotedSince(migratedDate == null ? deployedDate : null)
+				.build();
 	}
 
 }

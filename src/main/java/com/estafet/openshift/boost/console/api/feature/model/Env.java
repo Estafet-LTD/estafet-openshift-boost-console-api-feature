@@ -11,6 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.estafet.openshift.boost.commons.lib.date.DateUtils;
+import com.estafet.openshift.boost.console.api.feature.dto.EnvironmentDTO;
+
 @Entity
 @Table(name = "ENV")
 public class Env {
@@ -25,7 +28,7 @@ public class Env {
 	@Column(name = "LIVE", nullable = false)
 	private boolean live = false;
 
-	@OneToMany(mappedBy = "env", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "env", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<EnvFeature> envFeatures = new HashSet<EnvFeature>();
 
 	@OneToMany(mappedBy = "env", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -64,8 +67,19 @@ public class Env {
 		return features;
 	}
 
+	public EnvFeature getEnvFeature(String featureId) {
+		for (EnvFeature envfeature : envFeatures) {
+			if (envfeature.getFeature().getFeatureId().equals(name)) {
+				return envfeature;
+			}
+		}
+		return null;
+	}
+
 	public void addEnvFeature(EnvFeature envFeature) {
-		if (!getFeatures().contains(envFeature.getFeature())) {
+		if (!getFeatures().contains(envFeature.getFeature())
+				&& (name.equals("build") || envFeature.getFeature().getStatus().equals("DONE"))) {
+			updatedDate = DateUtils.newDate();
 			envFeatures.add(envFeature);
 			envFeature.setEnv(this);
 		}
@@ -94,6 +108,37 @@ public class Env {
 
 	public void setUpdatedDate(String updatedDate) {
 		this.updatedDate = updatedDate;
+	}
+
+	public String getPreviousEnv() {
+		if (name.equals("test")) {
+			return "build";
+		} else if (name.equals("green")) {
+			if (live) {
+				return "blue";
+			} else {
+				return "test";
+			}
+		} else if (name.equals("blue")) {
+			if (live) {
+				return "green";
+			} else {
+				return "test";
+			}
+		}
+		return null;
+	}
+	
+	public EnvironmentDTO getEnvironmentDTO() {
+		EnvironmentDTO environmentDTO = EnvironmentDTO.builder()
+				.setLive(live)
+				.setName(name)
+				.setUpdatedDate(updatedDate)
+				.build();
+		for (EnvFeature envFeature : envFeatures) {
+			environmentDTO.addFeature(envFeature.getFeatureDTO());
+		}
+		return environmentDTO;
 	}
 
 	@Override
