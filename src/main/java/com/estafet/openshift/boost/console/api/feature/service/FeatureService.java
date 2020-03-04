@@ -1,6 +1,7 @@
 package com.estafet.openshift.boost.console.api.feature.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.estafet.openshift.boost.commons.lib.date.DateUtils;
@@ -21,6 +22,7 @@ import com.estafet.openshift.boost.console.api.feature.model.Repo;
 import com.estafet.openshift.boost.console.api.feature.model.Version;
 import com.estafet.openshift.boost.messages.model.FeatureMessage;
 
+@Service
 public class FeatureService {
 
 	@Autowired
