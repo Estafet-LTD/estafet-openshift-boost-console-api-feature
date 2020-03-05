@@ -6,9 +6,9 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class RepoUtils {
+public class RepoUtil {
 
-	private static final Logger log = LoggerFactory.getLogger(RepoUtils.class);
+	private static final Logger log = LoggerFactory.getLogger(RepoUtil.class);
 	
 	public static String getRepoFromURL(String github, String repoUrl) {
 		log.info("repoURL - " + repoUrl);

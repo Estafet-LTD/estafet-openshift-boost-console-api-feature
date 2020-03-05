@@ -9,14 +9,17 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.estafet.openshift.boost.console.api.feature.message.GitCommit;
 import com.estafet.openshift.boost.console.api.feature.message.GitTag;
-import com.estafet.openshift.boost.console.api.feature.variables.EnvVars;
+import com.estafet.openshift.boost.console.api.feature.util.EnvUtil;
 
 @Service
+@CacheConfig(cacheNames = {"commits", "tags"})
 public class GithubService {
 
 	private static final Logger log = LoggerFactory.getLogger(GithubService.class);
@@ -24,6 +27,7 @@ public class GithubService {
 	@Autowired
 	private RestTemplate restTemplate;
 
+	@Cacheable(cacheNames = {"commits"})
 	public List<GitCommit> getRepoCommits(String repo) {
 		List<GitCommit> commits = new ArrayList<GitCommit>();
 		List<GitCommit> pageCommits = new ArrayList<GitCommit>();
@@ -37,7 +41,7 @@ public class GithubService {
 	}
 
 	private List<GitCommit> getRepoCommits(String repo, int page) {
-		String url = "https://api.github.com/repos/" + EnvVars.getGithub() + "/" + repo + "/commits?page=" + page;
+		String url = "https://api.github.com/repos/" + EnvUtil.getGithub() + "/" + repo + "/commits?page=" + page;
 		log.info(url);
 		return Arrays.asList(restTemplate.getForObject(url, GitCommit[].class));
 	}
@@ -54,6 +58,7 @@ public class GithubService {
 		return null;
 	}
 
+	@Cacheable(cacheNames = {"tags"})
 	public Map<String, List<GitCommit>> getGitCommitsByTags(String repo) {
 		Map<String, List<GitCommit>> map = new HashMap<String, List<GitCommit>>();
 		List<GitCommit> commits = getRepoCommits(repo);
@@ -74,7 +79,7 @@ public class GithubService {
 	}
 
 	private List<GitTag> getGitTags(String repo) {
-		String url = "https://api.github.com/repos/" + EnvVars.getGithub() + "/" + repo + "/tags";
+		String url = "https://api.github.com/repos/" + EnvUtil.getGithub() + "/" + repo + "/tags";
 		log.info(url);
 		return Arrays.asList(restTemplate.getForObject(url, GitTag[].class));
 	}

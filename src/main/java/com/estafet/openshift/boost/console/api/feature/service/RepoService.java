@@ -10,8 +10,8 @@ import com.estafet.openshift.boost.console.api.feature.message.BaseEnv;
 import com.estafet.openshift.boost.console.api.feature.model.Repo;
 import com.estafet.openshift.boost.console.api.feature.openshift.BuildConfigParser;
 import com.estafet.openshift.boost.console.api.feature.openshift.OpenShiftClient;
-import com.estafet.openshift.boost.console.api.feature.util.RepoUtils;
-import com.estafet.openshift.boost.console.api.feature.variables.EnvVars;
+import com.estafet.openshift.boost.console.api.feature.util.EnvUtil;
+import com.estafet.openshift.boost.console.api.feature.util.RepoUtil;
 import com.openshift.restclient.model.IBuildConfig;
 
 @Service
@@ -43,8 +43,8 @@ public class RepoService {
 	}
 	
 	private String getRepo(IBuildConfig buildConfig) {
-		return RepoUtils.getRepoFromURL(
-				EnvVars.getGithub(),
+		return RepoUtil.getRepoFromURL(
+				EnvUtil.getGithub(),
 				new BuildConfigParser(buildConfig).getGitRepository());
 	}
 

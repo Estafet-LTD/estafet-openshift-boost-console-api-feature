@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jms.DefaultJmsListenerContainerFactoryConfigurer;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +20,8 @@ import org.springframework.jms.support.converter.SimpleMessageConverter;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
 
+import com.estafet.openshift.boost.console.api.feature.util.EnvUtil;
+
 import io.opentracing.Tracer;
 import io.opentracing.contrib.jms.spring.TracingJmsTemplate;
 
@@ -27,6 +30,7 @@ import io.opentracing.contrib.jms.spring.TracingJmsTemplate;
 @EnableAutoConfiguration
 @SpringBootApplication
 @EnableScheduling
+@EnableCaching
 public class Application extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
@@ -47,7 +51,7 @@ public class Application extends SpringBootServletInitializer {
 
 	@Bean
 	public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder) {
-		return restTemplateBuilder.build();
+		return restTemplateBuilder.basicAuthorization(EnvUtil.getGithubUser(), EnvUtil.getGithubPwd()).build();
 	}
 
 	@Bean

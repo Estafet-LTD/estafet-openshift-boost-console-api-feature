@@ -44,6 +44,12 @@ parameters:
 - description: Defines the github organisation
   name: GITHUB
   required: true        
+- description: Defines the github organisation
+  name: GITHUB_USER
+  required: true
+- description: Defines the github organisation
+  name: GITHUB_PASSWORD
+  required: true  
 objects:
 - apiVersion: v1
   kind: DeploymentConfig
@@ -83,6 +89,10 @@ objects:
                 value: ${PRODUCT}     
               - name: GITHUB
                 value: ${GITHUB}                        
+              - name: GITHUB_USER
+                value: ${GITHUB_USER}
+              - name: GITHUB_PASSWORD
+                value: ${GITHUB_PASSWORD}
               - name: OPENSHIFT_HOST_PORT
                 value: ${OPENSHIFT_HOST_PORT}   
               - name: OPENSHIFT_USER
