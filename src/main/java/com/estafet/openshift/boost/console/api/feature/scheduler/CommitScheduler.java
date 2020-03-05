@@ -33,7 +33,7 @@ public class CommitScheduler {
 	private GithubService githubService;
 	
 	@Transactional(readOnly = true)
-	@Scheduled(fixedRate = 60000)
+	@Scheduled(fixedRate = 300000)
 	public void execute() {
 		for (Repo repo : repoDAO.getRepos()) {
 			for (GitCommit commit : githubService.getRepoCommits(repo.getName())) {
