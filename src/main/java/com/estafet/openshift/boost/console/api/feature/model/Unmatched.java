@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 @DiscriminatorValue("UNMATCHED")
 public class Unmatched extends RepoCommit {
 
-	
+	public static UnmatchedBuilder builder() {
+		return new UnmatchedBuilder();
+	}
 	
 }

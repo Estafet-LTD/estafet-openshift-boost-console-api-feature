@@ -33,7 +33,11 @@ public class FeatureBuilder {
 	public Feature build() {
 		Feature feature = new Feature();
 		feature.setFeatureId(featureId);
-		feature.setDescription(description);
+		if (description.length() > 255) {
+			feature.setDescription(description.substring(0, 255));	
+		} else {
+			feature.setDescription(description);	
+		}
 		feature.setStatus(status);
 		feature.setTitle(title);
 		return feature;

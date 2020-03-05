@@ -34,6 +34,10 @@ public class Repo {
 		return false;
 	}
 
+	public boolean contains(RepoCommit repoCommit) {
+		return commits.contains(repoCommit);
+	}
+	
 	public void addCommit(RepoCommit repoCommit) {
 		commits.add(repoCommit);
 		repoCommit.setRepo(this);

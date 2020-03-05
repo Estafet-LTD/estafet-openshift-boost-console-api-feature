@@ -1,7 +1,5 @@
 package com.estafet.openshift.boost.console.api.feature.dao;
 
-import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -17,10 +15,6 @@ public class EnvDAO {
 	
 	public Env getEnv(String envId) {
 		return entityManager.find(Env.class, envId);
-	}
-		
-	public List<Env> getEnvs() {
-		return null;
 	}
 
 	public void updateEnv(Env env) {

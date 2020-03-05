@@ -9,7 +9,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -19,7 +18,6 @@ import com.estafet.openshift.boost.console.api.feature.message.GitTag;
 import com.estafet.openshift.boost.console.api.feature.util.EnvUtil;
 
 @Service
-@CacheConfig(cacheNames = {"commits", "tags"})
 public class GithubService {
 
 	private static final Logger log = LoggerFactory.getLogger(GithubService.class);
@@ -33,14 +31,14 @@ public class GithubService {
 		List<GitCommit> pageCommits = new ArrayList<GitCommit>();
 		int page = 1;
 		do {
-			pageCommits = getRepoCommits(repo, page);
+			pageCommits = getRepoCommitsByPage(repo, page);
 			commits.addAll(pageCommits);
 			page++;
 		} while (!pageCommits.isEmpty());
 		return commits;
 	}
 
-	private List<GitCommit> getRepoCommits(String repo, int page) {
+	private List<GitCommit> getRepoCommitsByPage(String repo, int page) {
 		String url = "https://api.github.com/repos/" + EnvUtil.getGithub() + "/" + repo + "/commits?page=" + page;
 		log.info(url);
 		return Arrays.asList(restTemplate.getForObject(url, GitCommit[].class));
