@@ -1,8 +1,10 @@
-package com.estafet.openshift.boost.console.api.feature.model;
+package com.estafet.openshift.boost.console.api.feature.util;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+
+import com.estafet.openshift.boost.console.api.feature.util.Version;
 
 public class VersionTest {
 

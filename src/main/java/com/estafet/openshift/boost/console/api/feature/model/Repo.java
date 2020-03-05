@@ -22,7 +22,7 @@ public class Repo {
 	@Column(name = "MICROSERVICE", nullable = false)
 	private String microservice;
 
-	@OneToMany(mappedBy = "repo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "repo", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<RepoCommit> commits = new HashSet<RepoCommit>();
 
 	public boolean contains(Feature feature) {
@@ -34,6 +34,15 @@ public class Repo {
 		return false;
 	}
 
+	public RepoCommit getCommit(String commitId) {
+		for (RepoCommit commit : commits) {
+			if (commit.getSha().equals(commitId)) {
+				return commit;
+			}
+		}
+		return null;
+	}
+	
 	public boolean contains(RepoCommit repoCommit) {
 		return commits.contains(repoCommit);
 	}

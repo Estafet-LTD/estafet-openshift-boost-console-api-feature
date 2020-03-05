@@ -21,7 +21,7 @@ import com.estafet.openshift.boost.console.api.feature.model.Matched;
 import com.estafet.openshift.boost.console.api.feature.model.MatchedBuilder;
 import com.estafet.openshift.boost.console.api.feature.model.Microservice;
 import com.estafet.openshift.boost.console.api.feature.model.Repo;
-import com.estafet.openshift.boost.console.api.feature.model.Version;
+import com.estafet.openshift.boost.console.api.feature.util.Version;
 import com.estafet.openshift.boost.messages.model.FeatureMessage;
 
 @Service
@@ -53,7 +53,7 @@ public class FeatureService {
 					for (Matched matched : feature.getMatched()) {
 						Version matchedVersion = new Version(matched.getVersion());
 						Version microserviceVersion = new Version(microservice.getVersion());
-						if (matchedVersion.isLessThanOrEqual(microserviceVersion)) {
+						if (microserviceVersion.isSnapshot() || matchedVersion.isLessThanOrEqual(microserviceVersion)) {
 							EnvFeature envFeature = createEnvFeature(microservice, feature);
 							env.addEnvFeature(envFeature);
 							envDAO.updateEnv(env);

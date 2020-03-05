@@ -6,7 +6,6 @@ import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 
 import org.springframework.stereotype.Repository;
 
@@ -32,7 +31,7 @@ public class RepoDAO {
 
 	@SuppressWarnings("unchecked")
 	public List<Repo> getRepos() {
-		return entityManager.createQuery("Select r from Repo r").getResultList();
+		return entityManager.createQuery("Select DISTINCT r from Repo r JOIN FETCH r.commits c LEFT JOIN FETCH c.feature f").getResultList();
 	}
 	
 	public Map<String, String> reposMap() {
@@ -42,12 +41,6 @@ public class RepoDAO {
 			microservices.put(repo.getMicroservice(), repo.getName());
 		}
 		return microservices;
-	}
-	
-	public Repo getRepoByMicroservice(String microservice) {
-		TypedQuery<Repo> query = entityManager
-				.createQuery("select r from Repo r where r.microservice = ?1", Repo.class);
-		return query.setParameter(1, microservice).getSingleResult();
 	}
 
 }

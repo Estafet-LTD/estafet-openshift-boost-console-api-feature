@@ -7,6 +7,16 @@ public abstract class BaseEnv {
 	private String name;
 
 	private String updatedDate;
+	
+	private boolean live;
+
+	public boolean isLive() {
+		return live;
+	}
+
+	public void setLive(boolean live) {
+		this.live = live;
+	}
 
 	public String getUpdatedDate() {
 		return updatedDate;

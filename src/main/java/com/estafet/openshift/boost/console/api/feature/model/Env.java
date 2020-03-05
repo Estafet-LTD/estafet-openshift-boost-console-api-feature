@@ -31,7 +31,7 @@ public class Env {
 	@OneToMany(mappedBy = "env", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<EnvFeature> envFeatures = new HashSet<EnvFeature>();
 
-	@OneToMany(mappedBy = "env", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "env", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<Microservice> microservices = new HashSet<Microservice>();
 
 	public boolean isLive() {

@@ -1,5 +1,7 @@
 package com.estafet.openshift.boost.console.api.feature.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +19,8 @@ import com.openshift.restclient.model.IBuildConfig;
 @Service
 public class RepoService {
 	
+	private static final Logger log = LoggerFactory.getLogger(RepoService.class);
+	
 	@Autowired
 	private OpenShiftClient client;
 	
@@ -25,6 +29,7 @@ public class RepoService {
 	
 	@Transactional
 	public void updateRepos(BaseEnv env) {
+		log.info("updateRepos for env - " + env.getName());
 		for (BaseApp app : env.getApps()) {
 			updateRepo(env, app);
 		}

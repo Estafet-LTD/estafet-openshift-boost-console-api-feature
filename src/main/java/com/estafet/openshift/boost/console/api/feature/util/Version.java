@@ -1,4 +1,4 @@
-package com.estafet.openshift.boost.console.api.feature.model;
+package com.estafet.openshift.boost.console.api.feature.util;
 
 import java.util.StringTokenizer;
 
@@ -8,11 +8,22 @@ public class Version {
 	private final int minor;
 	private final int revision;
 
+	private final boolean snapshot;
+
 	public Version(String version) {
+		if (version.endsWith("-SNAPSHOT")) {
+			snapshot = true;
+		} else {
+			snapshot = false;
+		}
 		StringTokenizer tokenizer = new StringTokenizer(version, ".");
 		major = Integer.parseInt(tokenizer.nextToken());
 		minor = Integer.parseInt(tokenizer.nextToken());
 		revision = Integer.parseInt(tokenizer.nextToken());
+	}
+
+	public boolean isSnapshot() {
+		return snapshot;
 	}
 
 	public boolean isLessThanOrEqual(Version other) {
