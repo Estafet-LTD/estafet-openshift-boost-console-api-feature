@@ -31,7 +31,7 @@ public class RepoDAO {
 
 	@SuppressWarnings("unchecked")
 	public List<Repo> getRepos() {
-		return entityManager.createQuery("Select DISTINCT r from Repo r JOIN FETCH r.commits c LEFT JOIN FETCH c.feature f").getResultList();
+		return entityManager.createQuery("Select DISTINCT r from Repo r LEFT JOIN FETCH r.commits c LEFT JOIN FETCH c.feature f").getResultList();
 	}
 	
 	public Map<String, String> reposMap() {
