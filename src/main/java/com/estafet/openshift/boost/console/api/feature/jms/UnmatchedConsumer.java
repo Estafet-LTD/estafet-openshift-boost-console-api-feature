@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
 
-import com.estafet.openshift.boost.console.api.feature.dao.CommitDAO;
 import com.estafet.openshift.boost.console.api.feature.service.CommitService;
 import com.estafet.openshift.boost.messages.model.UnmatchedCommitMessage;
 
