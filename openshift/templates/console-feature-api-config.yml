@@ -13,7 +13,7 @@ parameters:
   required: true
 - description: Defines max memory
   name: MAX_MEMORY
-  value: 500Mi
+  value: 600Mi
   required: true  
 - description: Defines min memory
   name: MIN_MEMORY
