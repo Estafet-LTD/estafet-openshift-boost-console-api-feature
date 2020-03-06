@@ -12,30 +12,31 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "MICROSERVICE")
-public class Microservice {
+@Table(name = "ENV_MICROSERVICE")
+public class EnvMicroservice {
 
 	@Id
-	@SequenceGenerator(name = "MICROSERVICE_ID_SEQ", sequenceName = "MICROSERVICE_ID_SEQ", allocationSize = 1)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "MICROSERVICE_ID_SEQ")
-	@Column(name = "MICROSERVICE_ID")
+	@SequenceGenerator(name = "ENV_MICROSERVICE_ID_SEQ", sequenceName = "ENV_MICROSERVICE_ID_SEQ", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ENV_MICROSERVICE_ID_SEQ")
+	@Column(name = "ENV_MICROSERVICE_ID")
 	private Long id;
 
-	@Column(name = "NAME", nullable = false)
-	private String name;
+	@Column(name = "MICROSERVICE", nullable = false)
+	private String microservice;
 
 	@Column(name = "VERSION", nullable = false)
 	private String version;
 
-	@Column(name = "REPO", nullable = false)
-	private String repo;
-	
 	@Column(name = "DEPLOYED_DATE", nullable = false)
 	private String deployedDate;
 
 	@ManyToOne
 	@JoinColumn(name = "ENV_ID", nullable = false, referencedColumnName = "ENV_ID", foreignKey = @ForeignKey(name = "MICROSERVICE_TO_ENV_FK"))
 	private Env env;
+
+	@ManyToOne
+	@JoinColumn(name = "REPO_ID", nullable = false, referencedColumnName = "REPO_ID", foreignKey = @ForeignKey(name = "MICROSERVICE_TO_REPO_FK"))
+	private Repo repo;
 
 	public String getDeployedDate() {
 		return deployedDate;
@@ -45,11 +46,11 @@ public class Microservice {
 		this.deployedDate = deployedDate;
 	}
 
-	public String getRepo() {
+	public Repo getRepo() {
 		return repo;
 	}
 
-	public void setRepo(String repo) {
+	public void setRepo(Repo repo) {
 		this.repo = repo;
 	}
 
@@ -61,12 +62,12 @@ public class Microservice {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public String getMicroservice() {
+		return microservice;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setMicroservice(String microservice) {
+		this.microservice = microservice;
 	}
 
 	public String getVersion() {
@@ -89,7 +90,8 @@ public class Microservice {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((env == null) ? 0 : env.hashCode());
+		result = prime * result + ((microservice == null) ? 0 : microservice.hashCode());
 		return result;
 	}
 
@@ -101,23 +103,28 @@ public class Microservice {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Microservice other = (Microservice) obj;
-		if (name == null) {
-			if (other.name != null)
+		EnvMicroservice other = (EnvMicroservice) obj;
+		if (env == null) {
+			if (other.env != null)
 				return false;
-		} else if (!name.equals(other.name))
+		} else if (!env.equals(other.env))
+			return false;
+		if (microservice == null) {
+			if (other.microservice != null)
+				return false;
+		} else if (!microservice.equals(other.microservice))
 			return false;
 		return true;
 	}
-	
-	public static MicroserviceBuilder builder() {
-		return new MicroserviceBuilder();
+
+	public static EnvMicroserviceBuilder builder() {
+		return new EnvMicroserviceBuilder();
 	}
 
-	public void update(Microservice microservice) {
-		this.version = microservice.version;
-		this.repo = microservice.repo;
-		this.deployedDate = microservice.deployedDate;
+	public void update(EnvMicroservice envMicroservice) {
+		this.version = envMicroservice.version;
+		this.repo = envMicroservice.repo;
+		this.deployedDate = envMicroservice.deployedDate;
 	}
 
 }

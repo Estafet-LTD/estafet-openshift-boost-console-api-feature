@@ -82,7 +82,8 @@ public class EnvFeature {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((env == null) ? 0 : env.hashCode());
+		result = prime * result + ((feature == null) ? 0 : feature.hashCode());
 		return result;
 	}
 
@@ -95,18 +96,23 @@ public class EnvFeature {
 		if (getClass() != obj.getClass())
 			return false;
 		EnvFeature other = (EnvFeature) obj;
-		if (id == null) {
-			if (other.id != null)
+		if (env == null) {
+			if (other.env != null)
 				return false;
-		} else if (!id.equals(other.id))
+		} else if (!env.equals(other.env))
+			return false;
+		if (feature == null) {
+			if (other.feature != null)
+				return false;
+		} else if (!feature.equals(other.feature))
 			return false;
 		return true;
 	}
-	
+
 	public static EnvFeatureBuilder builder() {
 		return new EnvFeatureBuilder();
 	}
-	
+
 	public EnvFeatureMessage getEnvFeatureMessage() {
 		return EnvFeatureMessage.builder()
 				.setDeployedDate(deployedDate)
@@ -119,7 +125,7 @@ public class EnvFeature {
 				.setTitle(feature.getTitle())
 				.build();
 	}
-	
+
 	public FeatureDTO getFeatureDTO() {
 		return FeatureDTO.builder()
 				.setDescription(feature.getDescription())

@@ -3,8 +3,10 @@ package com.estafet.openshift.boost.console.api.feature.service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +17,6 @@ import org.springframework.web.client.RestTemplate;
 
 import com.estafet.openshift.boost.console.api.feature.message.GitCommit;
 import com.estafet.openshift.boost.console.api.feature.message.GitTag;
-import com.estafet.openshift.boost.console.api.feature.util.EnvUtil;
 
 @Service
 public class GithubService {
@@ -25,61 +26,63 @@ public class GithubService {
 	@Autowired
 	private RestTemplate restTemplate;
 
-	@Cacheable(cacheNames = {"commits"})
-	public List<GitCommit> getRepoCommits(String repo) {
+	@Cacheable(cacheNames = { "commits" })
+	public List<GitCommit> getRepoCommits(String github, String repo) {
 		List<GitCommit> commits = new ArrayList<GitCommit>();
 		List<GitCommit> pageCommits = new ArrayList<GitCommit>();
 		int page = 1;
 		do {
-			pageCommits = getRepoCommitsByPage(repo, page);
+			pageCommits = getRepoCommitsByPage(github, repo, page);
 			commits.addAll(pageCommits);
 			page++;
 		} while (!pageCommits.isEmpty());
 		return commits;
 	}
 
-	private List<GitCommit> getRepoCommitsByPage(String repo, int page) {
-		String url = "https://api.github.com/repos/" + EnvUtil.getGithub() + "/" + repo + "/commits?page=" + page;
+	private List<GitCommit> getRepoCommitsByPage(String github, String repo, int page) {
+		String url = "https://api.github.com/repos/" + github + "/" + repo + "/commits?page=" + page;
 		log.info(url);
 		return Arrays.asList(restTemplate.getForObject(url, GitCommit[].class));
 	}
 
-	public String getVersionForCommit(String repo, String commitId) {
-		Map<String, List<GitCommit>> commits = getGitCommitsByTags(repo);
-		for (String version : commits.keySet()) {
-			for (GitCommit commit : commits.get(version)) {
-				if (commit.getSha().equals(commitId)) {
-					return version;
-				}
+	public String getVersionForCommit(String github, String repo, String commitId) {
+		GitTag[] gitTags = getGitTags(github, repo);
+		Map<String, Set<String>> commits = getGitCommitsByTags(github, repo, gitTags);
+		for (GitTag gitTag : gitTags) {
+			if (commits.get(gitTag.getName()).contains(commitId)) {
+				return gitTag.getName();
 			}
 		}
-		return null;
+		throw new RuntimeException("Cannot find version for commit id " + commitId + " in repo " + repo);
 	}
 
-	@Cacheable(cacheNames = {"tags"})
-	public Map<String, List<GitCommit>> getGitCommitsByTags(String repo) {
-		Map<String, List<GitCommit>> map = new HashMap<String, List<GitCommit>>();
-		List<GitCommit> commits = getRepoCommits(repo);
-		List<GitTag> tags = getGitTags(repo);
-		for (GitTag tag : tags) {
-			map.put(tag.getName(), subList(tag, commits));
-		}
-		return map;
-	}
-
-	private List<GitCommit> subList(GitTag tag, List<GitCommit> commits) {
-		for (int i = 0; i < commits.size(); i++) {
-			if (commits.get(i).getSha().equals(tag.getCommit().getSha())) {
-				return commits.subList(i, commits.size());
+	@Cacheable(cacheNames = { "tags" })
+	public Map<String, Set<String>> getGitCommitsByTags(String github, String repo, GitTag[] gitTags) {
+		Map<String, String> commitTagMap = commitTagMap(gitTags);
+		Map<String, Set<String>> result = new HashMap<String, Set<String>>();
+		Set<String> commitSet = null;
+		for (GitCommit commit : getRepoCommits(github, repo)) {
+			if (commitTagMap.get(commit.getSha()) != null) {
+				commitSet = new HashSet<String>();
+				result.put(commitTagMap.get(commit.getSha()), commitSet);
 			}
+			commitSet.add(commit.getSha());
 		}
-		return null;
+		return result;
+	}
+	
+	private Map<String, String> commitTagMap(GitTag[] gitTags) {
+		Map<String, String> commitTagMap = new HashMap<String, String>();
+		for (GitTag gitTag : gitTags) {
+			commitTagMap.put(gitTag.getCommit().getSha(), gitTag.getName());
+		}
+		return commitTagMap; 
 	}
 
-	private List<GitTag> getGitTags(String repo) {
-		String url = "https://api.github.com/repos/" + EnvUtil.getGithub() + "/" + repo + "/tags";
+	private GitTag[] getGitTags(String github, String repo) {
+		String url = "https://api.github.com/repos/" + github + "/" + repo + "/tags";
 		log.info(url);
-		return Arrays.asList(restTemplate.getForObject(url, GitTag[].class));
+		return restTemplate.getForObject(url, GitTag[].class);
 	}
 
 }

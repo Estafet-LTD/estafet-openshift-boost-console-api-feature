@@ -34,11 +34,11 @@ public class RepoDAO {
 		return entityManager.createQuery("Select DISTINCT r from Repo r LEFT JOIN FETCH r.commits c LEFT JOIN FETCH c.feature f").getResultList();
 	}
 	
-	public Map<String, String> reposMap() {
-		Map<String, String> microservices = new HashMap<String, String>();
+	public Map<String, Repo> microservicesReposMap() {
+		Map<String, Repo> microservices = new HashMap<String, Repo>();
 		List<Repo> repos = getRepos();
 		for (Repo repo : repos) {
-			microservices.put(repo.getMicroservice(), repo.getName());
+			microservices.put(repo.getMicroservice(), repo);
 		}
 		return microservices;
 	}

@@ -12,6 +12,7 @@ import com.estafet.openshift.boost.console.api.feature.model.Matched;
 import com.estafet.openshift.boost.console.api.feature.model.Repo;
 import com.estafet.openshift.boost.console.api.feature.model.RepoCommit;
 import com.estafet.openshift.boost.console.api.feature.service.GithubService;
+import com.estafet.openshift.boost.console.api.feature.util.EnvUtil;
 
 @Component
 public class CommitScheduler {
@@ -29,7 +30,7 @@ public class CommitScheduler {
 	@Scheduled(fixedRate = 300000)
 	public void execute() {
 		for (Repo repo : repoDAO.getRepos()) {
-			for (GitCommit gitCommit : githubService.getRepoCommits(repo.getName())) {
+			for (GitCommit gitCommit : githubService.getRepoCommits(EnvUtil.getGithub(), repo.getName())) {
 				RepoCommit commit = repo.getCommit(gitCommit.getSha());
 				if (commit == null || (commit instanceof Matched && ((Matched)commit).getFeature().getStatus().equals("DONE"))) {
 					commitProducer.sendMessage(gitCommit.createCommitMessage(repo.getName()));

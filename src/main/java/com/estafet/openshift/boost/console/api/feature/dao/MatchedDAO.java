@@ -5,20 +5,16 @@ import javax.persistence.PersistenceContext;
 
 import org.springframework.stereotype.Repository;
 
-import com.estafet.openshift.boost.console.api.feature.model.Feature;
+import com.estafet.openshift.boost.console.api.feature.model.Matched;
 
 @Repository
-public class FeatureDAO {
+public class MatchedDAO {
 
 	@PersistenceContext
 	private EntityManager entityManager;
-
-	public Feature getFeatureById(String featureId) {
-		return entityManager.find(Feature.class, featureId);
+	
+	public Matched getMatched(String commitId) {
+		return entityManager.find(Matched.class, commitId);
 	}
-
-	public void create(Feature feature) {
-		entityManager.persist(feature);
-	}
-
+	
 }

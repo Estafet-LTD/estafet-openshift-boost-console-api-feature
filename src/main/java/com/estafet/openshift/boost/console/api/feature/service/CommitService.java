@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.estafet.openshift.boost.console.api.feature.dao.RepoDAO;
 import com.estafet.openshift.boost.console.api.feature.model.Repo;
 import com.estafet.openshift.boost.console.api.feature.model.Unmatched;
+import com.estafet.openshift.boost.console.api.feature.util.EnvUtil;
 import com.estafet.openshift.boost.messages.model.UnmatchedCommitMessage;
 
 @Service
@@ -31,10 +32,14 @@ public class CommitService {
 
 	private Unmatched createUnmatched(UnmatchedCommitMessage message, Repo repo) {
 		return Unmatched.builder()
-			.setRepo(repo)
-			.setSha(message.getCommitId())
-			.setVersion(githubService.getVersionForCommit(message.getRepo(), message.getCommitId()))
-			.build();
+						.setRepo(repo)
+						.setSha(message.getCommitId())
+						.setVersion(getVersion(message))
+						.build();
+	}
+
+	private String getVersion(UnmatchedCommitMessage message) {
+		return githubService.getVersionForCommit(EnvUtil.getGithub(), message.getRepo(), message.getCommitId());
 	}
 	
 }

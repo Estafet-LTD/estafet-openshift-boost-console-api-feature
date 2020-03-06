@@ -32,7 +32,7 @@ public class Env {
 	private Set<EnvFeature> envFeatures = new HashSet<EnvFeature>();
 
 	@OneToMany(mappedBy = "env", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private Set<Microservice> microservices = new HashSet<Microservice>();
+	private Set<EnvMicroservice> envMicroservices = new HashSet<EnvMicroservice>();
 
 	public boolean isLive() {
 		return live;
@@ -42,21 +42,21 @@ public class Env {
 		this.live = live;
 	}
 
-	public void addMicroservice(Microservice microservice) {
-		if (!microservices.contains(microservice)) {
-			microservices.add(microservice);
-			microservice.setEnv(this);
+	public void addMicroservice(EnvMicroservice envMicroservice) {
+		if (!envMicroservices.contains(envMicroservice)) {
+			envMicroservices.add(envMicroservice);
+			envMicroservice.setEnv(this);
 		} else {
-			getMicroservice(microservice.getName()).update(microservice);
+			getMicroservice(envMicroservice.getMicroservice()).update(envMicroservice);
 		}
 	}
 
-	public Set<Microservice> getMicroservices() {
-		return microservices;
+	public Set<EnvMicroservice> getMicroservices() {
+		return envMicroservices;
 	}
 
-	public void setMicroservices(Set<Microservice> microservices) {
-		this.microservices = microservices;
+	public void setMicroservices(Set<EnvMicroservice> envMicroservices) {
+		this.envMicroservices = envMicroservices;
 	}
 
 	public Set<Feature> getFeatures() {
@@ -85,10 +85,10 @@ public class Env {
 		}
 	}
 
-	public Microservice getMicroservice(String name) {
-		for (Microservice microservice : microservices) {
-			if (microservice.getName().equals(name)) {
-				return microservice;
+	public EnvMicroservice getMicroservice(String name) {
+		for (EnvMicroservice envMicroservice : envMicroservices) {
+			if (envMicroservice.getMicroservice().equals(name)) {
+				return envMicroservice;
 			}
 		}
 		return null;

@@ -1,9 +1,5 @@
 package com.estafet.openshift.boost.console.api.feature.message;
 
-import java.util.Map;
-
-import com.estafet.openshift.boost.console.api.feature.model.Microservice;
-
 public class BaseApp {
 
 	private String name;
@@ -34,15 +30,6 @@ public class BaseApp {
 
 	public final void setDeployedDate(String deployedDate) {
 		this.deployedDate = deployedDate;
-	}
-		
-	public Microservice createMicroservice(Map<String, String> microservicesMap) {
-		Microservice microservice = new Microservice();
-		microservice.setDeployedDate(deployedDate);
-		microservice.setName(name);
-		microservice.setVersion(version);
-		microservice.setRepo(microservicesMap.get(name));
-		return microservice;
 	}
 
 }

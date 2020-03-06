@@ -72,6 +72,7 @@ public abstract class RepoCommit {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((repo == null) ? 0 : repo.hashCode());
 		result = prime * result + ((sha == null) ? 0 : sha.hashCode());
 		return result;
 	}
@@ -85,6 +86,11 @@ public abstract class RepoCommit {
 		if (getClass() != obj.getClass())
 			return false;
 		RepoCommit other = (RepoCommit) obj;
+		if (repo == null) {
+			if (other.repo != null)
+				return false;
+		} else if (!repo.equals(other.repo))
+			return false;
 		if (sha == null) {
 			if (other.sha != null)
 				return false;
