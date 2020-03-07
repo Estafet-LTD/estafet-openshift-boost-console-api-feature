@@ -60,7 +60,7 @@ public class FeatureService {
 	}
 
 	private void updateRepo(Repo repo) {
-		repoDAO.update(repo);
+		repoDAO.updateRepo(repo);
 		for (Env env : repo.getEnvs()) {
 			env.setUpdatedDate(DateUtils.newDate());
 		}

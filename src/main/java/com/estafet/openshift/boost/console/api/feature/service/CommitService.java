@@ -26,7 +26,7 @@ public class CommitService {
 		Unmatched unmatched = createUnmatched(message, repo);
 		if (!repo.contains(unmatched)) {
 			repo.addCommit(unmatched);
-			repoDAO.update(repo);
+			repoDAO.updateRepo(repo);
 		}
 	}
 

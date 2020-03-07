@@ -126,6 +126,7 @@ public class EnvironmentService {
 		Repo repo = repoDAO.getRepo(repoId);
 		if (repo == null) {
 			repo = Repo.builder().setName(repoId).setMicroservice(app.getName()).build();
+			repoDAO.createRepo(repo);
 		}
 		return repo;
 	}

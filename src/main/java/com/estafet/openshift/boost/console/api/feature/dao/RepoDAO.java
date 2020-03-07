@@ -21,11 +21,11 @@ public class RepoDAO {
 		return entityManager.find(Repo.class, repoId);
 	}
 
-	public void create(Repo repo) {
+	public void createRepo(Repo repo) {
 		entityManager.persist(repo);
 	}
 
-	public void update(Repo repo) {
+	public void updateRepo(Repo repo) {
 		entityManager.merge(repo);
 	}
 
