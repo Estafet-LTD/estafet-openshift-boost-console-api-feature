@@ -112,4 +112,9 @@ public class EnvMicroservice {
 		this.deployedDate = envMicroservice.deployedDate;
 	}
 
+	@Override
+	public String toString() {
+		return "EnvMicroservice [id=" + id + ", microservice=" + microservice + ", env=" + env + "]";
+	}
+
 }

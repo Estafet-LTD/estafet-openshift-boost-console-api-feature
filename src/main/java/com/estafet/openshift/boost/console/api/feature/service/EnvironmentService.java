@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.estafet.openshift.boost.console.api.feature.dao.EnvDAO;
+import com.estafet.openshift.boost.console.api.feature.dao.EnvMicroserviceDAO;
 import com.estafet.openshift.boost.console.api.feature.dao.RepoDAO;
 import com.estafet.openshift.boost.console.api.feature.dto.EnvironmentDTO;
 import com.estafet.openshift.boost.console.api.feature.message.BaseApp;
@@ -60,6 +61,7 @@ public class EnvironmentService {
 					.setEnv(env)
 					.setVersion(app.getVersion())
 					.build();
+			log.info(env.getMicroservices().toString());
 		}
 		envDAO.updateEnv(env);
 		log.info("Microservices successfully updated for env - " + env.getName());

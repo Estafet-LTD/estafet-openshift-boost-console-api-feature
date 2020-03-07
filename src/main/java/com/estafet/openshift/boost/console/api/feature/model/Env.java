@@ -182,4 +182,9 @@ public class Env {
 		return new EnvBuilder();
 	}
 
+	@Override
+	public String toString() {
+		return "Env [name=" + name + "]";
+	}
+
 }
