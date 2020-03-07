@@ -53,6 +53,7 @@ public class Env {
 			EnvMicroservice envMicroservice = EnvMicroservice.builder()
 					.setDeployedDate(app.getDeployedDate())
 					.setVersion(app.getVersion())
+					.setMicroservice(app.getName())
 					.build();
 			envMicroservices.add(envMicroservice);
 			envMicroservice.setEnv(this);
