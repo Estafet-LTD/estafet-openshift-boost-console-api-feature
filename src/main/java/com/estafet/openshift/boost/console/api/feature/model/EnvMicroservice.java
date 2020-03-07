@@ -34,24 +34,12 @@ public class EnvMicroservice {
 	@JoinColumn(name = "ENV_ID", nullable = false, referencedColumnName = "ENV_ID", foreignKey = @ForeignKey(name = "MICROSERVICE_TO_ENV_FK"))
 	private Env env;
 
-	@ManyToOne
-	@JoinColumn(name = "REPO_ID", nullable = false, referencedColumnName = "REPO_ID", foreignKey = @ForeignKey(name = "MICROSERVICE_TO_REPO_FK"))
-	private Repo repo;
-
 	public String getDeployedDate() {
 		return deployedDate;
 	}
 
 	public void setDeployedDate(String deployedDate) {
 		this.deployedDate = deployedDate;
-	}
-
-	public Repo getRepo() {
-		return repo;
-	}
-
-	public void setRepo(Repo repo) {
-		this.repo = repo;
 	}
 
 	public String getMicroservice() {

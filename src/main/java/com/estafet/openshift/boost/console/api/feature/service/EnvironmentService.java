@@ -48,20 +48,12 @@ public class EnvironmentService {
 	public void updateMicroservices(BaseEnv envMessage) {
 		log.info("updateMicroservices for env - " + envMessage.getName());
 		Env env = envDAO.getEnv(envMessage.getName());
-		boolean envUpdated = false;
 		for (BaseApp app : envMessage.getApps()) {
 			log.info("create envMicroservice for " + app.getName());
-			if (env.updateMicroservice(app, repoDAO.getRepoByMicroservice(app.getName()))) {
-				envUpdated = true;
-			}
+			env.updateMicroservice(app, repoDAO.getRepoByMicroservice(app.getName()));
 		}
-		if (envUpdated) {
-			envDAO.updateEnv(env);
-			log.info("Microservices successfully updated for env - " + env.getName());
-		} else {
-			log.info("No microservices need to be updated for env - " + env.getName());
-		}
-
+		env.setUpdatedDate(envMessage.getUpdatedDate()); // reset the date
+		envDAO.updateEnv(env);
 	}
 
 }

@@ -48,31 +48,25 @@ public class Env {
 		this.live = live;
 	}
 
-	public boolean updateMicroservice(BaseApp app, Repo repo) {
+	public void updateMicroservice(BaseApp app, Repo repo) {
 		if (getMicroservice(app.getName()) == null) {
 			EnvMicroservice envMicroservice = EnvMicroservice.builder()
 					.setDeployedDate(app.getDeployedDate())
-					.setRepo(repo)
 					.setVersion(app.getVersion())
 					.build();
 			envMicroservices.add(envMicroservice);
 			envMicroservice.setEnv(this);
 			log.info("added - " + app.getName());
-			return true;
 		} else {
-			boolean updated = false;
 			EnvMicroservice envMicroservice = getMicroservice(app.getName());
 			if (!envMicroservice.getVersion().equals(app.getVersion())) {
 				envMicroservice.setVersion(app.getVersion());
-				updated = true;
 				log.info("version updated - " + app.getName());
 			}
 			if (!envMicroservice.getDeployedDate().equals(app.getDeployedDate())) {
 				envMicroservice.setDeployedDate(app.getDeployedDate());
-				updated = true;
 				log.info("deployed date updated - " + app.getName());
 			}
-			return updated;
 		}
 		
 	}
@@ -83,18 +77,6 @@ public class Env {
 
 	public void setMicroservices(Set<EnvMicroservice> envMicroservices) {
 		this.envMicroservices = envMicroservices;
-	}
-
-	public Set<Matched> getMatches() {
-		Set<Matched> matches = new HashSet<Matched>();
-		for (EnvMicroservice envMicroservice : envMicroservices) {
-			for (RepoCommit commit : envMicroservice.getRepo().getCommits()) {
-				if (commit instanceof Matched) {
-					matches.add((Matched)commit);
-				}
-			}
-		}
-		return matches;
 	}
 	
 	public Set<Feature> getFeatures() {

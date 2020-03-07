@@ -27,23 +27,6 @@ public class Repo {
 	@OneToMany(mappedBy = "repo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<RepoCommit> commits = new HashSet<RepoCommit>();
 
-	@OneToMany(mappedBy = "repo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private Set<EnvMicroservice> envMicroservices = new HashSet<EnvMicroservice>();
-
-	public void addEnvMicroservice(EnvMicroservice envMicroservice) {
-		envMicroservices.add(envMicroservice);
-		envMicroservice.setRepo(this);
-		envMicroservice.setMicroservice(microservice);
-	}
-
-	public Set<Env> getEnvs() {
-		Set<Env> envs = new HashSet<Env>();
-		for (EnvMicroservice envMicroservice : envMicroservices) {
-			envs.add(envMicroservice.getEnv());
-		}
-		return envs;
-	}
-
 	public Set<Feature> getFeatures() {
 		Set<Feature> features = new HashSet<Feature>();
 		for (RepoCommit commit : commits) {
@@ -70,14 +53,6 @@ public class Repo {
 	public void addCommit(RepoCommit repoCommit) {
 		commits.add(repoCommit);
 		repoCommit.setRepo(this);
-	}
-
-	public Set<EnvMicroservice> getEnvMicroservices() {
-		return envMicroservices;
-	}
-
-	public void setEnvMicroservices(Set<EnvMicroservice> envMicroservices) {
-		this.envMicroservices = envMicroservices;
 	}
 
 	public String getName() {
