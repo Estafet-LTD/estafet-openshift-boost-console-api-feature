@@ -22,10 +22,10 @@ public class Repo {
 	@Column(name = "MICROSERVICE", nullable = false)
 	private String microservice;
 
-	@OneToMany(mappedBy = "repo", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "repo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<RepoCommit> commits = new HashSet<RepoCommit>();
 	
-	@OneToMany(mappedBy = "repo", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "repo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<EnvMicroservice> envMicroservices = new HashSet<EnvMicroservice>();
 
 	public void addEnvMicroservice(EnvMicroservice envMicroservice) {

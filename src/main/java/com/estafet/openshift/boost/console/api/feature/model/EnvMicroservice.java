@@ -123,7 +123,6 @@ public class EnvMicroservice {
 
 	public void update(EnvMicroservice envMicroservice) {
 		this.version = envMicroservice.version;
-		this.repo = envMicroservice.repo;
 		this.deployedDate = envMicroservice.deployedDate;
 	}
 

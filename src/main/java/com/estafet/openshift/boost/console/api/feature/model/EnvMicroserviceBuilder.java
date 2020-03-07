@@ -9,6 +9,13 @@ public class EnvMicroserviceBuilder {
 	private String deployedDate;
 
 	private Repo repo;
+	
+	private Env env;
+
+	public EnvMicroserviceBuilder setEnv(Env env) {
+		this.env = env;
+		return this;
+	}
 
 	public EnvMicroserviceBuilder setMicroservice(String microservice) {
 		this.microservice = microservice;
@@ -35,6 +42,7 @@ public class EnvMicroserviceBuilder {
 		envMicroservice.setDeployedDate(deployedDate);
 		envMicroservice.setMicroservice(microservice);
 		envMicroservice.setVersion(version);
+		env.addEnvMicroservice(envMicroservice);
 		repo.addEnvMicroservice(envMicroservice);
 		return envMicroservice;
 	}

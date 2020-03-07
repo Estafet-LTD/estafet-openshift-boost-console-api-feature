@@ -28,10 +28,10 @@ public class Env {
 	@Column(name = "LIVE", nullable = false)
 	private boolean live = false;
 
-	@OneToMany(mappedBy = "env", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "env", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<EnvFeature> envFeatures = new HashSet<EnvFeature>();
 
-	@OneToMany(mappedBy = "env", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "env", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<EnvMicroservice> envMicroservices = new HashSet<EnvMicroservice>();
 
 	public boolean isLive() {
@@ -42,7 +42,7 @@ public class Env {
 		this.live = live;
 	}
 
-	public void addMicroservice(EnvMicroservice envMicroservice) {
+	public void addEnvMicroservice(EnvMicroservice envMicroservice) {
 		if (!envMicroservices.contains(envMicroservice)) {
 			envMicroservices.add(envMicroservice);
 			envMicroservice.setEnv(this);
@@ -176,6 +176,10 @@ public class Env {
 		} else if (!name.equals(other.name))
 			return false;
 		return true;
+	}
+	
+	public static EnvBuilder builder() {
+		return new EnvBuilder();
 	}
 
 }

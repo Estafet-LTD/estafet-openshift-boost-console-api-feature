@@ -66,7 +66,11 @@ public class GithubService {
 				commitSet = new HashSet<String>();
 				result.put(commitTagMap.get(commit.getSha()), commitSet);
 			}
-			commitSet.add(commit.getSha());
+			if (commitSet == null) {
+				log.warn("Cannot find corresponding tag for - commit " + commit.getSha() + " for repo " + repo);
+			} else {
+				commitSet.add(commit.getSha());	
+			}
 		}
 		return result;
 	}

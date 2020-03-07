@@ -1,5 +1,6 @@
 package com.estafet.openshift.boost.console.api.feature.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.estafet.openshift.boost.commons.lib.date.DateUtils;
 import com.estafet.openshift.boost.console.api.feature.dao.EnvDAO;
 import com.estafet.openshift.boost.console.api.feature.dao.RepoDAO;
 import com.estafet.openshift.boost.console.api.feature.dto.EnvironmentDTO;
@@ -50,19 +50,24 @@ public class EnvironmentService {
 	@Transactional
 	public void processEnvUpdate(BaseEnv envMessage) {
 		log.info("processEnvUpdate for env - " + envMessage.getName());
-		updateRepos(envMessage);
 		Env env = envDAO.getEnv(envMessage.getName());
 		if (env == null) {
-			env = new Env();
-			env.setLive(envMessage.isLive());
-			env.setName(envMessage.getName());
-			env.setUpdatedDate(DateUtils.newDate());
-			envDAO.createEnv(env);
+			env = createEnv(envMessage);
 		}
 		if (!env.getUpdatedDate().equals(envMessage.getUpdatedDate())) {
-			updateMicroservices(env, envMessage.getApps());
+			Map<String, Repo> reposMap = updateRepos(envMessage);
+			updateMicroservices(env, envMessage.getApps(), reposMap);
 			updateFeatures(env);
 		}
+	}
+
+	private Env createEnv(BaseEnv envMessage) {
+		Env env = Env.builder()
+				.setLive(envMessage.isLive())
+				.setName(envMessage.getName())
+				.build();
+		envDAO.createEnv(env);
+		return env;
 	}
 
 	@Transactional(readOnly = true)
@@ -70,18 +75,22 @@ public class EnvironmentService {
 		return envDAO.getEnv(env).getEnvironmentDTO();
 	}
 	
-	private void updateMicroservices(Env env, List<BaseApp> apps) {
-		Map<String, Repo> reposMap = repoDAO.microservicesReposMap();
+	private void updateMicroservices(Env env, List<BaseApp> apps, Map<String, Repo> reposMap) {
+		log.info("updateMicroservices for env - " + env.getName());
 		for (BaseApp app : apps) {
-			EnvMicroservice envMicroservice = EnvMicroservice.builder().setDeployedDate(app.getDeployedDate())
-					.setMicroservice(app.getName()).setRepo(reposMap.get(app.getName())).setVersion(app.getVersion())
+			EnvMicroservice.builder()
+					.setDeployedDate(app.getDeployedDate())
+					.setMicroservice(app.getName())
+					.setRepo(reposMap.get(app.getName()))
+					.setEnv(env)
+					.setVersion(app.getVersion())
 					.build();
-			env.addMicroservice(envMicroservice);
 		}
 		envDAO.updateEnv(env);
 	}
 
 	private void updateFeatures(Env env) {
+		log.info("updateFeatures for env - " + env.getName());
 		for (EnvMicroservice envMicroservice : env.getMicroservices()) {
 			for (RepoCommit commit : envMicroservice.getRepo().getCommits()) {
 				if (commit instanceof Matched) {
@@ -114,7 +123,7 @@ public class EnvironmentService {
 				new BuildConfigParser(buildConfig).getGitRepository());
 	}
 
-	private void updateRepo(BaseEnv env, BaseApp app) {
+	private Repo updateRepo(BaseEnv env, BaseApp app) {
 		IBuildConfig buildConfig = client.getBuildConfig(env.getName(), app.getName());
 		String repoId = getRepo(buildConfig);
 		Repo repo = repoDAO.getRepo(repoId);
@@ -124,13 +133,16 @@ public class EnvironmentService {
 			repo.setMicroservice(app.getName());
 			repoDAO.create(repo);
 		}
+		return repo;
 	}
 
-	private void updateRepos(BaseEnv env) {
+	private Map<String, Repo> updateRepos(BaseEnv env) {
 		log.info("updateRepos for env - " + env.getName());
+		Map<String, Repo> microservices = new HashMap<String, Repo>();
 		for (BaseApp app : env.getApps()) {
-			updateRepo(env, app);
+			microservices.put(app.getName(), updateRepo(env, app));
 		}
+		return microservices;
 	}
 
 }
