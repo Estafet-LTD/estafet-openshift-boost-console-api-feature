@@ -10,20 +10,22 @@ public class EnvFeatureId implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Feature feature;
-
 	private Env env;
-
-	public EnvFeatureId(Feature feature, Env env) {
-		this.feature = feature;
-		this.env = env;
-	}
 
 	public Feature getFeature() {
 		return feature;
 	}
 
+	public void setFeature(Feature feature) {
+		this.feature = feature;
+	}
+
 	public Env getEnv() {
 		return env;
+	}
+
+	public void setEnv(Env env) {
+		this.env = env;
 	}
 
 	@Override

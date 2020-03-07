@@ -10,20 +10,22 @@ public class EnvMicroserviceId implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Env env;
-
 	private String microservice;
-
-	public EnvMicroserviceId(Env env, String microservice) {
-		this.env = env;
-		this.microservice = microservice;
-	}
 
 	public Env getEnv() {
 		return env;
 	}
 
+	public void setEnv(Env env) {
+		this.env = env;
+	}
+
 	public String getMicroservice() {
 		return microservice;
+	}
+
+	public void setMicroservice(String microservice) {
+		this.microservice = microservice;
 	}
 
 	@Override
