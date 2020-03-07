@@ -1,4 +1,4 @@
-package com.estafet.openshift.boost.console.api.feature.util;
+package com.estafet.openshift.boost.console.api.feature.model;
 
 import java.util.StringTokenizer;
 
@@ -12,6 +12,7 @@ public class Version {
 
 	public Version(String version) {
 		if (version.endsWith("-SNAPSHOT")) {
+			version = version.replaceAll("\\-SNAPSHOT", "");
 			snapshot = true;
 		} else {
 			snapshot = false;

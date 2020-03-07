@@ -23,11 +23,11 @@ import com.estafet.openshift.boost.console.api.feature.model.Feature;
 import com.estafet.openshift.boost.console.api.feature.model.Matched;
 import com.estafet.openshift.boost.console.api.feature.model.Repo;
 import com.estafet.openshift.boost.console.api.feature.model.RepoCommit;
+import com.estafet.openshift.boost.console.api.feature.model.Version;
 import com.estafet.openshift.boost.console.api.feature.openshift.BuildConfigParser;
 import com.estafet.openshift.boost.console.api.feature.openshift.OpenShiftClient;
 import com.estafet.openshift.boost.console.api.feature.util.EnvUtil;
 import com.estafet.openshift.boost.console.api.feature.util.RepoUtil;
-import com.estafet.openshift.boost.console.api.feature.util.Version;
 import com.openshift.restclient.model.IBuildConfig;
 
 @Service
@@ -55,6 +55,7 @@ public class EnvironmentService {
 			env = createEnv(envMessage);
 		}
 		if (!env.getUpdatedDate().equals(envMessage.getUpdatedDate())) {
+			//env.setUpdatedDate(envMessage.getUpdatedDate());
 			Map<String, Repo> reposMap = updateRepos(envMessage);
 			updateMicroservices(env, envMessage.getApps(), reposMap);
 			updateFeatures(env);
@@ -62,10 +63,7 @@ public class EnvironmentService {
 	}
 
 	private Env createEnv(BaseEnv envMessage) {
-		Env env = Env.builder()
-				.setLive(envMessage.isLive())
-				.setName(envMessage.getName())
-				.build();
+		Env env = Env.builder().setLive(envMessage.isLive()).setName(envMessage.getName()).build();
 		envDAO.createEnv(env);
 		return env;
 	}
@@ -80,7 +78,6 @@ public class EnvironmentService {
 		for (BaseApp app : apps) {
 			EnvMicroservice.builder()
 					.setDeployedDate(app.getDeployedDate())
-					.setMicroservice(app.getName())
 					.setRepo(reposMap.get(app.getName()))
 					.setEnv(env)
 					.setVersion(app.getVersion())
@@ -128,10 +125,7 @@ public class EnvironmentService {
 		String repoId = getRepo(buildConfig);
 		Repo repo = repoDAO.getRepo(repoId);
 		if (repo == null) {
-			repo = new Repo();
-			repo.setName(repoId);
-			repo.setMicroservice(app.getName());
-			repoDAO.create(repo);
+			repo = Repo.builder().setName(repoId).setMicroservice(app.getName()).build();
 		}
 		return repo;
 	}

@@ -25,9 +25,9 @@ public class EnvFeatureBuilder {
 	
 	public EnvFeature build() {
 		EnvFeature envFeature = new EnvFeature();
-		feature.addEnvFeature(envFeature);
 		envFeature.setDeployedDate(deployedDate);
 		envFeature.setMigratedDate(migratedDate);
+		feature.addEnvFeature(envFeature);
 		return envFeature;
 	}
 	

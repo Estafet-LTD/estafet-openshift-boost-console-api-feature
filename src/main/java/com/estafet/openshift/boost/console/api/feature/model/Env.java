@@ -43,7 +43,7 @@ public class Env {
 	}
 
 	public void addEnvMicroservice(EnvMicroservice envMicroservice) {
-		if (!envMicroservices.contains(envMicroservice)) {
+		if (getMicroservice(envMicroservice.getMicroservice()) == null) {
 			envMicroservices.add(envMicroservice);
 			envMicroservice.setEnv(this);
 		} else {

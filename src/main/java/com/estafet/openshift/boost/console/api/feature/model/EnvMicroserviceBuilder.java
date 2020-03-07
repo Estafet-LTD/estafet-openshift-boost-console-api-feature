@@ -2,8 +2,6 @@ package com.estafet.openshift.boost.console.api.feature.model;
 
 public class EnvMicroserviceBuilder {
 
-	private String microservice;
-
 	private String version;
 
 	private String deployedDate;
@@ -14,11 +12,6 @@ public class EnvMicroserviceBuilder {
 
 	public EnvMicroserviceBuilder setEnv(Env env) {
 		this.env = env;
-		return this;
-	}
-
-	public EnvMicroserviceBuilder setMicroservice(String microservice) {
-		this.microservice = microservice;
 		return this;
 	}
 
@@ -40,7 +33,7 @@ public class EnvMicroserviceBuilder {
 	public EnvMicroservice build() {
 		EnvMicroservice envMicroservice = new EnvMicroservice();
 		envMicroservice.setDeployedDate(deployedDate);
-		envMicroservice.setMicroservice(microservice);
+		envMicroservice.setMicroservice(repo.getMicroservice());
 		envMicroservice.setVersion(version);
 		env.addEnvMicroservice(envMicroservice);
 		repo.addEnvMicroservice(envMicroservice);

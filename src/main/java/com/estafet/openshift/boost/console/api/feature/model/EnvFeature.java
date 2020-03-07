@@ -3,48 +3,35 @@ package com.estafet.openshift.boost.console.api.feature.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.estafet.openshift.boost.console.api.feature.dto.FeatureDTO;
 import com.estafet.openshift.boost.console.api.feature.message.EnvFeatureMessage;
 
 @Entity
+@IdClass(EnvFeatureId.class)
 @Table(name = "ENV_FEATURE")
 public class EnvFeature {
-
-	@Id
-	@SequenceGenerator(name = "ENV_FEATURE_SEQ", sequenceName = "ENV_FEATURE_SEQ", allocationSize = 1)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ENV_FEATURE_SEQ")
-	@Column(name = "ENV_FEATURE_ID")
-	private Long id;
-
+	
 	@Column(name = "DEPLOYED_DATE", nullable = false)
 	private String deployedDate;
 
 	@Column(name = "MIGRATED_DATE", nullable = true)
 	private String migratedDate;
 
+	@Id
 	@ManyToOne
 	@JoinColumn(name = "FEATURE_ID", nullable = false, referencedColumnName = "FEATURE_ID", foreignKey = @ForeignKey(name = "ENV_FEATURE_TO_FEATURE_FK"))
 	private Feature feature;
 
+	@Id
 	@ManyToOne
 	@JoinColumn(name = "ENV_ID", nullable = false, referencedColumnName = "ENV_ID", foreignKey = @ForeignKey(name = "ENV_FEATURE_TO_ENV_FK"))
 	private Env env;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public String getDeployedDate() {
 		return deployedDate;
@@ -78,6 +65,34 @@ public class EnvFeature {
 		this.env = env;
 	}
 
+	public static EnvFeatureBuilder builder() {
+		return new EnvFeatureBuilder();
+	}
+
+	public EnvFeatureMessage getEnvFeatureMessage() {
+		return EnvFeatureMessage.builder()
+				.setDeployedDate(deployedDate)
+				.setDescription(feature.getDescription())
+				.setDeployedDate(deployedDate)
+				.setEnvironment(env.getName())
+				.setFeatureId(feature.getFeatureId())
+				.setMigratedDate(migratedDate)
+				.setStatus(feature.getStatus())
+				.setTitle(feature.getTitle())
+				.build();
+	}
+
+	public FeatureDTO getFeatureDTO() {
+		return FeatureDTO.builder()
+				.setDescription(feature.getDescription())
+				.setFeatureId(feature.getFeatureId())
+				.setStatus(feature.getStatus())
+				.setTitle(feature.getTitle())
+				.setPromoted(migratedDate != null)
+				.setUnpromotedSince(migratedDate == null ? deployedDate : null)
+				.build();
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -107,34 +122,6 @@ public class EnvFeature {
 		} else if (!feature.equals(other.feature))
 			return false;
 		return true;
-	}
-
-	public static EnvFeatureBuilder builder() {
-		return new EnvFeatureBuilder();
-	}
-
-	public EnvFeatureMessage getEnvFeatureMessage() {
-		return EnvFeatureMessage.builder()
-				.setDeployedDate(deployedDate)
-				.setDescription(feature.getDescription())
-				.setDeployedDate(deployedDate)
-				.setEnvironment(env.getName())
-				.setFeatureId(feature.getFeatureId())
-				.setMigratedDate(migratedDate)
-				.setStatus(feature.getStatus())
-				.setTitle(feature.getTitle())
-				.build();
-	}
-
-	public FeatureDTO getFeatureDTO() {
-		return FeatureDTO.builder()
-				.setDescription(feature.getDescription())
-				.setFeatureId(feature.getFeatureId())
-				.setStatus(feature.getStatus())
-				.setTitle(feature.getTitle())
-				.setPromoted(migratedDate != null)
-				.setUnpromotedSince(migratedDate == null ? deployedDate : null)
-				.build();
 	}
 
 }

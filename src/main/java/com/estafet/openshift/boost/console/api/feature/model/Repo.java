@@ -125,5 +125,9 @@ public class Repo {
 			return false;
 		return true;
 	}
+	
+	public static RepoBuilder builder() {
+		return new RepoBuilder();
+	}
 
 }

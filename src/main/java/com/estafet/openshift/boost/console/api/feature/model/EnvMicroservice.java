@@ -3,24 +3,18 @@ package com.estafet.openshift.boost.console.api.feature.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
+@IdClass(EnvMicroserviceId.class)
 @Table(name = "ENV_MICROSERVICE")
 public class EnvMicroservice {
 
 	@Id
-	@SequenceGenerator(name = "ENV_MICROSERVICE_ID_SEQ", sequenceName = "ENV_MICROSERVICE_ID_SEQ", allocationSize = 1)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ENV_MICROSERVICE_ID_SEQ")
-	@Column(name = "ENV_MICROSERVICE_ID")
-	private Long id;
-
 	@Column(name = "MICROSERVICE", nullable = false)
 	private String microservice;
 
@@ -30,6 +24,7 @@ public class EnvMicroservice {
 	@Column(name = "DEPLOYED_DATE", nullable = false)
 	private String deployedDate;
 
+	@Id
 	@ManyToOne
 	@JoinColumn(name = "ENV_ID", nullable = false, referencedColumnName = "ENV_ID", foreignKey = @ForeignKey(name = "MICROSERVICE_TO_ENV_FK"))
 	private Env env;
@@ -52,14 +47,6 @@ public class EnvMicroservice {
 
 	public void setRepo(Repo repo) {
 		this.repo = repo;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public String getMicroservice() {
