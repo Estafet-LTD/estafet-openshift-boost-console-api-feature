@@ -7,13 +7,6 @@ public class EnvMicroserviceBuilder {
 	private String deployedDate;
 
 	private Repo repo;
-	
-	private Env env;
-
-	public EnvMicroserviceBuilder setEnv(Env env) {
-		this.env = env;
-		return this;
-	}
 
 	public EnvMicroserviceBuilder setRepo(Repo repo) {
 		this.repo = repo;
@@ -33,9 +26,7 @@ public class EnvMicroserviceBuilder {
 	public EnvMicroservice build() {
 		EnvMicroservice envMicroservice = new EnvMicroservice();
 		envMicroservice.setDeployedDate(deployedDate);
-		envMicroservice.setMicroservice(repo.getMicroservice());
 		envMicroservice.setVersion(version);
-		env.addEnvMicroservice(envMicroservice);
 		repo.addEnvMicroservice(envMicroservice);
 		return envMicroservice;
 	}

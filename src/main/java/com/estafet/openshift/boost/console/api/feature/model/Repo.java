@@ -33,6 +33,7 @@ public class Repo {
 	public void addEnvMicroservice(EnvMicroservice envMicroservice) {
 		envMicroservices.add(envMicroservice);
 		envMicroservice.setRepo(this);
+		envMicroservice.setMicroservice(microservice);
 	}
 
 	public Set<Env> getEnvs() {

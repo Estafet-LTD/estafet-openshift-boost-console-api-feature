@@ -11,13 +11,19 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.estafet.openshift.boost.commons.lib.date.DateUtils;
 import com.estafet.openshift.boost.console.api.feature.dto.EnvironmentDTO;
+import com.estafet.openshift.boost.console.api.feature.message.BaseApp;
 
 @Entity
 @Table(name = "ENV")
 public class Env {
 
+	private static final Logger log = LoggerFactory.getLogger(Env.class);
+	
 	@Id
 	@Column(name = "ENV_ID", nullable = false)
 	private String name;
@@ -42,15 +48,35 @@ public class Env {
 		this.live = live;
 	}
 
-	public void addEnvMicroservice(EnvMicroservice envMicroservice) {
-		if (getMicroservice(envMicroservice.getMicroservice()) == null) {
+	public boolean updateMicroservice(BaseApp app, Repo repo) {
+		if (getMicroservice(app.getName()) == null) {
+			EnvMicroservice envMicroservice = EnvMicroservice.builder()
+					.setDeployedDate(app.getDeployedDate())
+					.setRepo(repo)
+					.setVersion(app.getVersion())
+					.build();
 			envMicroservices.add(envMicroservice);
 			envMicroservice.setEnv(this);
+			log.info("added - " + app.getName());
+			return true;
 		} else {
-			getMicroservice(envMicroservice.getMicroservice()).update(envMicroservice);
+			boolean updated = false;
+			EnvMicroservice envMicroservice = getMicroservice(app.getName());
+			if (!envMicroservice.getVersion().equals(app.getVersion())) {
+				envMicroservice.setVersion(app.getVersion());
+				updated = true;
+				log.info("version updated - " + app.getName());
+			}
+			if (!envMicroservice.getDeployedDate().equals(app.getDeployedDate())) {
+				envMicroservice.setDeployedDate(app.getDeployedDate());
+				updated = true;
+				log.info("deployed date updated - " + app.getName());
+			}
+			return updated;
 		}
+		
 	}
-
+	
 	public Set<EnvMicroservice> getMicroservices() {
 		return envMicroservices;
 	}
@@ -186,5 +212,6 @@ public class Env {
 	public String toString() {
 		return "Env [name=" + name + "]";
 	}
+
 
 }
