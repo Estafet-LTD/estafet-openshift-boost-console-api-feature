@@ -76,6 +76,7 @@ public class EnvironmentService {
 	private void updateMicroservices(Env env, List<BaseApp> apps, Map<String, Repo> reposMap) {
 		log.info("updateMicroservices for env - " + env.getName());
 		for (BaseApp app : apps) {
+			log.info("create envMicroservice for " + app.getName());
 			EnvMicroservice.builder()
 					.setDeployedDate(app.getDeployedDate())
 					.setRepo(reposMap.get(app.getName()))
@@ -84,6 +85,7 @@ public class EnvironmentService {
 					.build();
 		}
 		envDAO.updateEnv(env);
+		log.info("Microservices successfully updated for env - " + env.getName());
 	}
 
 	private void updateFeatures(Env env) {
@@ -137,6 +139,7 @@ public class EnvironmentService {
 		for (BaseApp app : env.getApps()) {
 			microservices.put(app.getName(), updateRepo(env, app));
 		}
+		log.info("Repos successfully updated for env - " + env.getName());
 		return microservices;
 	}
 
