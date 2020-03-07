@@ -3,32 +3,37 @@ package com.estafet.openshift.boost.console.api.feature.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.estafet.openshift.boost.console.api.feature.dto.FeatureDTO;
 import com.estafet.openshift.boost.console.api.feature.message.EnvFeatureMessage;
 
 @Entity
-@IdClass(EnvFeatureId.class)
 @Table(name = "ENV_FEATURE")
 public class EnvFeature {
-	
+
+	@Id
+	@SequenceGenerator(name = "ENV_FEATURE_SEQ", sequenceName = "ENV_FEATURE_SEQ", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ENV_FEATURE_SEQ")
+	@Column(name = "ENV_FEATURE_ID")
+	private Long id;
+
 	@Column(name = "DEPLOYED_DATE", nullable = false)
 	private String deployedDate;
 
 	@Column(name = "MIGRATED_DATE", nullable = true)
 	private String migratedDate;
 
-	@Id
 	@ManyToOne
 	@JoinColumn(name = "FEATURE_ID", nullable = false, referencedColumnName = "FEATURE_ID", foreignKey = @ForeignKey(name = "ENV_FEATURE_TO_FEATURE_FK"))
 	private Feature feature;
 
-	@Id
 	@ManyToOne
 	@JoinColumn(name = "ENV_ID", nullable = false, referencedColumnName = "ENV_ID", foreignKey = @ForeignKey(name = "ENV_FEATURE_TO_ENV_FK"))
 	private Env env;
@@ -97,8 +102,7 @@ public class EnvFeature {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((env == null) ? 0 : env.hashCode());
-		result = prime * result + ((feature == null) ? 0 : feature.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
 
@@ -111,15 +115,10 @@ public class EnvFeature {
 		if (getClass() != obj.getClass())
 			return false;
 		EnvFeature other = (EnvFeature) obj;
-		if (env == null) {
-			if (other.env != null)
+		if (id == null) {
+			if (other.id != null)
 				return false;
-		} else if (!env.equals(other.env))
-			return false;
-		if (feature == null) {
-			if (other.feature != null)
-				return false;
-		} else if (!feature.equals(other.feature))
+		} else if (!id.equals(other.id))
 			return false;
 		return true;
 	}

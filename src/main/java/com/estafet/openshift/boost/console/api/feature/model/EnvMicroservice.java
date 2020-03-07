@@ -3,18 +3,24 @@ package com.estafet.openshift.boost.console.api.feature.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
-@IdClass(EnvMicroserviceId.class)
 @Table(name = "ENV_MICROSERVICE")
 public class EnvMicroservice {
 
 	@Id
+	@SequenceGenerator(name = "ENV_MICROSERVICE_ID_SEQ", sequenceName = "ENV_MICROSERVICE_ID_SEQ", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ENV_MICROSERVICE_ID_SEQ")
+	@Column(name = "ENV_MICROSERVICE_ID")
+	private Long id;
+
 	@Column(name = "MICROSERVICE", nullable = false)
 	private String microservice;
 
@@ -24,7 +30,6 @@ public class EnvMicroservice {
 	@Column(name = "DEPLOYED_DATE", nullable = false)
 	private String deployedDate;
 
-	@Id
 	@ManyToOne
 	@JoinColumn(name = "ENV_ID", nullable = false, referencedColumnName = "ENV_ID", foreignKey = @ForeignKey(name = "MICROSERVICE_TO_ENV_FK"))
 	private Env env;
@@ -77,8 +82,7 @@ public class EnvMicroservice {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((env == null) ? 0 : env.hashCode());
-		result = prime * result + ((microservice == null) ? 0 : microservice.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
 
@@ -91,15 +95,10 @@ public class EnvMicroservice {
 		if (getClass() != obj.getClass())
 			return false;
 		EnvMicroservice other = (EnvMicroservice) obj;
-		if (env == null) {
-			if (other.env != null)
+		if (id == null) {
+			if (other.id != null)
 				return false;
-		} else if (!env.equals(other.env))
-			return false;
-		if (microservice == null) {
-			if (other.microservice != null)
-				return false;
-		} else if (!microservice.equals(other.microservice))
+		} else if (!id.equals(other.id))
 			return false;
 		return true;
 	}
