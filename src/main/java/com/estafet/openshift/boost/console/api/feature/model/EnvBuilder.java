@@ -1,12 +1,17 @@
 package com.estafet.openshift.boost.console.api.feature.model;
 
-import com.estafet.openshift.boost.commons.lib.date.DateUtils;
-
 public class EnvBuilder {
 
 	private String name;
 
 	private Boolean live;
+	
+	private String updatedDate;
+
+	public EnvBuilder setUpdatedDate(String updatedDate) {
+		this.updatedDate = updatedDate;
+		return this;
+	}
 
 	public EnvBuilder setName(String name) {
 		this.name = name;
@@ -22,7 +27,7 @@ public class EnvBuilder {
 		Env env = new Env();
 		env.setLive(live);
 		env.setName(name);
-		env.setUpdatedDate(DateUtils.newDate());
+		env.setUpdatedDate(updatedDate);
 		return env;
 	}
 	

@@ -10,9 +10,11 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "REPO")
+@Table(name = "REPO", uniqueConstraints = {
+		@UniqueConstraint(columnNames = "microservice", name = "MICROSERVICE_KEY") })
 public class Repo {
 
 	@Id
@@ -24,7 +26,7 @@ public class Repo {
 
 	@OneToMany(mappedBy = "repo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<RepoCommit> commits = new HashSet<RepoCommit>();
-	
+
 	@OneToMany(mappedBy = "repo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<EnvMicroservice> envMicroservices = new HashSet<EnvMicroservice>();
 
@@ -32,7 +34,7 @@ public class Repo {
 		envMicroservices.add(envMicroservice);
 		envMicroservice.setRepo(this);
 	}
-	
+
 	public Set<Env> getEnvs() {
 		Set<Env> envs = new HashSet<Env>();
 		for (EnvMicroservice envMicroservice : envMicroservices) {
@@ -40,12 +42,12 @@ public class Repo {
 		}
 		return envs;
 	}
-		
+
 	public Set<Feature> getFeatures() {
 		Set<Feature> features = new HashSet<Feature>();
 		for (RepoCommit commit : commits) {
 			if (commit instanceof Matched) {
-				features.add(((Matched)commit).getFeature());
+				features.add(((Matched) commit).getFeature());
 			}
 		}
 		return features;
@@ -125,7 +127,7 @@ public class Repo {
 			return false;
 		return true;
 	}
-	
+
 	public static RepoBuilder builder() {
 		return new RepoBuilder();
 	}

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import com.estafet.openshift.boost.console.api.feature.message.BuildEnv;
 import com.estafet.openshift.boost.console.api.feature.service.EnvironmentService;
+import com.estafet.openshift.boost.console.api.feature.service.RepositoryService;
 
 import io.opentracing.Tracer;
 
@@ -23,12 +24,19 @@ public class BuildEnvConsumer {
 	
 	@Autowired
 	private EnvironmentService environmentService;
+	
+	@Autowired
+	private RepositoryService repositoryService;
 
 	@JmsListener(destination = TOPIC, containerFactory = "myFactory")
 	public void onMessage(String message) {
 		try {
 			log.info("Received message - " + message);
-			environmentService.processEnvUpdate(BuildEnv.fromJSON(message));
+			BuildEnv envMessage = BuildEnv.fromJSON(message);
+			log.info("env - " + envMessage.getName());
+			if (environmentService.createEnv(envMessage)) {
+				repositoryService.updateRepos(envMessage);
+			}
 		} finally {
 			if (tracer.activeSpan() != null) {
 				tracer.activeSpan().close();
