@@ -36,6 +36,7 @@ public class BuildEnvConsumer {
 			log.info("env - " + envMessage.getName());
 			if (environmentService.createEnv(envMessage)) {
 				repositoryService.updateRepos(envMessage);
+				environmentService.updateMicroservices(envMessage);
 			}
 		} finally {
 			if (tracer.activeSpan() != null) {

@@ -49,7 +49,7 @@ public class EnvironmentService {
 	}
 	
 	@Transactional
-	private void updateMicroservices(BaseEnv envMessage) {
+	public void updateMicroservices(BaseEnv envMessage) {
 		log.info("updateMicroservices for env - " + envMessage.getName());
 		Env env = envDAO.getEnv(envMessage.getName());
 		for (BaseApp app : envMessage.getApps()) {
