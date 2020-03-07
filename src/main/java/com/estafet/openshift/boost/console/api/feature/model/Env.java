@@ -59,6 +59,18 @@ public class Env {
 		this.envMicroservices = envMicroservices;
 	}
 
+	public Set<Matched> getMatches() {
+		Set<Matched> matches = new HashSet<Matched>();
+		for (EnvMicroservice envMicroservice : envMicroservices) {
+			for (RepoCommit commit : envMicroservice.getRepo().getCommits()) {
+				if (commit instanceof Matched) {
+					matches.add((Matched)commit);
+				}
+			}
+		}
+		return matches;
+	}
+	
 	public Set<Feature> getFeatures() {
 		Set<Feature> features = new HashSet<Feature>();
 		for (EnvFeature envFeature : envFeatures) {
