@@ -5,7 +5,7 @@ import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
 
 import com.estafet.openshift.boost.console.api.feature.service.FeatureService;
-import com.estafet.openshift.boost.messages.model.FeatureMessage;
+import com.estafet.openshift.boost.messages.features.FeatureMessage;
 
 import io.opentracing.Tracer;
 

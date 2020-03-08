@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import com.estafet.openshift.boost.commons.lib.date.DateUtils;
 import com.estafet.openshift.boost.console.api.feature.dto.EnvironmentDTO;
-import com.estafet.openshift.boost.console.api.feature.message.BaseApp;
+import com.estafet.openshift.boost.messages.environments.EnvironmentApp;
 
 @Entity
 @Table(name = "ENV")
@@ -48,7 +48,7 @@ public class Env {
 		this.live = live;
 	}
 
-	public void updateMicroservice(BaseApp app, Repo repo) {
+	public void updateMicroservice(EnvironmentApp app, Repo repo) {
 		if (getMicroservice(app.getName()) == null) {
 			EnvMicroservice envMicroservice = EnvMicroservice.builder()
 					.setDeployedDate(app.getDeployedDate())

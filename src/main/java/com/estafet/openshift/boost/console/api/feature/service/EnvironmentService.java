@@ -9,9 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.estafet.openshift.boost.console.api.feature.dao.EnvDAO;
 import com.estafet.openshift.boost.console.api.feature.dao.RepoDAO;
 import com.estafet.openshift.boost.console.api.feature.dto.EnvironmentDTO;
-import com.estafet.openshift.boost.console.api.feature.message.BaseApp;
-import com.estafet.openshift.boost.console.api.feature.message.BaseEnv;
 import com.estafet.openshift.boost.console.api.feature.model.Env;
+import com.estafet.openshift.boost.messages.environments.Environment;
+import com.estafet.openshift.boost.messages.environments.EnvironmentApp;
 
 @Service
 public class EnvironmentService {
@@ -25,7 +25,7 @@ public class EnvironmentService {
 	private RepoDAO repoDAO;
 
 	@Transactional
-	public boolean createEnv(BaseEnv envMessage) {
+	public boolean createEnv(Environment envMessage) {
 		Env env = envDAO.getEnv(envMessage.getName());
 		if (env == null) {
 			env = Env.builder().setLive(envMessage.isLive()).setUpdatedDate(envMessage.getUpdatedDate())
@@ -45,10 +45,10 @@ public class EnvironmentService {
 	}
 
 	@Transactional
-	public void updateMicroservices(BaseEnv envMessage) {
+	public void updateMicroservices(Environment envMessage) {
 		log.info("updateMicroservices for env - " + envMessage.getName());
 		Env env = envDAO.getEnv(envMessage.getName());
-		for (BaseApp app : envMessage.getApps()) {
+		for (EnvironmentApp app : envMessage.getApps()) {
 			log.info("create envMicroservice for " + app.getName());
 			env.updateMicroservice(app, repoDAO.getRepoByMicroservice(app.getName()));
 		}

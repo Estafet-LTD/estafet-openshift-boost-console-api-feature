@@ -16,7 +16,6 @@ import com.estafet.openshift.boost.console.api.feature.dao.EnvFeatureDAO;
 import com.estafet.openshift.boost.console.api.feature.dao.FeatureDAO;
 import com.estafet.openshift.boost.console.api.feature.dao.RepoDAO;
 import com.estafet.openshift.boost.console.api.feature.jms.NewEnvironmentFeatureProducer;
-import com.estafet.openshift.boost.console.api.feature.message.BaseEnv;
 import com.estafet.openshift.boost.console.api.feature.message.EnvFeatureMessage;
 import com.estafet.openshift.boost.console.api.feature.model.Env;
 import com.estafet.openshift.boost.console.api.feature.model.EnvFeature;
@@ -26,7 +25,8 @@ import com.estafet.openshift.boost.console.api.feature.model.Matched;
 import com.estafet.openshift.boost.console.api.feature.model.MatchedBuilder;
 import com.estafet.openshift.boost.console.api.feature.model.Repo;
 import com.estafet.openshift.boost.console.api.feature.model.Version;
-import com.estafet.openshift.boost.messages.model.FeatureMessage;
+import com.estafet.openshift.boost.messages.environments.Environment;
+import com.estafet.openshift.boost.messages.features.FeatureMessage;
 
 @Service
 public class FeatureService {
@@ -109,7 +109,7 @@ public class FeatureService {
 	}
 
 	@Transactional
-	public void updateEnvFeatures(BaseEnv envMessage) {
+	public void updateEnvFeatures(Environment envMessage) {
 		log.info("update EnvFeatures for env - " + envMessage.getName());
 		Env env = envDAO.getEnv(envMessage.getName());
 		for (EnvMicroservice envMicroservice : env.getMicroservices()) {

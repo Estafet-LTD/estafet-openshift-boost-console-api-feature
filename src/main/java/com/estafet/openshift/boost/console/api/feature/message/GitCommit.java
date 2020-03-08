@@ -3,7 +3,7 @@ package com.estafet.openshift.boost.console.api.feature.message;
 
 import java.util.List;
 
-import com.estafet.openshift.boost.messages.model.CommitMessage;
+import com.estafet.openshift.boost.messages.features.CommitMessage;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;

@@ -9,7 +9,7 @@ import com.estafet.openshift.boost.console.api.feature.dao.CommitDAO;
 import com.estafet.openshift.boost.console.api.feature.dao.RepoDAO;
 import com.estafet.openshift.boost.console.api.feature.model.Repo;
 import com.estafet.openshift.boost.console.api.feature.model.Unmatched;
-import com.estafet.openshift.boost.messages.model.UnmatchedCommitMessage;
+import com.estafet.openshift.boost.messages.features.UnmatchedCommitMessage;
 
 @Service
 public class CommitService {
