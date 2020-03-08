@@ -22,7 +22,7 @@ public class FeatureDAO {
 
 	public List<Feature> getFeaturesByRepo(String repo, String sha) {
 		TypedQuery<Feature> query = entityManager.createQuery(
-				"select f from Feature f JOIN f.matched m where f.repo.name = ?1 and m.sha = ?2", Feature.class);
+				"select f from Feature f JOIN f.matched m where m.repo.name = ?1 and m.sha = ?2", Feature.class);
 		return query.setParameter(1, repo).setParameter(1, sha).getResultList();
 	}
 
