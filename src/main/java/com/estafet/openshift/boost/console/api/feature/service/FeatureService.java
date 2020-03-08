@@ -67,6 +67,7 @@ public class FeatureService {
 					.setFeature(feature)
 					.setSha(message.getCommitId())
 					.setVersion(version)
+					.setRepo(repo)
 					.build();
 			commitDAO.createRepoCommit(matched);
 		}
