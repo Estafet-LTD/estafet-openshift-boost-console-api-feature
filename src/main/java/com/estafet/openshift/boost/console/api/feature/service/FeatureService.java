@@ -130,6 +130,8 @@ public class FeatureService {
 				}
 			}
 		}
+		env.setUpdatedDate(envMessage.getUpdatedDate());
+		envDAO.updateEnv(env);
 	}
 
 }
