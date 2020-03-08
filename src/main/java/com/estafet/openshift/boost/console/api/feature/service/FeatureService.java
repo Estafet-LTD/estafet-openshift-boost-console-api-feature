@@ -124,8 +124,9 @@ public class FeatureService {
 										.setDeployedDate(envMicroservice.getDeployedDate())
 										.setEnv(env)
 										.build();
+						EnvFeatureMessage envFeatureMessage = envFeature.getEnvFeatureMessage();
 						envFeatureDAO.createEnv(envFeature);
-						newEnvFeatureProducer.sendMessage(envFeature.getEnvFeatureMessage());
+						newEnvFeatureProducer.sendMessage(envFeatureMessage);
 					}
 				}
 			}
