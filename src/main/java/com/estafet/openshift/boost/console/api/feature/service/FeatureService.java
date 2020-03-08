@@ -68,21 +68,20 @@ public class FeatureService {
 					.setSha(message.getCommitId())
 					.setVersion(version)
 					.build();
-			repo.addCommit(matched);
-			updateRepo(repo);
+			commitDAO.createRepoCommit(matched);
+		}
+		updateEnvs();
+	}
+
+	private void updateEnvs() {
+		for (Env env : envDAO.getEnvs()) {
+			env.setUpdatedDate(DateUtils.newDate());
+			envDAO.updateEnv(env);
 		}
 	}
 	
 	private Set<Feature> getRepoFeatures(FeatureMessage message) {
 		return new HashSet<Feature>(featureDAO.getFeaturesByRepo(message.getRepo(), message.getCommitId()));
-	}
-
-	private void updateRepo(Repo repo) {
-		repoDAO.updateRepo(repo);
-		for (Env env : envDAO.getEnvs()) {
-			env.setUpdatedDate(DateUtils.newDate());
-			envDAO.updateEnv(env);
-		}
 	}
 
 	private Feature createFeature(FeatureMessage message) {

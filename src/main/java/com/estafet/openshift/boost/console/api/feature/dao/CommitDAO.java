@@ -17,6 +17,10 @@ public class CommitDAO {
 	@PersistenceContext
 	private EntityManager entityManager;
 
+	public void createRepoCommit(RepoCommit commit) {
+		entityManager.persist(commit);
+	}
+	
 	public List<Matched> getMatchedForMicroservice(String microservice) {
 		TypedQuery<Matched> query = entityManager
 				.createQuery("select m from Matched m where m.repo.microservice = ?1", Matched.class);

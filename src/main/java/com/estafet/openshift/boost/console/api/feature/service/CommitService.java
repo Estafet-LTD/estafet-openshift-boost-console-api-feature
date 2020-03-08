@@ -22,7 +22,6 @@ public class CommitService {
 	
 	@Transactional
 	public void processUnmatched(UnmatchedCommitMessage message) {
-		
 		if (commitDAO.getCommit(message.getRepo(), message.getCommitId()) == null) {
 			Repo repo = repoDAO.getRepo(message.getRepo());
 			repo.addCommit(createUnmatched(message, repo));

@@ -7,6 +7,13 @@ public class MatchedBuilder {
 	private String sha;
 	
 	private String version;
+	
+	private Repo repo;
+	
+	public MatchedBuilder setRepo(Repo repo) {
+		this.repo = repo;
+		return this;
+	}
 
 	public MatchedBuilder setFeature(Feature feature) {
 		this.feature = feature;
@@ -26,6 +33,7 @@ public class MatchedBuilder {
 	public Matched build() {
 		Matched matched = new Matched();
 		feature.addMatched(matched);
+		repo.addCommit(matched);
 		matched.setSha(sha);
 		matched.setVersion(version);
 		return matched;

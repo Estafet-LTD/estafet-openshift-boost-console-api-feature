@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import com.estafet.openshift.boost.console.api.feature.dao.RepoDAO;
@@ -31,6 +32,7 @@ public class GithubService {
 	@Autowired
 	private RepoDAO repoDAO;
 
+	@Transactional
 	public List<GitCommit> getLastestRepoCommits(String github, String repoId) {
 		Repo repo = repoDAO.getRepo(repoId);
 		List<GitCommit> commits = getRepoCommits(github, repoId, repo.getLastDate());
