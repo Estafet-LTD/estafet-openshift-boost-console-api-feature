@@ -37,7 +37,7 @@ public class RepositoryService {
 	}
 
 	private Repo updateRepo(Environment env, EnvironmentApp app) {
-		IBuildConfig buildConfig = client.getBuildConfig(getApp(env, app));
+		IBuildConfig buildConfig = client.getBuildConfig(app.getName());
 		String repoId = getRepo(buildConfig);
 		Repo repo = repoDAO.getRepo(repoId);
 		if (repo == null) {
@@ -45,14 +45,6 @@ public class RepositoryService {
 			repoDAO.createRepo(repo);
 		}
 		return repo;
-	}
-	
-	private String getApp(Environment env, EnvironmentApp app) {
-		if (env.getName().equals("blue") || env.getName().equals("green")) {
-			return app.getName().substring(env.getName().length());
-		} else  {
-			return app.getName();
-		} 
 	}
 
 	private String getRepo(IBuildConfig buildConfig) {
