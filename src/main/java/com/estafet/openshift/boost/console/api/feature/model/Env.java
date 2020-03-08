@@ -95,7 +95,6 @@ public class Env {
 	}
 
 	public void addEnvFeature(EnvFeature envFeature) {
-		updatedDate = DateUtils.newDate();
 		envFeatures.add(envFeature);
 		envFeature.setEnv(this);
 	}
