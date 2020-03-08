@@ -1,9 +1,14 @@
 package com.estafet.openshift.boost.console.api.feature.model;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.estafet.openshift.boost.messages.features.MissingFieldException;
 
 public class EnvFeatureBuilder {
 
+	private static final Logger log = LoggerFactory.getLogger(EnvFeatureBuilder.class);
+	
 	private String deployedDate;
 
 	private String migratedDate;
@@ -39,6 +44,7 @@ public class EnvFeatureBuilder {
 		env.addEnvFeature(envFeature);
 		envFeature.setDeployedDate(deployedDate);
 		envFeature.setMigratedDate(migratedDate);
+		log.info("new envFeature object - " + envFeature);
 		return envFeature;
 	}
 	

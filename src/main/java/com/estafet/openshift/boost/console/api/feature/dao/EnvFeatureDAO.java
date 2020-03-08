@@ -19,7 +19,7 @@ public class EnvFeatureDAO {
 
 	public void save(EnvFeature envFeature) {
 		log.info("envFeature object - " + envFeature);
-		entityManager.merge(envFeature);	
+		entityManager.persist(envFeature);	
 	}
 	
 }
