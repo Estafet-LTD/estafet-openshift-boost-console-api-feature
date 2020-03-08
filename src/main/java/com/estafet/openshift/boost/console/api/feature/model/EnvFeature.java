@@ -10,12 +10,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import com.estafet.openshift.boost.console.api.feature.dto.FeatureDTO;
 import com.estafet.openshift.boost.console.api.feature.message.EnvFeatureMessage;
 
 @Entity
-@Table(name = "ENV_FEATURE")
+@Table(name = "ENV_FEATURE", uniqueConstraints = {
+		@UniqueConstraint(columnNames = {"ENV_ID", "FEATURE_ID"}, name = "ENV_FEATURE_KEY") })
 public class EnvFeature {
 
 	@Id

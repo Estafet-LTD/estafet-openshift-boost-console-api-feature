@@ -14,7 +14,7 @@ import javax.persistence.UniqueConstraint;
 
 @Entity
 @Table(name = "REPO", uniqueConstraints = {
-		@UniqueConstraint(columnNames = "microservice", name = "MICROSERVICE_KEY") })
+		@UniqueConstraint(columnNames = "MICROSERVICE", name = "MICROSERVICE_KEY") })
 public class Repo {
 
 	@Id
@@ -24,18 +24,11 @@ public class Repo {
 	@Column(name = "MICROSERVICE", nullable = false)
 	private String microservice;
 
+	@Column(name = "LAST_DATE", nullable = false)
+	private String lastDate;
+	
 	@OneToMany(mappedBy = "repo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<RepoCommit> commits = new HashSet<RepoCommit>();
-
-	public Set<Feature> getFeatures() {
-		Set<Feature> features = new HashSet<Feature>();
-		for (RepoCommit commit : commits) {
-			if (commit instanceof Matched) {
-				features.add(((Matched) commit).getFeature());
-			}
-		}
-		return features;
-	}
 
 	public RepoCommit getCommit(String commitId) {
 		for (RepoCommit commit : commits) {
@@ -57,6 +50,14 @@ public class Repo {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getLastDate() {
+		return lastDate;
+	}
+
+	public void setLastDate(String lastDate) {
+		this.lastDate = lastDate;
 	}
 
 	public String getMicroservice() {

@@ -13,11 +13,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "MATCHED_TYPE")
-@Table(name = "REPO_COMMIT")
+@Table(name = "REPO_COMMIT", uniqueConstraints = {
+		@UniqueConstraint(columnNames = {"REPO_ID", "SHA"}, name = "REPO_COMMIT_KEY") })
 public abstract class RepoCommit {
 
 	@Id

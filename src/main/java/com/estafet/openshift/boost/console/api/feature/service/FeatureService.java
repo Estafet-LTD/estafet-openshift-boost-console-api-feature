@@ -1,5 +1,8 @@
 package com.estafet.openshift.boost.console.api.feature.service;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +60,7 @@ public class FeatureService {
 			featureDAO.create(feature);
 		}
 		Repo repo = repoDAO.getRepo(message.getRepo());
-		if (!repo.getFeatures().contains(feature)) {
+		if (getRepoFeatures(message).contains(feature)) {
 			String version = githubService.getVersionForCommit(EnvUtil.getGithub(), repo.getName(),
 					message.getCommitId());
 			Matched matched = new MatchedBuilder()
@@ -69,6 +72,10 @@ public class FeatureService {
 			updateRepo(repo);
 		}
 	}
+	
+	private Set<Feature> getRepoFeatures(FeatureMessage message) {
+		return new HashSet<Feature>(featureDAO.getFeaturesByRepo(message.getRepo(), message.getCommitId()));
+	}
 
 	private void updateRepo(Repo repo) {
 		repoDAO.updateRepo(repo);
@@ -79,8 +86,10 @@ public class FeatureService {
 	}
 
 	private Feature createFeature(FeatureMessage message) {
-		Feature feature = Feature.builder().setDescription(message.getDescription())
-				.setFeatureId(message.getFeatureId()).setStatus(message.getStatus().getValue())
+		Feature feature = Feature.builder()
+				.setDescription(message.getDescription())
+				.setFeatureId(message.getFeatureId())
+				.setStatus(message.getStatus().getValue())
 				.setTitle(message.getTitle()).build();
 		return feature;
 	}
