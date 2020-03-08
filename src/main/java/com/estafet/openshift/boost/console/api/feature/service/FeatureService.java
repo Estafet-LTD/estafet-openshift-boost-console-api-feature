@@ -120,7 +120,7 @@ public class FeatureService {
 					Version matchedVersion = new Version(matched.getVersion());
 					Version microserviceVersion = new Version(envMicroservice.getVersion());
 					if (envMessage.getName().equals("build") || matchedVersion.isLessThanOrEqual(microserviceVersion)) {
-						EnvFeature envFeature =  EnvFeature.builder()
+						EnvFeature envFeature = EnvFeature.builder()
 										.setFeature(feature)
 										.setDeployedDate(envMicroservice.getDeployedDate())
 										.setEnv(env)
