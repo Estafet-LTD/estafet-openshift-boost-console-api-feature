@@ -25,7 +25,7 @@ public class CommitDAO {
 	
 	public RepoCommit getCommit(String repo, String sha) {
 		TypedQuery<RepoCommit> query = entityManager
-				.createQuery("select c from RepoCommit c where c.repo.name = ?1 and c.commitId = ?2", RepoCommit.class);
+				.createQuery("select c from RepoCommit c where c.repo.name = ?1 and c.sha = ?2", RepoCommit.class);
 		List<RepoCommit> commits = query.setParameter(1, repo).setParameter(2, sha).getResultList();
 		return commits.isEmpty() ? null : commits.get(0);
 	}
