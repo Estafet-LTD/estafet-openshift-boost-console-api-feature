@@ -12,7 +12,7 @@ public class FeatureDTO {
 
 	private boolean promoted;
 
-	private String unpromotedSince;
+	private String waitingSince;
 
 	public String getFeatureId() {
 		return featureId;
@@ -54,12 +54,12 @@ public class FeatureDTO {
 		this.promoted = promoted;
 	}
 
-	public String getUnpromotedSince() {
-		return unpromotedSince;
+	public String getWaitingSince() {
+		return waitingSince;
 	}
 
-	public void setUnpromotedSince(String unpromotedSince) {
-		this.unpromotedSince = unpromotedSince;
+	public void setWaitingSince(String waitingSince) {
+		this.waitingSince = waitingSince;
 	}
 	
 	public static FeatureDTOBuilder builder() {

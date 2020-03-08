@@ -9,7 +9,6 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.slf4j.Logger;
@@ -35,7 +34,6 @@ public class Env {
 	@Column(name = "LIVE", nullable = false)
 	private boolean live = false;
 
-	@OrderBy("migratedDate DESC, deployedDate ASC")
 	@OneToMany(mappedBy = "env", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<EnvFeature> envFeatures = new HashSet<EnvFeature>();
 
@@ -153,15 +151,12 @@ public class Env {
 	}
 	
 	public EnvironmentDTO getEnvironmentDTO() {
-		EnvironmentDTO environmentDTO = EnvironmentDTO.builder()
+		return EnvironmentDTO.builder()
 				.setLive(live)
 				.setName(name)
 				.setUpdatedDate(updatedDate)
+				.setEnvFeatures(envFeatures)
 				.build();
-		for (EnvFeature envFeature : envFeatures) {
-			environmentDTO.addFeature(envFeature.getFeatureDTO());
-		}
-		return environmentDTO;
 	}
 
 	@Override

@@ -12,7 +12,7 @@ public class FeatureDTOBuilder {
 
 	private boolean promoted;
 
-	private String unpromotedSince;
+	private String waitingSince;
 
 	public FeatureDTOBuilder setFeatureId(String featureId) {
 		this.featureId = featureId;
@@ -39,8 +39,8 @@ public class FeatureDTOBuilder {
 		return this;
 	}
 
-	public FeatureDTOBuilder setUnpromotedSince(String unpromotedSince) {
-		this.unpromotedSince = unpromotedSince;
+	public FeatureDTOBuilder setWaitingSince(String waitingSince) {
+		this.waitingSince = waitingSince;
 		return this;
 	}
 	
@@ -51,7 +51,7 @@ public class FeatureDTOBuilder {
 		dto.setPromoted(promoted);
 		dto.setStatus(status);
 		dto.setTitle(title);
-		dto.setUnpromotedSince(unpromotedSince);
+		dto.setWaitingSince(waitingSince);
 		return dto;
 	}
 	

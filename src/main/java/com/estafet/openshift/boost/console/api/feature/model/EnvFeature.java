@@ -96,7 +96,7 @@ public class EnvFeature {
 				.setStatus(feature.getStatus())
 				.setTitle(feature.getTitle())
 				.setPromoted(migratedDate != null)
-				.setUnpromotedSince(migratedDate == null ? deployedDate : null)
+				.setWaitingSince(migratedDate == null ? deployedDate : null)
 				.build();
 	}
 
