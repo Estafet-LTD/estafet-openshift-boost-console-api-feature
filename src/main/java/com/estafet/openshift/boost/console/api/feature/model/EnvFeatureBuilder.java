@@ -7,6 +7,13 @@ public class EnvFeatureBuilder {
 	private String migratedDate;
 
 	private Feature feature;
+	
+	private Env env;
+
+	public EnvFeatureBuilder setEnv(Env env) {
+		this.env = env;
+		return this;
+	}
 
 	public EnvFeatureBuilder setDeployedDate(String deployedDate) {
 		this.deployedDate = deployedDate;
@@ -25,9 +32,10 @@ public class EnvFeatureBuilder {
 	
 	public EnvFeature build() {
 		EnvFeature envFeature = new EnvFeature();
+		feature.addEnvFeature(envFeature);
+		env.addEnvFeature(envFeature);
 		envFeature.setDeployedDate(deployedDate);
 		envFeature.setMigratedDate(migratedDate);
-		feature.addEnvFeature(envFeature);
 		return envFeature;
 	}
 	

@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.estafet.openshift.boost.commons.lib.date.DateUtils;
 import com.estafet.openshift.boost.console.api.feature.dao.CommitDAO;
 import com.estafet.openshift.boost.console.api.feature.dao.EnvDAO;
+import com.estafet.openshift.boost.console.api.feature.dao.EnvFeatureDAO;
 import com.estafet.openshift.boost.console.api.feature.dao.FeatureDAO;
 import com.estafet.openshift.boost.console.api.feature.dao.RepoDAO;
 import com.estafet.openshift.boost.console.api.feature.jms.NewEnvironmentFeatureProducer;
@@ -46,6 +47,9 @@ public class FeatureService {
 
 	@Autowired
 	private CommitDAO commitDAO;
+	
+	@Autowired
+	private EnvFeatureDAO envFeatureDAO;
 
 	@Autowired
 	private NewEnvironmentFeatureProducer newEnvFeatureProducer;
@@ -100,13 +104,13 @@ public class FeatureService {
 			prevEnv.setUpdatedDate(DateUtils.newDate());
 			EnvFeature envFeature = prevEnv.getEnvFeature(envFeatureMessage.getFeatureId());
 			envFeature.setMigratedDate(envFeatureMessage.getDeployedDate());
-			envDAO.updateEnv(prevEnv);
+			envFeatureDAO.createEnv(envFeature);
 		}
 	}
 
 	@Transactional
-	public void updateFeatures(BaseEnv envMessage) {
-		log.info("updateFeatures for env - " + envMessage.getName());
+	public void updateEnvFeatures(BaseEnv envMessage) {
+		log.info("update EnvFeatures for env - " + envMessage.getName());
 		Env env = envDAO.getEnv(envMessage.getName());
 		for (EnvMicroservice envMicroservice : env.getMicroservices()) {
 			for (Matched matched : commitDAO.getMatchedForMicroservice(envMicroservice.getMicroservice())) {
@@ -114,22 +118,18 @@ public class FeatureService {
 				if (!env.getFeatures().contains(feature)) {
 					Version matchedVersion = new Version(matched.getVersion());
 					Version microserviceVersion = new Version(envMicroservice.getVersion());
-					if (microserviceVersion.isSnapshot() || matchedVersion.isLessThanOrEqual(microserviceVersion)) {
-						EnvFeature envFeature = createEnvFeature(envMicroservice, feature);
-						env.addEnvFeature(envFeature);
-						envDAO.updateEnv(env);
+					if (envMessage.getName().equals("build") || matchedVersion.isLessThanOrEqual(microserviceVersion)) {
+						EnvFeature envFeature =  EnvFeature.builder()
+										.setFeature(feature)
+										.setDeployedDate(envMicroservice.getDeployedDate())
+										.setEnv(env)
+										.build();
+						envFeatureDAO.createEnv(envFeature);
 						newEnvFeatureProducer.sendMessage(envFeature.getEnvFeatureMessage());
 					}
 				}
 			}
 		}
-	}
-
-	private EnvFeature createEnvFeature(EnvMicroservice envMicroservice, Feature feature) {
-		return EnvFeature.builder()
-				.setFeature(feature)
-				.setDeployedDate(envMicroservice.getDeployedDate())
-				.build();
 	}
 
 }

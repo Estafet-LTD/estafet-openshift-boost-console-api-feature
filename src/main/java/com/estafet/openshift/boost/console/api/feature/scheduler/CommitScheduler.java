@@ -26,7 +26,7 @@ public class CommitScheduler {
 	private GithubService githubService;
 	
 	@Transactional
-	@Scheduled(fixedRate = 180000)
+	@Scheduled(fixedRate = 300000)
 	public void execute() {
 		for (Repo repo : repoDAO.getRepos()) {
 			for (GitCommit gitCommit : githubService.getLastestRepoCommits(repo.getName())) {

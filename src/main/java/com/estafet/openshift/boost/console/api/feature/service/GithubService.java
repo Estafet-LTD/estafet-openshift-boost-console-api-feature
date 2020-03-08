@@ -79,7 +79,6 @@ public class GithubService {
 		throw new RuntimeException("Cannot find version for commit id " + commitId + " in repo " + repo);
 	}
 
-	@Cacheable(cacheNames = { "tags" })
 	public Map<String, Set<String>> getGitCommitsByTags(String repo) {
 		GitTag[] gitTags = getGitTags(repo);
 		Map<String, String> commitTagMap = commitTagMap(gitTags);
@@ -107,7 +106,7 @@ public class GithubService {
 		return commitTagMap; 
 	}
 
-	@Cacheable(cacheNames = { "gitTags" })
+	@Cacheable(cacheNames = { "tags" })
 	public GitTag[] getGitTags(String repo) {
 		String url = "https://api.github.com/repos/" + ENV.getGithub() + "/" + repo + "/tags";
 		log.info(url);
