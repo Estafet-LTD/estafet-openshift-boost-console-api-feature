@@ -111,6 +111,7 @@ public class FeatureService {
 	@Transactional
 	public void updateEnvFeatures(Environment envMessage) {
 		log.info("update EnvFeatures for env - " + envMessage.getName());
+		log.info(envMessage.toJSON());
 		Env env = envDAO.getEnv(envMessage.getName());
 		for (EnvMicroservice envMicroservice : env.getMicroservices()) {
 			for (Matched matched : commitDAO.getMatchedForMicroservice(envMicroservice.getMicroservice())) {
