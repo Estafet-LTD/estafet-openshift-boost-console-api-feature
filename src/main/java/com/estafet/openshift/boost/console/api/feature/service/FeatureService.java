@@ -125,15 +125,15 @@ public class FeatureService {
 										.setEnv(env)
 										.build();
 						envFeatureDAO.createEnv(envFeature);
-						EnvFeatureMessage envFeatureMessage = EnvFeatureMessage.builder()
-										.setDeployedDate(envMicroservice.getDeployedDate())
-										.setDescription(feature.getDescription())
-										.setEnvironment(envMessage.getName())
-										.setFeatureId(feature.getFeatureId())
-										.setStatus(feature.getStatus())
-										.setTitle(feature.getTitle())
-										.build();
-						newEnvFeatureProducer.sendMessage(envFeatureMessage);
+//						EnvFeatureMessage envFeatureMessage = EnvFeatureMessage.builder()
+//										.setDeployedDate(envMicroservice.getDeployedDate())
+//										.setDescription(feature.getDescription())
+//										.setEnvironment(envMessage.getName())
+//										.setFeatureId(feature.getFeatureId())
+//										.setStatus(feature.getStatus())
+//										.setTitle(feature.getTitle())
+//										.build();
+//						newEnvFeatureProducer.sendMessage(envFeatureMessage);
 					}
 				}
 			}
