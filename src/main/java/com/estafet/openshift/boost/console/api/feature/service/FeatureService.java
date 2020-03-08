@@ -60,7 +60,7 @@ public class FeatureService {
 			featureDAO.create(feature);
 		}
 		Repo repo = repoDAO.getRepo(message.getRepo());
-		if (getRepoFeatures(message).contains(feature)) {
+		if (!getRepoFeatures(message).contains(feature)) {
 			String version = githubService.getVersionForCommit(EnvUtil.getGithub(), repo.getName(),
 					message.getCommitId());
 			Matched matched = new MatchedBuilder()
@@ -128,7 +128,10 @@ public class FeatureService {
 	}
 
 	private EnvFeature createEnvFeature(EnvMicroservice envMicroservice, Feature feature) {
-		return EnvFeature.builder().setFeature(feature).setDeployedDate(envMicroservice.getDeployedDate()).build();
+		return EnvFeature.builder()
+				.setFeature(feature)
+				.setDeployedDate(envMicroservice.getDeployedDate())
+				.build();
 	}
 
 }
