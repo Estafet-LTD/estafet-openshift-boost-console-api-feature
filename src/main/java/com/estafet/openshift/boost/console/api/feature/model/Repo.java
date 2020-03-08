@@ -24,7 +24,7 @@ public class Repo {
 	@Column(name = "MICROSERVICE", nullable = false)
 	private String microservice;
 
-	@Column(name = "LAST_DATE", nullable = false)
+	@Column(name = "LAST_DATE", nullable = true)
 	private String lastDate;
 	
 	@OneToMany(mappedBy = "repo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

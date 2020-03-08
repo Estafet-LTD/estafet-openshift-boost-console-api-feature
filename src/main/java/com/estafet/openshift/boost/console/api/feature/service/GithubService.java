@@ -15,8 +15,10 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.estafet.openshift.boost.console.api.feature.dao.RepoDAO;
 import com.estafet.openshift.boost.console.api.feature.message.GitCommit;
 import com.estafet.openshift.boost.console.api.feature.message.GitTag;
+import com.estafet.openshift.boost.console.api.feature.model.Repo;
 
 @Service
 public class GithubService {
@@ -25,22 +27,40 @@ public class GithubService {
 
 	@Autowired
 	private RestTemplate restTemplate;
+	
+	@Autowired
+	private RepoDAO repoDAO;
 
-	@Cacheable(cacheNames = { "commits" })
+	public List<GitCommit> getLastestRepoCommits(String github, String repoId) {
+		Repo repo = repoDAO.getRepo(repoId);
+		List<GitCommit> commits = getRepoCommits(github, repoId, repo.getLastDate());
+		repo.setLastDate(commits.get(0).getCommit().getCommitter().getDate());
+		repoDAO.updateRepo(repo);
+		return commits;
+	}
+
 	public List<GitCommit> getRepoCommits(String github, String repo) {
+		return getRepoCommits(github, repo, null);
+	}
+	
+	@Cacheable(cacheNames = { "commits" })
+	public List<GitCommit> getRepoCommits(String github, String repo, String since) {
 		List<GitCommit> commits = new ArrayList<GitCommit>();
 		List<GitCommit> pageCommits = new ArrayList<GitCommit>();
 		int page = 1;
 		do {
-			pageCommits = getRepoCommitsByPage(github, repo, page);
+			pageCommits = getRepoCommitsByPage(github, repo, since, page);
 			commits.addAll(pageCommits);
 			page++;
 		} while (!pageCommits.isEmpty());
 		return commits;
 	}
-
-	private List<GitCommit> getRepoCommitsByPage(String github, String repo, int page) {
+	
+	private List<GitCommit> getRepoCommitsByPage(String github, String repo, String since, int page) {
 		String url = "https://api.github.com/repos/" + github + "/" + repo + "/commits?page=" + page;
+		if (since != null) {
+			url += "&since=" + since; 
+		}
 		log.info(url);
 		return Arrays.asList(restTemplate.getForObject(url, GitCommit[].class));
 	}
