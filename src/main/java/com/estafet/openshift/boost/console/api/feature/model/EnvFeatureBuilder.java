@@ -1,5 +1,7 @@
 package com.estafet.openshift.boost.console.api.feature.model;
 
+import com.estafet.openshift.boost.messages.features.MissingFieldException;
+
 public class EnvFeatureBuilder {
 
 	private String deployedDate;
@@ -31,12 +33,29 @@ public class EnvFeatureBuilder {
 	}
 	
 	public EnvFeature build() {
+		nullCheck("deployedDate", "feature", "env");
 		EnvFeature envFeature = new EnvFeature();
 		feature.addEnvFeature(envFeature);
 		env.addEnvFeature(envFeature);
 		envFeature.setDeployedDate(deployedDate);
 		envFeature.setMigratedDate(migratedDate);
 		return envFeature;
+	}
+	
+	private void nullCheck(String...fields) {
+		for (String field : fields) {
+			nullCheck(field);
+		}
+	}
+	
+	private void nullCheck(String field) {
+		try {
+			if (this.getClass().getDeclaredField(field).get(this) == null) {
+				throw new MissingFieldException(field + " cannot be null");
+			}
+		} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 }
