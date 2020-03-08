@@ -47,7 +47,7 @@ public class FeatureService {
 
 	@Autowired
 	private CommitDAO commitDAO;
-	
+
 	@Autowired
 	private EnvFeatureDAO envFeatureDAO;
 
@@ -65,12 +65,8 @@ public class FeatureService {
 		Repo repo = repoDAO.getRepo(message.getRepo());
 		if (!getRepoFeatures(message).contains(feature)) {
 			String version = githubService.getVersionForCommit(repo.getName(), message.getCommitId());
-			Matched matched = new MatchedBuilder()
-					.setFeature(feature)
-					.setSha(message.getCommitId())
-					.setVersion(version)
-					.setRepo(repo)
-					.build();
+			Matched matched = new MatchedBuilder().setFeature(feature).setSha(message.getCommitId()).setVersion(version)
+					.setRepo(repo).build();
 			commitDAO.createRepoCommit(matched);
 		}
 		updateEnvs();
@@ -82,16 +78,14 @@ public class FeatureService {
 			envDAO.updateEnv(env);
 		}
 	}
-	
+
 	private Set<Feature> getRepoFeatures(FeatureMessage message) {
 		return new HashSet<Feature>(featureDAO.getFeaturesByRepo(message.getRepo(), message.getCommitId()));
 	}
 
 	private Feature createFeature(FeatureMessage message) {
-		Feature feature = Feature.builder()
-				.setDescription(message.getDescription())
-				.setFeatureId(message.getFeatureId())
-				.setStatus(message.getStatus().getValue())
+		Feature feature = Feature.builder().setDescription(message.getDescription())
+				.setFeatureId(message.getFeatureId()).setStatus(message.getStatus().getValue())
 				.setTitle(message.getTitle()).build();
 		return feature;
 	}
@@ -111,7 +105,7 @@ public class FeatureService {
 	@Transactional
 	public void updateEnvFeatures(Environment envMessage) {
 		log.info("update EnvFeatures for env - " + envMessage.getName());
-		log.info(envMessage.toJSON());
+		log.debug(envMessage.toJSON());
 		Env env = envDAO.getEnv(envMessage.getName());
 		for (EnvMicroservice envMicroservice : env.getMicroservices()) {
 			for (Matched matched : commitDAO.getMatchedForMicroservice(envMicroservice.getMicroservice())) {
@@ -119,12 +113,13 @@ public class FeatureService {
 				if (!env.getFeatures().contains(feature)) {
 					Version matchedVersion = new Version(matched.getVersion());
 					Version microserviceVersion = new Version(envMicroservice.getVersion());
-					if (envMessage.getName().equals("build") || matchedVersion.isLessThanOrEqual(microserviceVersion)) {
+					if (envMessage.getName().equals("build") || (matchedVersion.isLessThanOrEqual(microserviceVersion)
+							&& feature.getStatus().equals("Done"))) {
 						EnvFeature envFeature = EnvFeature.builder()
-										.setFeature(feature)
-										.setDeployedDate(envMicroservice.getDeployedDate())
-										.setEnv(env)
-										.build();
+								.setFeature(feature)
+								.setDeployedDate(envMicroservice.getDeployedDate())
+								.setEnv(env)
+								.build();
 						envFeatureDAO.save(envFeature);
 //						EnvFeatureMessage envFeatureMessage = EnvFeatureMessage.builder()
 //										.setDeployedDate(envMicroservice.getDeployedDate())

@@ -18,7 +18,7 @@ public class EnvFeatureDAO {
 	private EntityManager entityManager;
 
 	public void save(EnvFeature envFeature) {
-		log.info("envFeature object - " + envFeature);
+		log.debug("envFeature object - " + envFeature);
 		entityManager.persist(envFeature);	
 	}
 	

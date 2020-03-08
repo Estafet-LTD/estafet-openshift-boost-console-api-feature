@@ -23,7 +23,7 @@ import com.estafet.openshift.boost.messages.environments.EnvironmentApp;
 public class Env {
 
 	private static final Logger log = LoggerFactory.getLogger(Env.class);
-	
+
 	@Id
 	@Column(name = "ENV_ID", nullable = false)
 	private String name;
@@ -50,11 +50,8 @@ public class Env {
 
 	public void updateMicroservice(EnvironmentApp app, Repo repo) {
 		if (getMicroservice(app.getName()) == null) {
-			EnvMicroservice envMicroservice = EnvMicroservice.builder()
-					.setDeployedDate(app.getDeployedDate())
-					.setVersion(app.getVersion())
-					.setMicroservice(app.getName())
-					.build();
+			EnvMicroservice envMicroservice = EnvMicroservice.builder().setDeployedDate(app.getDeployedDate())
+					.setVersion(app.getVersion()).setMicroservice(app.getName()).build();
 			envMicroservices.add(envMicroservice);
 			envMicroservice.setEnv(this);
 			log.info("added - " + app.getName());
@@ -69,9 +66,9 @@ public class Env {
 				log.info("deployed date updated - " + app.getName());
 			}
 		}
-		
+
 	}
-	
+
 	public Set<EnvMicroservice> getMicroservices() {
 		return envMicroservices;
 	}
@@ -79,7 +76,7 @@ public class Env {
 	public void setMicroservices(Set<EnvMicroservice> envMicroservices) {
 		this.envMicroservices = envMicroservices;
 	}
-	
+
 	public Set<Feature> getFeatures() {
 		Set<Feature> features = new HashSet<Feature>();
 		for (EnvFeature envFeature : envFeatures) {
@@ -98,12 +95,9 @@ public class Env {
 	}
 
 	public void addEnvFeature(EnvFeature envFeature) {
-		if (!getFeatures().contains(envFeature.getFeature())
-				&& (name.equals("build") || envFeature.getFeature().getStatus().equals("DONE"))) {
-			updatedDate = DateUtils.newDate();
-			envFeatures.add(envFeature);
-			envFeature.setEnv(this);
-		}
+		updatedDate = DateUtils.newDate();
+		envFeatures.add(envFeature);
+		envFeature.setEnv(this);
 	}
 
 	public EnvMicroservice getMicroservice(String name) {
@@ -149,14 +143,10 @@ public class Env {
 		}
 		return null;
 	}
-	
+
 	public EnvironmentDTO getEnvironmentDTO() {
-		return EnvironmentDTO.builder()
-				.setLive(live)
-				.setName(name)
-				.setUpdatedDate(updatedDate)
-				.setEnvFeatures(envFeatures)
-				.build();
+		return EnvironmentDTO.builder().setLive(live).setName(name).setUpdatedDate(updatedDate)
+				.setEnvFeatures(envFeatures).build();
 	}
 
 	@Override
@@ -183,7 +173,7 @@ public class Env {
 			return false;
 		return true;
 	}
-	
+
 	public static EnvBuilder builder() {
 		return new EnvBuilder();
 	}
@@ -192,6 +182,5 @@ public class Env {
 	public String toString() {
 		return "Env [name=" + name + "]";
 	}
-
 
 }
