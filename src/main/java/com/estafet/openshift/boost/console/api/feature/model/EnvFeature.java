@@ -70,6 +70,12 @@ public class EnvFeature {
 	public void setEnv(Env env) {
 		this.env = env;
 	}
+	
+	@Override
+	public String toString() {
+		return "EnvFeature [id=" + id + ", deployedDate=" + deployedDate + ", migratedDate=" + migratedDate
+				+ ", feature=" + feature + ", env=" + env + "]";
+	}
 
 	public static EnvFeatureBuilder builder() {
 		return new EnvFeatureBuilder();

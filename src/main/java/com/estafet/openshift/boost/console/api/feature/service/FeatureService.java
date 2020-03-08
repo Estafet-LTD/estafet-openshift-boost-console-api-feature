@@ -104,7 +104,7 @@ public class FeatureService {
 			prevEnv.setUpdatedDate(DateUtils.newDate());
 			EnvFeature envFeature = prevEnv.getEnvFeature(envFeatureMessage.getFeatureId());
 			envFeature.setMigratedDate(envFeatureMessage.getDeployedDate());
-			envFeatureDAO.createEnv(envFeature);
+			envFeatureDAO.save(envFeature);
 		}
 	}
 
@@ -125,7 +125,7 @@ public class FeatureService {
 										.setDeployedDate(envMicroservice.getDeployedDate())
 										.setEnv(env)
 										.build();
-						envFeatureDAO.createEnv(envFeature);
+						envFeatureDAO.save(envFeature);
 //						EnvFeatureMessage envFeatureMessage = EnvFeatureMessage.builder()
 //										.setDeployedDate(envMicroservice.getDeployedDate())
 //										.setDescription(feature.getDescription())
