@@ -37,7 +37,7 @@ public class RepositoryService {
 	}
 
 	private Repo updateRepo(Environment env, EnvironmentApp app) {
-		IBuildConfig buildConfig = client.getBuildConfig(env.getName(), app.getName());
+		IBuildConfig buildConfig = client.getBuildConfig(app.getName());
 		String repoId = getRepo(buildConfig);
 		Repo repo = repoDAO.getRepo(repoId);
 		if (repo == null) {

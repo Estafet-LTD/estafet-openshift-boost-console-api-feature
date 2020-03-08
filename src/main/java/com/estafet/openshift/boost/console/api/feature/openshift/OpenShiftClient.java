@@ -34,12 +34,11 @@ public final class OpenShiftClient {
 	}
 		
 	@SuppressWarnings("deprecation")
-	public IBuildConfig getBuildConfig(String env, String app) {
+	public IBuildConfig getBuildConfig(String app) {
 		Span span = tracer.buildSpan("OpenShiftClient.getBuild").start();
 		try {
 			span.setBaggageItem("app",app);
-			span.setBaggageItem("env",env);
-			return (IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, app, product + "-" + env);
+			return (IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, app, product + "-build");
 		} catch (RuntimeException e) {
 			throw handleException(span, e);
 		} finally {
