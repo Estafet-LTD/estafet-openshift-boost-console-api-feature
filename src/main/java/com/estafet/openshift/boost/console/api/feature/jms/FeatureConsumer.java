@@ -23,8 +23,7 @@ public class FeatureConsumer {
 	@JmsListener(destination = TOPIC, containerFactory = "myFactory")
 	public void onMessage(String message) {
 		try {
-			FeatureMessage featureMessage = FeatureMessage.fromJSON(message);
-			featureService.processFeature(featureMessage);
+			featureService.processFeature(FeatureMessage.fromJSON(message));
 		} finally {
 			if (tracer.activeSpan() != null) {
 				tracer.activeSpan().close();

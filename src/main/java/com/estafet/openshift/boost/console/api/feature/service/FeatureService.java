@@ -60,7 +60,10 @@ public class FeatureService {
 		if (!repo.getFeatures().contains(feature)) {
 			String version = githubService.getVersionForCommit(EnvUtil.getGithub(), repo.getName(),
 					message.getCommitId());
-			Matched matched = new MatchedBuilder().setFeature(feature).setSha(message.getCommitId()).setVersion(version)
+			Matched matched = new MatchedBuilder()
+					.setFeature(feature)
+					.setSha(message.getCommitId())
+					.setVersion(version)
 					.build();
 			repo.addCommit(matched);
 			updateRepo(repo);

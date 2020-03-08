@@ -23,8 +23,7 @@ public class UnmatchedConsumer {
 	@JmsListener(destination = TOPIC, containerFactory = "myFactory")
 	public void onMessage(String message) {
 		try {
-			UnmatchedCommitMessage unmatchedCommitMessage = UnmatchedCommitMessage.fromJSON(message);
-			commitService.processUnmatched(unmatchedCommitMessage);
+			commitService.processUnmatched(UnmatchedCommitMessage.fromJSON(message));
 		} finally {
 			if (tracer.activeSpan() != null) {
 				tracer.activeSpan().close();

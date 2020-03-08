@@ -23,8 +23,7 @@ public class NewEnvironmentFeatureConsumer {
 	@JmsListener(destination = TOPIC, containerFactory = "myFactory")
 	public void onMessage(String message) {
 		try {
-			EnvFeatureMessage envFeatureMessage = EnvFeatureMessage.fromJSON(message);
-			featureService.processEnvFeature(envFeatureMessage);
+			featureService.processEnvFeature(EnvFeatureMessage.fromJSON(message));
 		} finally {
 			if (tracer.activeSpan() != null) {
 				tracer.activeSpan().close();

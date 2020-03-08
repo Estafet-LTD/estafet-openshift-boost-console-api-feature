@@ -27,12 +27,12 @@ public class CommitScheduler {
 	private GithubService githubService;
 	
 	@Transactional(readOnly = true)
-	//@Scheduled(fixedRate = 300000)
+	@Scheduled(fixedRate = 180000)
 	public void execute() {
 		for (Repo repo : repoDAO.getRepos()) {
 			for (GitCommit gitCommit : githubService.getRepoCommits(EnvUtil.getGithub(), repo.getName())) {
 				RepoCommit commit = repo.getCommit(gitCommit.getSha());
-				if (commit == null || (commit instanceof Matched && ((Matched)commit).getFeature().getStatus().equals("DONE"))) {
+				if (commit == null || (commit instanceof Matched && !((Matched)commit).getFeature().getStatus().equals("DONE"))) {
 					commitProducer.sendMessage(gitCommit.createCommitMessage(repo.getName()));
 				}
 			}
