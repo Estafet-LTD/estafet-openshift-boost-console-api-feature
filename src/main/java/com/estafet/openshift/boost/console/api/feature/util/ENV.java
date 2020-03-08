@@ -1,8 +1,8 @@
 package com.estafet.openshift.boost.console.api.feature.util;
 
-public final class EnvUtil {
+public final class ENV {
 
-	private EnvUtil( ) {}
+	private ENV( ) {}
 		
 	public static final String getGithub() {
 		return System.getenv("GITHUB");

@@ -20,6 +20,7 @@ import com.estafet.openshift.boost.console.api.feature.dao.RepoDAO;
 import com.estafet.openshift.boost.console.api.feature.message.GitCommit;
 import com.estafet.openshift.boost.console.api.feature.message.GitTag;
 import com.estafet.openshift.boost.console.api.feature.model.Repo;
+import com.estafet.openshift.boost.console.api.feature.util.ENV;
 
 @Service
 public class GithubService {
@@ -33,33 +34,33 @@ public class GithubService {
 	private RepoDAO repoDAO;
 
 	@Transactional
-	public List<GitCommit> getLastestRepoCommits(String github, String repoId) {
+	public List<GitCommit> getLastestRepoCommits(String repoId) {
 		Repo repo = repoDAO.getRepo(repoId);
-		List<GitCommit> commits = getRepoCommits(github, repoId, repo.getLastDate());
+		List<GitCommit> commits = getRepoCommits(repoId, repo.getLastDate());
 		repo.setLastDate(commits.get(0).getCommit().getCommitter().getDate());
 		repoDAO.updateRepo(repo);
 		return commits;
 	}
 
-	public List<GitCommit> getRepoCommits(String github, String repo) {
-		return getRepoCommits(github, repo, null);
+	public List<GitCommit> getRepoCommits(String repo) {
+		return getRepoCommits(repo, null);
 	}
 	
 	@Cacheable(cacheNames = { "commits" })
-	public List<GitCommit> getRepoCommits(String github, String repo, String since) {
+	public List<GitCommit> getRepoCommits(String repo, String since) {
 		List<GitCommit> commits = new ArrayList<GitCommit>();
 		List<GitCommit> pageCommits = new ArrayList<GitCommit>();
 		int page = 1;
 		do {
-			pageCommits = getRepoCommitsByPage(github, repo, since, page);
+			pageCommits = getRepoCommitsByPage(repo, since, page);
 			commits.addAll(pageCommits);
 			page++;
 		} while (!pageCommits.isEmpty());
 		return commits;
 	}
 	
-	private List<GitCommit> getRepoCommitsByPage(String github, String repo, String since, int page) {
-		String url = "https://api.github.com/repos/" + github + "/" + repo + "/commits?page=" + page;
+	private List<GitCommit> getRepoCommitsByPage(String repo, String since, int page) {
+		String url = "https://api.github.com/repos/" + ENV.getGithub() + "/" + repo + "/commits?page=" + page;
 		if (since != null) {
 			url += "&since=" + since; 
 		}
@@ -67,9 +68,9 @@ public class GithubService {
 		return Arrays.asList(restTemplate.getForObject(url, GitCommit[].class));
 	}
 
-	public String getVersionForCommit(String github, String repo, String commitId) {
-		GitTag[] gitTags = getGitTags(github, repo);
-		Map<String, Set<String>> commits = getGitCommitsByTags(github, repo, gitTags);
+	public String getVersionForCommit(String repo, String commitId) {
+		GitTag[] gitTags = getGitTags(repo);
+		Map<String, Set<String>> commits = getGitCommitsByTags(repo);
 		for (GitTag gitTag : gitTags) {
 			if (commits.get(gitTag.getName()).contains(commitId)) {
 				return gitTag.getName();
@@ -79,11 +80,12 @@ public class GithubService {
 	}
 
 	@Cacheable(cacheNames = { "tags" })
-	public Map<String, Set<String>> getGitCommitsByTags(String github, String repo, GitTag[] gitTags) {
+	public Map<String, Set<String>> getGitCommitsByTags(String repo) {
+		GitTag[] gitTags = getGitTags(repo);
 		Map<String, String> commitTagMap = commitTagMap(gitTags);
 		Map<String, Set<String>> result = new HashMap<String, Set<String>>();
 		Set<String> commitSet = null;
-		for (GitCommit commit : getRepoCommits(github, repo)) {
+		for (GitCommit commit : getRepoCommits(repo)) {
 			if (commitTagMap.get(commit.getSha()) != null) {
 				commitSet = new HashSet<String>();
 				result.put(commitTagMap.get(commit.getSha()), commitSet);
@@ -105,8 +107,9 @@ public class GithubService {
 		return commitTagMap; 
 	}
 
-	private GitTag[] getGitTags(String github, String repo) {
-		String url = "https://api.github.com/repos/" + github + "/" + repo + "/tags";
+	@Cacheable(cacheNames = { "gitTags" })
+	public GitTag[] getGitTags(String repo) {
+		String url = "https://api.github.com/repos/" + ENV.getGithub() + "/" + repo + "/tags";
 		log.info(url);
 		return restTemplate.getForObject(url, GitTag[].class);
 	}
