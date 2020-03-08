@@ -124,8 +124,15 @@ public class FeatureService {
 										.setDeployedDate(envMicroservice.getDeployedDate())
 										.setEnv(env)
 										.build();
-						EnvFeatureMessage envFeatureMessage = envFeature.getEnvFeatureMessage();
 						envFeatureDAO.createEnv(envFeature);
+						EnvFeatureMessage envFeatureMessage = EnvFeatureMessage.builder()
+										.setDeployedDate(envMicroservice.getDeployedDate())
+										.setDescription(feature.getDescription())
+										.setEnvironment(envMessage.getName())
+										.setFeatureId(feature.getFeatureId())
+										.setStatus(feature.getStatus())
+										.setTitle(feature.getTitle())
+										.build();
 						newEnvFeatureProducer.sendMessage(envFeatureMessage);
 					}
 				}

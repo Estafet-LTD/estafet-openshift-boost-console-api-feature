@@ -13,7 +13,6 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import com.estafet.openshift.boost.console.api.feature.dto.FeatureDTO;
-import com.estafet.openshift.boost.console.api.feature.message.EnvFeatureMessage;
 
 @Entity
 @Table(name = "ENV_FEATURE", uniqueConstraints = {
@@ -74,19 +73,6 @@ public class EnvFeature {
 
 	public static EnvFeatureBuilder builder() {
 		return new EnvFeatureBuilder();
-	}
-
-	public EnvFeatureMessage getEnvFeatureMessage() {
-		return EnvFeatureMessage.builder()
-				.setDeployedDate(deployedDate)
-				.setDescription(feature.getDescription())
-				.setDeployedDate(deployedDate)
-				.setEnvironment(env.getName())
-				.setFeatureId(feature.getFeatureId())
-				.setMigratedDate(migratedDate)
-				.setStatus(feature.getStatus())
-				.setTitle(feature.getTitle())
-				.build();
 	}
 
 	public FeatureDTO getFeatureDTO() {
