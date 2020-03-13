@@ -9,6 +9,13 @@ public class FeatureBuilder {
 	private String description;
 
 	private String status;
+	
+	private String url;
+
+	public FeatureBuilder setUrl(String url) {
+		this.url = url;
+		return this;
+	}
 
 	public FeatureBuilder setFeatureId(String featureId) {
 		this.featureId = featureId;
@@ -40,6 +47,7 @@ public class FeatureBuilder {
 		}
 		feature.setStatus(status);
 		feature.setTitle(title);
+		feature.setUrl(url);
 		return feature;
 	}
 	

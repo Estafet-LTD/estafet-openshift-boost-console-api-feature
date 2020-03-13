@@ -28,28 +28,47 @@ public class Feature {
 	@Column(name = "STATUS", nullable = true)
 	private String status;
 
+	@Column(name = "URL", nullable = true)
+	private String url;
+
 	@OneToMany(mappedBy = "feature", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<Matched> matched = new HashSet<Matched>();
-	
+
 	@OneToMany(mappedBy = "feature", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<EnvFeature> envFeatures = new HashSet<EnvFeature>();
-	
+
 	public void addMatched(Matched matched) {
 		this.matched.add(matched);
 		matched.setFeature(this);
 	}
-	
+
 	public void addEnvFeature(EnvFeature envFeature) {
 		this.envFeatures.add(envFeature);
 		envFeature.setFeature(this);
 	}
-	
+
 	public Set<Matched> getMatched() {
 		return matched;
 	}
 
 	public void setMatched(Set<Matched> matched) {
 		this.matched = matched;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public Set<EnvFeature> getEnvFeatures() {
+		return envFeatures;
+	}
+
+	public void setEnvFeatures(Set<EnvFeature> envFeatures) {
+		this.envFeatures = envFeatures;
 	}
 
 	public String getFeatureId() {

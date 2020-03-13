@@ -13,6 +13,16 @@ public class FeatureDTO {
 	private boolean promoted;
 
 	private String waitingSince;
+	
+	private String url;
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
 
 	public String getFeatureId() {
 		return featureId;

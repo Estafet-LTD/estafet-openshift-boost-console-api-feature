@@ -4,7 +4,7 @@ create sequence REPO_COMMIT_ID_SEQ start 1 increment 1;
 create table ENV (ENV_ID varchar(255) not null, LIVE boolean not null, UPDATED_DATE varchar(255) not null, primary key (ENV_ID));
 create table ENV_FEATURE (ENV_FEATURE_ID int8 not null, DEPLOYED_DATE varchar(255) not null, MIGRATED_DATE varchar(255), ENV_ID varchar(255) not null, FEATURE_ID varchar(255) not null, primary key (ENV_FEATURE_ID));
 create table ENV_MICROSERVICE (ENV_MICROSERVICE_ID int8 not null, DEPLOYED_DATE varchar(255) not null, MICROSERVICE varchar(255) not null, VERSION varchar(255) not null, ENV_ID varchar(255) not null, primary key (ENV_MICROSERVICE_ID));
-create table FEATURE (FEATURE_ID varchar(255) not null, DESCRIPTION varchar(255), STATUS varchar(255), TITLE varchar(255), primary key (FEATURE_ID));
+create table FEATURE (FEATURE_ID varchar(255) not null, DESCRIPTION varchar(255), STATUS varchar(255), TITLE varchar(255), URL varchar(255), primary key (FEATURE_ID));
 create table REPO (REPO_ID varchar(255) not null, LAST_DATE varchar(255), MICROSERVICE varchar(255) not null, primary key (REPO_ID));
 create table REPO_COMMIT (MATCHED_TYPE varchar(31) not null, REPO_COMMIT_ID int8 not null, SHA varchar(255) not null, VERSION varchar(255), REPO_ID varchar(255) not null, FEATURE_ID varchar(255), primary key (REPO_COMMIT_ID));
 alter table ENV_FEATURE add constraint ENV_FEATURE_KEY unique (ENV_ID, FEATURE_ID);

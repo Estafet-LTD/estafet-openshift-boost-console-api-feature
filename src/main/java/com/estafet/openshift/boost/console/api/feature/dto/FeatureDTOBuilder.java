@@ -13,6 +13,13 @@ public class FeatureDTOBuilder {
 	private boolean promoted;
 
 	private String waitingSince;
+	
+	private String url;
+
+	public FeatureDTOBuilder setUrl(String url) {
+		this.url = url;
+		return this;
+	}
 
 	public FeatureDTOBuilder setFeatureId(String featureId) {
 		this.featureId = featureId;
@@ -46,6 +53,7 @@ public class FeatureDTOBuilder {
 	
 	public FeatureDTO build() {
 		FeatureDTO dto = new FeatureDTO();
+		dto.setUrl(url);
 		dto.setDescription(description);
 		dto.setFeatureId(featureId);
 		dto.setPromoted(promoted);

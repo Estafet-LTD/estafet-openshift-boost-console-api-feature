@@ -15,17 +15,13 @@ import com.estafet.openshift.boost.console.api.feature.dao.EnvDAO;
 import com.estafet.openshift.boost.console.api.feature.dao.EnvFeatureDAO;
 import com.estafet.openshift.boost.console.api.feature.dao.FeatureDAO;
 import com.estafet.openshift.boost.console.api.feature.dao.RepoDAO;
-import com.estafet.openshift.boost.console.api.feature.jms.NewEnvironmentFeatureProducer;
 import com.estafet.openshift.boost.console.api.feature.message.EnvFeatureMessage;
 import com.estafet.openshift.boost.console.api.feature.model.Env;
 import com.estafet.openshift.boost.console.api.feature.model.EnvFeature;
-import com.estafet.openshift.boost.console.api.feature.model.EnvMicroservice;
 import com.estafet.openshift.boost.console.api.feature.model.Feature;
 import com.estafet.openshift.boost.console.api.feature.model.Matched;
 import com.estafet.openshift.boost.console.api.feature.model.MatchedBuilder;
 import com.estafet.openshift.boost.console.api.feature.model.Repo;
-import com.estafet.openshift.boost.console.api.feature.model.Version;
-import com.estafet.openshift.boost.messages.environments.Environment;
 import com.estafet.openshift.boost.messages.features.FeatureMessage;
 
 @Service
@@ -50,9 +46,6 @@ public class FeatureService {
 
 	@Autowired
 	private EnvFeatureDAO envFeatureDAO;
-
-	@Autowired
-	private NewEnvironmentFeatureProducer newEnvFeatureProducer;
 
 	@Transactional
 	public void processFeature(FeatureMessage message) {
@@ -84,8 +77,11 @@ public class FeatureService {
 	}
 
 	private Feature createFeature(FeatureMessage message) {
-		Feature feature = Feature.builder().setDescription(message.getDescription())
-				.setFeatureId(message.getFeatureId()).setStatus(message.getStatus().getValue())
+		Feature feature = Feature.builder()
+				.setUrl(message.getFeatureURL())
+				.setDescription(message.getDescription())
+				.setFeatureId(message.getFeatureId())
+				.setStatus(message.getStatus().getValue())
 				.setTitle(message.getTitle()).build();
 		return feature;
 	}
@@ -102,40 +98,6 @@ public class FeatureService {
 		}
 	}
 
-	@Transactional
-	public void updateEnvFeatures(Environment envMessage) {
-		log.info("update EnvFeatures for env - " + envMessage.getName());
-		log.debug(envMessage.toJSON());
-		Env env = envDAO.getEnv(envMessage.getName());
-		for (EnvMicroservice envMicroservice : env.getMicroservices()) {
-			for (Matched matched : commitDAO.getMatchedForMicroservice(envMicroservice.getMicroservice())) {
-				Feature feature = matched.getFeature();
-				if (!env.getFeatures().contains(feature)) {
-					Version matchedVersion = new Version(matched.getVersion());
-					Version microserviceVersion = new Version(envMicroservice.getVersion());
-					if (envMessage.getName().equals("build") || (matchedVersion.isLessThanOrEqual(microserviceVersion)
-							&& feature.getStatus().equals("Done"))) {
-						EnvFeature envFeature = EnvFeature.builder()
-								.setFeature(feature)
-								.setDeployedDate(envMicroservice.getDeployedDate())
-								.setEnv(env)
-								.build();
-						envFeatureDAO.save(envFeature);
-						EnvFeatureMessage envFeatureMessage = EnvFeatureMessage.builder()
-										.setDeployedDate(envMicroservice.getDeployedDate())
-										.setDescription(feature.getDescription())
-										.setEnvironment(envMessage.getName())
-										.setFeatureId(feature.getFeatureId())
-										.setStatus(feature.getStatus())
-										.setTitle(feature.getTitle())
-										.build();
-						newEnvFeatureProducer.sendMessage(envFeatureMessage);
-					}
-				}
-			}
-		}
-		env.setUpdatedDate(envMessage.getUpdatedDate());
-		envDAO.updateEnv(env);
-	}
+	
 
 }
