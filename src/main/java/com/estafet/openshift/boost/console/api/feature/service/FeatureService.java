@@ -93,8 +93,11 @@ public class FeatureService {
 	@Transactional
 	public void processEnvFeature(EnvFeatureMessage envFeatureMessage) {
 		if (!envFeatureMessage.getEnvironment().equals("build")) {
+			log.info(envFeatureMessage.toJSON());
 			Env env = envDAO.getEnv(envFeatureMessage.getEnvironment());
+			log.info("env - " + env.toString());
 			Env prevEnv = envDAO.getEnv(env.getPreviousEnv());
+			log.info("prevEnv - " + prevEnv.toString());
 			prevEnv.setUpdatedDate(DateUtils.newDate());
 			EnvFeature envFeature = prevEnv.getEnvFeature(envFeatureMessage.getFeatureId());
 			envFeature.setMigratedDate(envFeatureMessage.getDeployedDate());
