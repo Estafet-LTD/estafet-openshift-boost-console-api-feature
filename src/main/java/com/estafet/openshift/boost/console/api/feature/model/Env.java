@@ -137,8 +137,12 @@ public class Env {
 	}
 
 	public EnvironmentDTO getEnvironmentDTO() {
-		return EnvironmentDTO.builder().setLive(live).setName(name).setUpdatedDate(updatedDate)
-				.setEnvFeatures(envFeatures).build();
+		return EnvironmentDTO.builder()
+				.setLive(live)
+				.setName(name)
+				.setUpdatedDate(updatedDate)
+				.setEnvFeatures(envFeatures)
+				.build();
 	}
 
 	@Override
