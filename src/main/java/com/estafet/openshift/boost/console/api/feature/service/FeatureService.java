@@ -58,8 +58,12 @@ public class FeatureService {
 		Repo repo = repoDAO.getRepo(message.getRepo());
 		if (!getRepoFeatures(message).contains(feature)) {
 			String version = githubService.getVersionForCommit(repo.getName(), message.getCommitId());
-			Matched matched = new MatchedBuilder().setFeature(feature).setSha(message.getCommitId()).setVersion(version)
-					.setRepo(repo).build();
+			Matched matched = new MatchedBuilder()
+					.setFeature(feature)
+					.setSha(message.getCommitId())
+					.setVersion(version)
+					.setRepo(repo)
+					.build();
 			commitDAO.createRepoCommit(matched);
 		}
 		updateEnvs();
