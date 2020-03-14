@@ -12,12 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.estafet.openshift.boost.commons.lib.date.DateUtils;
 import com.estafet.openshift.boost.console.api.feature.dao.CommitDAO;
 import com.estafet.openshift.boost.console.api.feature.dao.EnvDAO;
-import com.estafet.openshift.boost.console.api.feature.dao.EnvFeatureDAO;
 import com.estafet.openshift.boost.console.api.feature.dao.FeatureDAO;
 import com.estafet.openshift.boost.console.api.feature.dao.RepoDAO;
-import com.estafet.openshift.boost.console.api.feature.message.EnvFeatureMessage;
 import com.estafet.openshift.boost.console.api.feature.model.Env;
-import com.estafet.openshift.boost.console.api.feature.model.EnvFeature;
 import com.estafet.openshift.boost.console.api.feature.model.Feature;
 import com.estafet.openshift.boost.console.api.feature.model.Matched;
 import com.estafet.openshift.boost.console.api.feature.model.MatchedBuilder;
@@ -43,9 +40,6 @@ public class FeatureService {
 
 	@Autowired
 	private CommitDAO commitDAO;
-
-	@Autowired
-	private EnvFeatureDAO envFeatureDAO;
 
 	@Transactional
 	public void processFeature(FeatureMessage message) {
@@ -89,22 +83,5 @@ public class FeatureService {
 				.setTitle(message.getTitle()).build();
 		return feature;
 	}
-
-	@Transactional
-	public void processEnvFeature(EnvFeatureMessage envFeatureMessage) {
-		if (!envFeatureMessage.getEnvironment().equals("build")) {
-			log.info(envFeatureMessage.toJSON());
-			Env env = envDAO.getEnv(envFeatureMessage.getEnvironment());
-			log.info("env - " + env.toString());
-			Env prevEnv = envDAO.getEnv(env.getPreviousEnv());
-			log.info("prevEnv - " + prevEnv.toString());
-			prevEnv.setUpdatedDate(DateUtils.newDate());
-			EnvFeature envFeature = prevEnv.getEnvFeature(envFeatureMessage.getFeatureId());
-			envFeature.setMigratedDate(envFeatureMessage.getDeployedDate());
-			envFeatureDAO.save(envFeature);
-		}
-	}
-
-	
 
 }

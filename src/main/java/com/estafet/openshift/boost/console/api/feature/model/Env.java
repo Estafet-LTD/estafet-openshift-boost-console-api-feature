@@ -123,19 +123,6 @@ public class Env {
 		this.updatedDate = updatedDate;
 	}
 
-	public String getPreviousEnv() {
-		if (name.equals("test")) {
-			return "build";
-		} else if (!live && (name.equals("green") || name.equals("blue"))) {
-			return "test";
-		} else if (name.equals("green")) {
-			return "blue";
-		} else if (name.equals("blue")) {
-			return "green";
-		}
-		return null;
-	}
-
 	public EnvironmentDTO getEnvironmentDTO() {
 		return EnvironmentDTO.builder()
 				.setLive(live)

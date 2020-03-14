@@ -12,7 +12,6 @@ import com.estafet.openshift.boost.console.api.feature.dao.EnvFeatureDAO;
 import com.estafet.openshift.boost.console.api.feature.dao.RepoDAO;
 import com.estafet.openshift.boost.console.api.feature.dto.EnvironmentDTO;
 import com.estafet.openshift.boost.console.api.feature.jms.EnvConsumer;
-import com.estafet.openshift.boost.console.api.feature.jms.NewEnvironmentFeatureProducer;
 import com.estafet.openshift.boost.console.api.feature.model.Env;
 import com.estafet.openshift.boost.console.api.feature.model.EnvFeature;
 import com.estafet.openshift.boost.console.api.feature.model.EnvMicroservice;
@@ -47,9 +46,6 @@ public class EnvironmentService {
 	
 	@Autowired
 	private EnvFeatureDAO envFeatureDAO;
-
-	@Autowired
-	private NewEnvironmentFeatureProducer newEnvFeatureProducer;
 
 	@Transactional
 	public void processEnvMessage(Environment envMessage) {
@@ -121,7 +117,6 @@ public class EnvironmentService {
 								.setEnv(env)
 								.build();
 						envFeatureDAO.save(envFeature);
-						newEnvFeatureProducer.sendMessage(envFeature.getEnvFeatureMessage());
 					}
 				}
 			}
