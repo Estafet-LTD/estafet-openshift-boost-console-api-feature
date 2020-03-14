@@ -126,7 +126,7 @@ public class Env {
 	public String getPreviousEnv() {
 		if (name.equals("test")) {
 			return "build";
-		} else if (live) {
+		} else if (!live && (name.equals("green") || name.equals("blue"))) {
 			return "test";
 		} else if (name.equals("green")) {
 			return "blue";
