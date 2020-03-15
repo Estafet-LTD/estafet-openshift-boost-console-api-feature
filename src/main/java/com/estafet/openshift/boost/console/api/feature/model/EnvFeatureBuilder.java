@@ -11,8 +11,6 @@ public class EnvFeatureBuilder {
 	
 	private String deployedDate;
 
-	private String migratedDate;
-
 	private Feature feature;
 	
 	private Env env;
@@ -27,11 +25,6 @@ public class EnvFeatureBuilder {
 		return this;
 	}
 
-	public EnvFeatureBuilder setMigratedDate(String migratedDate) {
-		this.migratedDate = migratedDate;
-		return this;
-	}
-
 	public EnvFeatureBuilder setFeature(Feature feature) {
 		this.feature = feature;
 		return this;
@@ -43,11 +36,6 @@ public class EnvFeatureBuilder {
 		feature.addEnvFeature(envFeature);
 		env.addEnvFeature(envFeature);
 		envFeature.setDeployedDate(deployedDate);
-		if (migratedDate != null) {
-			envFeature.setMigratedDate(migratedDate);	
-		} else if (env.getName().equals("green") || env.getName().equals("blue")) {
-			envFeature.setMigratedDate(deployedDate);
-		}
 		log.info("new envFeature object - " + envFeature);
 		return envFeature;
 	}

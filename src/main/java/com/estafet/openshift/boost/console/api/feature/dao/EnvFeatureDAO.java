@@ -20,9 +20,14 @@ public class EnvFeatureDAO {
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	public void save(EnvFeature envFeature) {
-		log.debug("envFeature object - " + envFeature);
+	public void create(EnvFeature envFeature) {
+		log.info("create envFeature - " + envFeature);
 		entityManager.persist(envFeature);	
+	}
+	
+	public void update(EnvFeature envFeature) {
+		log.info("update envFeature - " + envFeature);
+		entityManager.merge(envFeature);	
 	}
 	
 	public List<EnvFeature> getNewEnvFeatures(String env) {

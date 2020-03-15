@@ -71,7 +71,7 @@ public class EnvironmentService {
 			log.info("nextEnvFeature - " + nextEnvFeature);
 			if (nextEnvFeature != null) {
 				envFeature.setDeployedDate(nextEnvFeature.calculateDeployedDate());
-				envFeatureDAO.save(envFeature);
+				envFeatureDAO.update(envFeature);
 			}
 		}
 	}
@@ -138,9 +138,12 @@ public class EnvironmentService {
 					Version microserviceVersion = new Version(envMicroservice.getVersion());
 					if (envMessage.getName().equals("build") || (matchedVersion.isLessThanOrEqual(microserviceVersion)
 							&& feature.getStatus().equals("Done"))) {
-						EnvFeature envFeature = EnvFeature.builder().setFeature(feature)
-								.setDeployedDate(envMicroservice.getDeployedDate()).setEnv(env).build();
-						envFeatureDAO.save(envFeature);
+						EnvFeature envFeature = EnvFeature.builder()
+								.setFeature(feature)
+								.setDeployedDate(envMicroservice.getDeployedDate())
+								.setEnv(env)
+								.build();
+						envFeatureDAO.create(envFeature);
 					}
 				}
 			}
