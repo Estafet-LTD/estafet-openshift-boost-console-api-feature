@@ -13,7 +13,6 @@ import com.estafet.openshift.boost.console.api.feature.dao.EnvDAO;
 import com.estafet.openshift.boost.console.api.feature.dao.EnvFeatureDAO;
 import com.estafet.openshift.boost.console.api.feature.dao.RepoDAO;
 import com.estafet.openshift.boost.console.api.feature.dto.EnvironmentDTO;
-import com.estafet.openshift.boost.console.api.feature.jms.EnvConsumer;
 import com.estafet.openshift.boost.console.api.feature.model.Env;
 import com.estafet.openshift.boost.console.api.feature.model.EnvFeature;
 import com.estafet.openshift.boost.console.api.feature.model.EnvMicroservice;
@@ -51,7 +50,7 @@ public class EnvironmentService {
 
 	@Transactional
 	public void processEnvMessage(Environment envMessage) {
-		EnvConsumer.log.info("env - " + envMessage.getName());
+		log.info("env - " + envMessage.getName());
 		if (createEnv(envMessage)) {
 			updateRepos(envMessage);
 			updateMicroservices(envMessage);
@@ -61,10 +60,15 @@ public class EnvironmentService {
 	}
 
 	private void updateMigrationDate(Environment envMessage) {
+		Env env = envDAO.getEnv(envMessage.getName());
+		log.info("env - " + env.toString());
+		Env nextEnv = nextEnv(env);
+		log.info("nextEnv - " + nextEnv.toString());
 		List<EnvFeature> envFeatures = envFeatureDAO.getNewEnvFeatures(envMessage.getName());
 		for (EnvFeature envFeature : envFeatures) {
-			Env nextEnv = nextEnv(envFeature.getEnv());
+			log.info("envFeature - " + envFeature.toString());
 			EnvFeature nextEnvFeature = nextEnv.getEnvFeature(envFeature.getFeature().getFeatureId());
+			log.info("nextEnvFeature - " + nextEnvFeature);
 			if (nextEnvFeature != null) {
 				envFeature.setDeployedDate(nextEnvFeature.calculateDeployedDate());
 				envFeatureDAO.save(envFeature);
@@ -85,8 +89,11 @@ public class EnvironmentService {
 	private boolean createEnv(Environment envMessage) {
 		Env env = envDAO.getEnv(envMessage.getName());
 		if (env == null) {
-			env = Env.builder().setLive(envMessage.isLive()).setUpdatedDate(envMessage.getUpdatedDate())
-					.setName(envMessage.getName()).build();
+			env = Env.builder()
+					.setLive(envMessage.isLive())
+					.setUpdatedDate(envMessage.getUpdatedDate())
+					.setName(envMessage.getName())
+					.build();
 			envDAO.createEnv(env);
 			log.info("created env - " + envMessage.getName());
 			return true;

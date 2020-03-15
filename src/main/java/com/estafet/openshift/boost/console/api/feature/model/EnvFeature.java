@@ -16,6 +16,9 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.estafet.openshift.boost.commons.lib.date.DateUtils;
 import com.estafet.openshift.boost.console.api.feature.dto.FeatureDTO;
 
@@ -24,6 +27,8 @@ import com.estafet.openshift.boost.console.api.feature.dto.FeatureDTO;
 		@UniqueConstraint(columnNames = {"ENV_ID", "FEATURE_ID"}, name = "ENV_FEATURE_KEY") })
 public class EnvFeature {
 
+	private static final Logger log = LoggerFactory.getLogger(EnvFeature.class);
+	
 	@Id
 	@SequenceGenerator(name = "ENV_FEATURE_SEQ", sequenceName = "ENV_FEATURE_SEQ", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ENV_FEATURE_SEQ")
@@ -95,6 +100,7 @@ public class EnvFeature {
 								? envMicroservice.getDeployedDate()
 								: minDeployedDate;
 			}
+			log.info("calculateDeployedDate - " + minDeployedDate);
 			return minDeployedDate;
 		} catch (ParseException e) {
 			throw new RuntimeException(e);
