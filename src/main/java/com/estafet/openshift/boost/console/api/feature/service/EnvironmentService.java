@@ -63,15 +63,17 @@ public class EnvironmentService {
 		Env env = envDAO.getEnv(envMessage.getName());
 		log.info("env - " + env.toString());
 		Env nextEnv = nextEnv(env);
-		log.info("nextEnv - " + nextEnv.toString());
-		List<EnvFeature> envFeatures = envFeatureDAO.getNewEnvFeatures(envMessage.getName());
-		for (EnvFeature envFeature : envFeatures) {
-			log.info("envFeature - " + envFeature.toString());
-			EnvFeature nextEnvFeature = nextEnv.getEnvFeature(envFeature.getFeature().getFeatureId());
-			log.info("nextEnvFeature - " + nextEnvFeature);
-			if (nextEnvFeature != null) {
-				envFeature.setMigratedDate(nextEnvFeature.calculateDeployedDate());
-				envFeatureDAO.update(envFeature);
+		if (nextEnv != null) {
+			log.info("nextEnv - " + nextEnv.toString());
+			List<EnvFeature> envFeatures = envFeatureDAO.getNewEnvFeatures(envMessage.getName());
+			for (EnvFeature envFeature : envFeatures) {
+				log.info("envFeature - " + envFeature.toString());
+				EnvFeature nextEnvFeature = nextEnv.getEnvFeature(envFeature.getFeature().getFeatureId());
+				log.info("nextEnvFeature - " + nextEnvFeature);
+				if (nextEnvFeature != null) {
+					envFeature.setMigratedDate(nextEnvFeature.calculateDeployedDate());
+					envFeatureDAO.update(envFeature);
+				}
 			}
 		}
 	}
