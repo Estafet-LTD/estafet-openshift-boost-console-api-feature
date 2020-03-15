@@ -86,7 +86,7 @@ public class Env {
 
 	public EnvFeature getEnvFeature(String featureId) {
 		for (EnvFeature envfeature : envFeatures) {
-			if (envfeature.getFeature().getFeatureId().equals(name)) {
+			if (envfeature.getFeature().getFeatureId().equals(featureId)) {
 				return envfeature;
 			}
 		}
