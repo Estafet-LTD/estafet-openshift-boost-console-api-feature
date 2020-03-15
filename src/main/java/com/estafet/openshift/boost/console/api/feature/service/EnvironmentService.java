@@ -70,7 +70,7 @@ public class EnvironmentService {
 			EnvFeature nextEnvFeature = nextEnv.getEnvFeature(envFeature.getFeature().getFeatureId());
 			log.info("nextEnvFeature - " + nextEnvFeature);
 			if (nextEnvFeature != null) {
-				envFeature.setDeployedDate(nextEnvFeature.calculateDeployedDate());
+				envFeature.setMigratedDate(nextEnvFeature.calculateDeployedDate());
 				envFeatureDAO.update(envFeature);
 			}
 		}
