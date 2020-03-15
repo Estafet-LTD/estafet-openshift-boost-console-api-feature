@@ -43,7 +43,11 @@ public class EnvFeatureBuilder {
 		feature.addEnvFeature(envFeature);
 		env.addEnvFeature(envFeature);
 		envFeature.setDeployedDate(deployedDate);
-		envFeature.setMigratedDate(migratedDate);
+		if (migratedDate != null) {
+			envFeature.setMigratedDate(migratedDate);	
+		} else if (env.getName().equals("green") || env.getName().equals("blue")) {
+			envFeature.setMigratedDate(deployedDate);
+		}
 		log.info("new envFeature object - " + envFeature);
 		return envFeature;
 	}

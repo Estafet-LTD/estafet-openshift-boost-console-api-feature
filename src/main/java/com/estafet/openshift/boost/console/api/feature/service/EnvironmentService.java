@@ -1,5 +1,7 @@
 package com.estafet.openshift.boost.console.api.feature.service;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +36,7 @@ public class EnvironmentService {
 
 	@Autowired
 	private OpenShiftClient client;
-	
+
 	@Autowired
 	private EnvDAO envDAO;
 
@@ -43,7 +45,7 @@ public class EnvironmentService {
 
 	@Autowired
 	private CommitDAO commitDAO;
-	
+
 	@Autowired
 	private EnvFeatureDAO envFeatureDAO;
 
@@ -55,16 +57,36 @@ public class EnvironmentService {
 			updateMicroservices(envMessage);
 			updateEnvFeatures(envMessage);
 		}
+		updateMigrationDate(envMessage);
 	}
-	
+
+	private void updateMigrationDate(Environment envMessage) {
+		List<EnvFeature> envFeatures = envFeatureDAO.getNewEnvFeatures(envMessage.getName());
+		for (EnvFeature envFeature : envFeatures) {
+			Env nextEnv = nextEnv(envFeature.getEnv());
+			EnvFeature nextEnvFeature = nextEnv.getEnvFeature(envFeature.getFeature().getFeatureId());
+			if (nextEnvFeature != null) {
+				envFeature.setDeployedDate(nextEnvFeature.calculateDeployedDate());
+				envFeatureDAO.save(envFeature);
+			}
+		}
+	}
+
+	private Env nextEnv(Env env) {
+		if (env.getName().equals("build")) {
+			return envDAO.getEnv("test");
+		} else if (env.getName().equals("test")) {
+			return envDAO.getStagingEnv();
+		} else {
+			return env;
+		}
+	}
+
 	private boolean createEnv(Environment envMessage) {
 		Env env = envDAO.getEnv(envMessage.getName());
 		if (env == null) {
-			env = Env.builder()
-					.setLive(envMessage.isLive())
-					.setUpdatedDate(envMessage.getUpdatedDate())
-					.setName(envMessage.getName())
-					.build();
+			env = Env.builder().setLive(envMessage.isLive()).setUpdatedDate(envMessage.getUpdatedDate())
+					.setName(envMessage.getName()).build();
 			envDAO.createEnv(env);
 			log.info("created env - " + envMessage.getName());
 			return true;
@@ -73,7 +95,7 @@ public class EnvironmentService {
 			return !env.getUpdatedDate().equals(envMessage.getUpdatedDate());
 		}
 	}
-	
+
 	private void updateRepos(Environment env) {
 		log.info("updateRepos for env - " + env.getName());
 		for (EnvironmentApp app : env.getApps()) {
@@ -94,11 +116,9 @@ public class EnvironmentService {
 	}
 
 	private String getRepo(IBuildConfig buildConfig) {
-		return RepoUtil.getRepoFromURL(
-				ENV.getGithub(),
-				new BuildConfigParser(buildConfig).getGitRepository());
+		return RepoUtil.getRepoFromURL(ENV.getGithub(), new BuildConfigParser(buildConfig).getGitRepository());
 	}
-	
+
 	private void updateEnvFeatures(Environment envMessage) {
 		log.info("update EnvFeatures for env - " + envMessage.getName());
 		log.debug(envMessage.toJSON());
@@ -111,11 +131,8 @@ public class EnvironmentService {
 					Version microserviceVersion = new Version(envMicroservice.getVersion());
 					if (envMessage.getName().equals("build") || (matchedVersion.isLessThanOrEqual(microserviceVersion)
 							&& feature.getStatus().equals("Done"))) {
-						EnvFeature envFeature = EnvFeature.builder()
-								.setFeature(feature)
-								.setDeployedDate(envMicroservice.getDeployedDate())
-								.setEnv(env)
-								.build();
+						EnvFeature envFeature = EnvFeature.builder().setFeature(feature)
+								.setDeployedDate(envMicroservice.getDeployedDate()).setEnv(env).build();
 						envFeatureDAO.save(envFeature);
 					}
 				}

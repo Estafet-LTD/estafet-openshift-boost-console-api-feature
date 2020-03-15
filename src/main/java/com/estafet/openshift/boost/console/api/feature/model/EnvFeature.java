@@ -1,5 +1,9 @@
 package com.estafet.openshift.boost.console.api.feature.model;
 
+import java.text.ParseException;
+import java.util.Date;
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
@@ -12,6 +16,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import com.estafet.openshift.boost.commons.lib.date.DateUtils;
 import com.estafet.openshift.boost.console.api.feature.dto.FeatureDTO;
 
 @Entity
@@ -77,6 +82,25 @@ public class EnvFeature {
 				+ ", feature=" + feature + ", env=" + env + "]";
 	}
 
+	public String calculateDeployedDate() {
+		try {
+			Set<Matched> matches = getFeature().getMatched();
+			String minDeployedDate = null;
+			for (Matched matched : matches) {
+				String microservice = matched.getRepo().getMicroservice();
+				EnvMicroservice envMicroservice = env.getMicroservice(microservice);
+				Date deployedDate = DateUtils.dateFormat.parse(envMicroservice.getDeployedDate());
+				minDeployedDate = minDeployedDate == null
+						|| deployedDate.before(DateUtils.dateFormat.parse(minDeployedDate))
+								? envMicroservice.getDeployedDate()
+								: minDeployedDate;
+			}
+			return minDeployedDate;
+		} catch (ParseException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
 	public static EnvFeatureBuilder builder() {
 		return new EnvFeatureBuilder();
 	}
