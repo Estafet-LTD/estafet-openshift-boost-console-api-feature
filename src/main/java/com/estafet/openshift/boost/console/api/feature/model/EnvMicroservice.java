@@ -29,7 +29,7 @@ public class EnvMicroservice {
 	@Column(name = "VERSION", nullable = false)
 	private String version;
 
-	@Column(name = "DEPLOYED_DATE", nullable = false)
+	@Column(name = "DEPLOYED_DATE", nullable = true)
 	private String deployedDate;
 
 	@ManyToOne
