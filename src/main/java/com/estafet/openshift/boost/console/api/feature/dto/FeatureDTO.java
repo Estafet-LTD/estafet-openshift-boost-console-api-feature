@@ -1,5 +1,9 @@
 package com.estafet.openshift.boost.console.api.feature.dto;
 
+import java.util.Date;
+
+import com.estafet.openshift.boost.commons.lib.date.DateUtils;
+
 public class FeatureDTO {
 
 	private String featureId;
@@ -74,6 +78,10 @@ public class FeatureDTO {
 	
 	public static FeatureDTOBuilder builder() {
 		return new FeatureDTOBuilder();
+	}
+	
+	public Date waitingSinceDate() {
+		return DateUtils.getDate(waitingSince);
 	}
 
 }
