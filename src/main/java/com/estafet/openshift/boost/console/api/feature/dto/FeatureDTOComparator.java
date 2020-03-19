@@ -11,7 +11,7 @@ public class FeatureDTOComparator implements Comparator<FeatureDTO> {
 		} else if (feature1.getWaitingSince() != null && feature2.getWaitingSince() == null) {
 			return 1;
 		} else if (feature2.getWaitingSince() != null && feature1.getWaitingSince() == null) {
-			return 1;
+			return -1;
 		}
 		return feature2.waitingSinceDate().compareTo(feature1.waitingSinceDate());
 	}
