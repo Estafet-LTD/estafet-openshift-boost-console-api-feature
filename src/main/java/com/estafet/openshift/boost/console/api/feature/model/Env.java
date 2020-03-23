@@ -1,5 +1,6 @@
 package com.estafet.openshift.boost.console.api.feature.model;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.estafet.openshift.boost.console.api.feature.dto.EnvironmentDTO;
+import com.estafet.openshift.boost.console.api.feature.dto.FeatureDTOComparator;
 import com.estafet.openshift.boost.messages.environments.EnvironmentApp;
 
 @Entity
@@ -162,12 +164,16 @@ public class Env {
 	}
 
 	public EnvironmentDTO getEnvironmentDTO() {
-		return EnvironmentDTO.builder()
-				.setLive(live)
-				.setName(name)
-				.setUpdatedDate(updatedDate)
-				.setEnvFeatures(envFeatures)
-				.build();
+		EnvironmentDTO dto = EnvironmentDTO.builder()
+								.setLive(live)
+								.setName(name)
+								.setUpdatedDate(updatedDate)
+								.build();
+		for (EnvFeature envFeature : envFeatures) {
+			dto.addFeature(envFeature.getFeatureDTO());
+		}
+		Collections.sort(dto.getFeatures(), new FeatureDTOComparator());
+		return dto;
 	}
 
 	@Override
