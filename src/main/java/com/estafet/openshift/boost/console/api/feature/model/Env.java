@@ -32,7 +32,7 @@ public class Env {
 	@Column(name = "UPDATED_DATE", nullable = false)
 	private String updatedDate;
 
-	@Column(name = "LIVE", nullable = false)
+	@Column(name = "LIVE", nullable = true)
 	private Boolean live;
 	
 	@Column(name = "TESTED", nullable = true)
@@ -73,8 +73,11 @@ public class Env {
 
 	public void updateMicroservice(EnvironmentApp app, Repo repo) {
 		if (getMicroservice(app.getName()) == null) {
-			EnvMicroservice envMicroservice = EnvMicroservice.builder().setDeployedDate(app.getDeployedDate())
-					.setVersion(app.getVersion()).setMicroservice(app.getName()).build();
+			EnvMicroservice envMicroservice = EnvMicroservice.builder()
+					.setDeployedDate(app.getDeployedDate())
+					.setVersion(app.getVersion())
+					.setMicroservice(app.getName())
+					.build();
 			envMicroservices.add(envMicroservice);
 			envMicroservice.setEnv(this);
 			log.info("added - " + app.getName());
