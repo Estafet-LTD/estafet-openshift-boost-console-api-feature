@@ -64,28 +64,27 @@ public class EnvironmentService {
 		Env env = envDAO.getEnv(envMessage.getName());
 		log.info("env - " + env.toString());
 		Env nextEnv = nextEnv(env);
-		if (nextEnv != null) {
-			log.info("nextEnv - " + nextEnv.toString());
-			List<EnvFeature> envFeatures = envFeatureDAO.getNewEnvFeatures(envMessage.getName());
-			for (EnvFeature envFeature : envFeatures) {
-				log.info("envFeature - " + envFeature.toString());
-				EnvFeature nextEnvFeature = nextEnv.getEnvFeature(envFeature.getFeature().getFeatureId());
-				log.info("nextEnvFeature - " + nextEnvFeature);
-				if (nextEnvFeature != null) {
-					envFeature.setMigratedDate(nextEnvFeature.calculateDeployedDate());
-					envFeatureDAO.update(envFeature);
-				}
+		log.info("nextEnv - " + nextEnv.toString());
+		List<EnvFeature> envFeatures = envFeatureDAO.getNewEnvFeatures(envMessage.getName());
+		for (EnvFeature envFeature : envFeatures) {
+			log.info("envFeature - " + envFeature.toString());
+			EnvFeature nextEnvFeature = nextEnv.getEnvFeature(envFeature.getFeature().getFeatureId());
+			log.info("nextEnvFeature - " + nextEnvFeature);
+			if (nextEnvFeature != null) {
+				envFeature.setMigratedDate(nextEnvFeature.calculateDeployedDate());
+				envFeatureDAO.update(envFeature);
 			}
 		}
 	}
 
 	private Env nextEnv(Env env) {
-		if (env.getName().equals("build")) {
-			return envDAO.getEnv("test");
-		} else if (env.getName().equals("test")) {
-			return envDAO.getStagingEnv();
+		Env next = envDAO.getEnv(env.getNext());
+		if (next != null) {
+			return next;
+		} else if (env.getLive()) {
+			return envDAO.getLiveEnv();
 		} else {
-			return env;
+			return envDAO.getStagingEnv();
 		}
 	}
 
@@ -141,8 +140,8 @@ public class EnvironmentService {
 				if (!env.getFeatures().contains(feature)) {
 					Version matchedVersion = new Version(matched.getVersion());
 					Version microserviceVersion = new Version(envMicroservice.getVersion());
-					if (envMessage.getName().equals("build") || (matchedVersion.isLessThanOrEqual(microserviceVersion)
-							&& feature.getStatus().equals("Done"))) {
+					if (envMessage.getName().equals("build") || envMessage.getName().equals("test") 
+							|| (matchedVersion.isLessThanOrEqual(microserviceVersion) && feature.getStatus().equals("Done"))) {
 						EnvFeature envFeature = EnvFeature.builder()
 								.setFeature(feature)
 								.setDeployedDate(envMicroservice.getDeployedDate())
