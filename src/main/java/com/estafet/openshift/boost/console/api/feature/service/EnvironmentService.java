@@ -1,5 +1,6 @@
 package com.estafet.openshift.boost.console.api.feature.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -92,7 +93,9 @@ public class EnvironmentService {
 		Env env = envDAO.getEnv(envMessage.getName());
 		if (env == null) {
 			env = Env.builder()
-					.setLive(envMessage.isLive())
+					.setLive(envMessage.getLive())
+					.setNext(envMessage.getNext())
+					.setTested(envMessage.getTested())
 					.setUpdatedDate(envMessage.getUpdatedDate())
 					.setName(envMessage.getName())
 					.build();
@@ -155,7 +158,7 @@ public class EnvironmentService {
 	}
 
 	@Transactional(readOnly = true)
-	public EnvironmentDTO getEnv(String env) {
+	public EnvironmentDTO getEnvironment(String env) {
 		return envDAO.getEnv(env).getEnvironmentDTO();
 	}
 
@@ -169,6 +172,34 @@ public class EnvironmentService {
 		}
 		env.setUpdatedDate(envMessage.getUpdatedDate()); // reset the date
 		envDAO.updateEnv(env);
+	}
+
+	@Transactional(readOnly = true)
+	public List<EnvironmentDTO> getEnvironments() {
+		return getEnvironments("build");
+	}
+	
+	public List<EnvironmentDTO> getEnvironments(String envId) {
+		return getEnvironments(envId, new ArrayList<EnvironmentDTO>());
+	}
+	
+	private List<EnvironmentDTO> getEnvironments(String envId, List<EnvironmentDTO> envs) {
+		Env env = envDAO.getEnv(envId);
+		envs.add(env.getEnvironmentDTO());
+		if (env.getNext() != null) {
+			return getEnvironments(env.getNext(), envs);
+		} else {
+			Env green = envDAO.getEnv("green");
+			Env blue = envDAO.getEnv("blue");
+			if (green.getLive()) {
+				envs.add(blue.getEnvironmentDTO());
+				envs.add(green.getEnvironmentDTO());
+			} else {
+				envs.add(green.getEnvironmentDTO());
+				envs.add(blue.getEnvironmentDTO());
+			}
+			return envs;
+		}
 	}
 
 }

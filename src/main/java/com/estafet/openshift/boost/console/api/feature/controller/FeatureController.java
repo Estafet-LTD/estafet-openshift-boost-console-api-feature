@@ -1,5 +1,7 @@
 package com.estafet.openshift.boost.console.api.feature.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +28,12 @@ public class FeatureController {
 	
 	@GetMapping("/environment/{env}")
 	public EnvironmentDTO getEnvironment(@PathVariable String env) {
-		return environmentService.getEnv(env);
+		return environmentService.getEnvironment(env);
+	}
+	
+	@GetMapping("/environments")
+	public List<EnvironmentDTO> getEnvironments() {
+		return environmentService.getEnvironments();
 	}
 	
 }

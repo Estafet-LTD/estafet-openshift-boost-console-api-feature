@@ -17,7 +17,6 @@ import com.estafet.openshift.boost.console.api.feature.dao.RepoDAO;
 import com.estafet.openshift.boost.console.api.feature.model.Env;
 import com.estafet.openshift.boost.console.api.feature.model.Feature;
 import com.estafet.openshift.boost.console.api.feature.model.Matched;
-import com.estafet.openshift.boost.console.api.feature.model.MatchedBuilder;
 import com.estafet.openshift.boost.console.api.feature.model.Repo;
 import com.estafet.openshift.boost.messages.features.FeatureMessage;
 
@@ -52,7 +51,7 @@ public class FeatureService {
 		Repo repo = repoDAO.getRepo(message.getRepo());
 		if (!getRepoFeatures(message).contains(feature)) {
 			String version = githubService.getVersionForCommit(repo.getName(), message.getCommitId());
-			Matched matched = new MatchedBuilder()
+			Matched matched = Matched.builder()
 					.setFeature(feature)
 					.setSha(message.getCommitId())
 					.setVersion(version)

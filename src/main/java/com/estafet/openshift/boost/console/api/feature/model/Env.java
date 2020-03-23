@@ -31,7 +31,13 @@ public class Env {
 	private String updatedDate;
 
 	@Column(name = "LIVE", nullable = false)
-	private boolean live = false;
+	private Boolean live;
+	
+	@Column(name = "TESTED", nullable = true)
+	private Boolean tested;
+	
+	@Column(name = "NEXT", nullable = true)
+	private String next;
 
 	@OneToMany(mappedBy = "env", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<EnvFeature> envFeatures = new HashSet<EnvFeature>();
@@ -39,11 +45,27 @@ public class Env {
 	@OneToMany(mappedBy = "env", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<EnvMicroservice> envMicroservices = new HashSet<EnvMicroservice>();
 
-	public boolean isLive() {
+	public Boolean getTested() {
+		return tested;
+	}
+
+	public void setTested(Boolean tested) {
+		this.tested = tested;
+	}
+
+	public String getNext() {
+		return next;
+	}
+
+	public void setNext(String next) {
+		this.next = next;
+	}
+
+	public Boolean getLive() {
 		return live;
 	}
 
-	public void setLive(boolean live) {
+	public void setLive(Boolean live) {
 		this.live = live;
 	}
 
@@ -66,6 +88,22 @@ public class Env {
 			}
 		}
 
+	}
+
+	public Set<EnvFeature> getEnvFeatures() {
+		return envFeatures;
+	}
+
+	public void setEnvFeatures(Set<EnvFeature> envFeatures) {
+		this.envFeatures = envFeatures;
+	}
+
+	public Set<EnvMicroservice> getEnvMicroservices() {
+		return envMicroservices;
+	}
+
+	public void setEnvMicroservices(Set<EnvMicroservice> envMicroservices) {
+		this.envMicroservices = envMicroservices;
 	}
 
 	public Set<EnvMicroservice> getMicroservices() {
@@ -164,6 +202,53 @@ public class Env {
 	@Override
 	public String toString() {
 		return "Env [name=" + name + "]";
+	}
+	
+	public static class EnvBuilder {
+
+		private String name;
+		private Boolean live;
+		private String updatedDate;
+		private Boolean tested;
+		private String next;
+		
+		private EnvBuilder() {}
+
+		public EnvBuilder setTested(Boolean tested) {
+			this.tested = tested;
+			return this;
+		}
+
+		public EnvBuilder setNext(String next) {
+			this.next = next;
+			return this;
+		}
+
+		public EnvBuilder setUpdatedDate(String updatedDate) {
+			this.updatedDate = updatedDate;
+			return this;
+		}
+
+		public EnvBuilder setName(String name) {
+			this.name = name;
+			return this;
+		}
+
+		public EnvBuilder setLive(Boolean live) {
+			this.live = live;
+			return this;
+		}
+		
+		public Env build() {
+			Env env = new Env();
+			env.setLive(live);
+			env.setName(name);
+			env.setUpdatedDate(updatedDate);
+			env.setNext(next);
+			env.setTested(tested);
+			return env;
+		}
+		
 	}
 
 }

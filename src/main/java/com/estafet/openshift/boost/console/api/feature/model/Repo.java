@@ -104,5 +104,32 @@ public class Repo {
 	public static RepoBuilder builder() {
 		return new RepoBuilder();
 	}
+	
+	public static class RepoBuilder {
+
+		private String name;
+
+		private String microservice;
+
+		private RepoBuilder() {}
+		
+		public RepoBuilder setName(String name) {
+			this.name = name;
+			return this;
+		}
+
+		public RepoBuilder setMicroservice(String microservice) {
+			this.microservice = microservice;
+			return this;
+		}
+
+		public Repo build() {
+			Repo repo = new Repo();
+			repo.setName(name);
+			repo.setMicroservice(microservice);
+			return repo;
+		}
+		
+	}
 
 }

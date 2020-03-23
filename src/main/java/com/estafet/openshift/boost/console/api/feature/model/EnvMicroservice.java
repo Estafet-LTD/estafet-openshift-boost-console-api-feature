@@ -106,5 +106,40 @@ public class EnvMicroservice {
 	public String toString() {
 		return "EnvMicroservice [id=" + id + ", microservice=" + microservice + ", env=" + env + "]";
 	}
+	
+	public static class EnvMicroserviceBuilder {
+
+		private String version;
+
+		private String deployedDate;
+		
+		private String microservice;
+		
+		private EnvMicroserviceBuilder( ) { }
+
+		public EnvMicroserviceBuilder setMicroservice(String microservice) {
+			this.microservice = microservice;
+			return this;
+		}
+
+		public EnvMicroserviceBuilder setVersion(String version) {
+			this.version = version;
+			return this;
+		}
+
+		public EnvMicroserviceBuilder setDeployedDate(String deployedDate) {
+			this.deployedDate = deployedDate;
+			return this;
+		}
+
+		public EnvMicroservice build() {
+			EnvMicroservice envMicroservice = new EnvMicroservice();
+			envMicroservice.setMicroservice(microservice);
+			envMicroservice.setDeployedDate(deployedDate);
+			envMicroservice.setVersion(version);
+			return envMicroservice;
+		}
+
+	}
 
 }
