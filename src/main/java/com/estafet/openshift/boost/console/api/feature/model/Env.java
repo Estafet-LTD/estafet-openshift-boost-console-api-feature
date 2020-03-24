@@ -210,7 +210,8 @@ public class Env {
 
 	@Override
 	public String toString() {
-		return "Env [name=" + name + "]";
+		return "Env [name=" + name + ", updatedDate=" + updatedDate + ", live=" + live + ", tested=" + tested
+				+ ", next=" + next + "]";
 	}
 	
 	public static class EnvBuilder {

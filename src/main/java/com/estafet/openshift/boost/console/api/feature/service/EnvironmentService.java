@@ -78,6 +78,7 @@ public class EnvironmentService {
 	}
 
 	private Env nextEnv(Env env) {
+		log.info(env.toString());
 		Env next = envDAO.getEnv(env.getNext());
 		if (next != null) {
 			return next;
