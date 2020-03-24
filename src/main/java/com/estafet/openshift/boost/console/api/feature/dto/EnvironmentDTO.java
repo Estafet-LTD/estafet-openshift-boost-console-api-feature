@@ -84,7 +84,7 @@ public class EnvironmentDTO {
 			return this;
 		}
 
-		public EnvironmentDTOBuilder setLive(boolean live) {
+		public EnvironmentDTOBuilder setLive(Boolean live) {
 			this.live = live;
 			return this;
 		}
