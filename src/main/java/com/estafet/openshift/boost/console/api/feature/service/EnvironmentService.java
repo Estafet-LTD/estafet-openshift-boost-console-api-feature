@@ -64,16 +64,18 @@ public class EnvironmentService {
 		Env env = envDAO.getEnv(envMessage.getName());
 		log.info("env - " + env.toString());
 		Env nextEnv = nextEnv(env);
-		log.info("nextEnv - " + nextEnv.toString());
-		List<EnvFeature> envFeatures = envFeatureDAO.getNewEnvFeatures(envMessage.getName());
-		for (EnvFeature envFeature : envFeatures) {
-			log.info("envFeature - " + envFeature.toString());
-			EnvFeature nextEnvFeature = nextEnv.getEnvFeature(envFeature.getFeature().getFeatureId());
-			log.info("nextEnvFeature - " + nextEnvFeature);
-			if (nextEnvFeature != null) {
-				envFeature.setMigratedDate(nextEnvFeature.calculateDeployedDate());
-				envFeatureDAO.update(envFeature);
-			}
+		if (nextEnv != null) {
+			log.info("nextEnv - " + nextEnv.toString());
+			List<EnvFeature> envFeatures = envFeatureDAO.getNewEnvFeatures(envMessage.getName());
+			for (EnvFeature envFeature : envFeatures) {
+				log.info("envFeature - " + envFeature.toString());
+				EnvFeature nextEnvFeature = nextEnv.getEnvFeature(envFeature.getFeature().getFeatureId());
+				log.info("nextEnvFeature - " + nextEnvFeature);
+				if (nextEnvFeature != null) {
+					envFeature.setMigratedDate(nextEnvFeature.calculateDeployedDate());
+					envFeatureDAO.update(envFeature);
+				}
+			}			
 		}
 	}
 
@@ -82,11 +84,10 @@ public class EnvironmentService {
 		Env next = envDAO.getEnv(env.getNext());
 		if (next != null) {
 			return next;
-		} else if (env.getLive()) {
-			return envDAO.getLiveEnv();
-		} else {
-			return envDAO.getStagingEnv();
+		} else if (env.getName().equals("green") || env.getName().equals("blue")) {
+			return env.getLive() ? envDAO.getLiveEnv() : envDAO.getStagingEnv();
 		}
+		return null;
 	}
 
 	private boolean createEnv(Environment envMessage) {
