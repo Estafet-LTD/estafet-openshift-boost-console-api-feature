@@ -82,9 +82,11 @@ public class EnvironmentService {
 	private Env nextEnv(Env env) {
 		log.info(env.toString());
 		if (env.getNext() != null && !env.getNext().equals("prod")) {
-			return envDAO.getEnv(env.getNext());	
-		} else if (env.getNext().equals("prod"))  {
-			return envDAO.getStagingEnv();
+			if (env.getNext().equals("prod")) {
+				return envDAO.getStagingEnv();	
+			} else {
+				return envDAO.getEnv(env.getNext());	
+			}
 		} else if (env.getName().equals("green") || env.getName().equals("blue")) {
 			return env.getLive() ? envDAO.getLiveEnv() : envDAO.getStagingEnv();
 		}
