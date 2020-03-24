@@ -81,7 +81,7 @@ public class EnvironmentService {
 
 	private Env nextEnv(Env env) {
 		log.info(env.toString());
-		if (env.getNext() != null && !env.getNext().equals("prod")) {
+		if (env.getNext() != null) {
 			if (env.getNext().equals("prod")) {
 				return envDAO.getStagingEnv();	
 			} else {
