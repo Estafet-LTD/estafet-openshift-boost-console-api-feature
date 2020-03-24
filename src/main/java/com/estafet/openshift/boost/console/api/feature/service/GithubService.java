@@ -16,11 +16,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import com.estafet.openshift.boost.commons.lib.env.ENV;
 import com.estafet.openshift.boost.console.api.feature.dao.RepoDAO;
 import com.estafet.openshift.boost.console.api.feature.message.GitCommit;
 import com.estafet.openshift.boost.console.api.feature.message.GitTag;
 import com.estafet.openshift.boost.console.api.feature.model.Repo;
-import com.estafet.openshift.boost.console.api.feature.util.ENV;
 
 @Service
 public class GithubService {
@@ -60,7 +60,7 @@ public class GithubService {
 	}
 	
 	private List<GitCommit> getRepoCommitsByPage(String repo, String since, int page) {
-		String url = "https://api.github.com/repos/" + ENV.getGithub() + "/" + repo + "/commits?page=" + page;
+		String url = "https://api.github.com/repos/" + ENV.GITHUB + "/" + repo + "/commits?page=" + page;
 		if (since != null) {
 			url += "&since=" + since; 
 		}
@@ -108,7 +108,7 @@ public class GithubService {
 
 	@Cacheable(cacheNames = { "tags" })
 	public GitTag[] getGitTags(String repo) {
-		String url = "https://api.github.com/repos/" + ENV.getGithub() + "/" + repo + "/tags";
+		String url = "https://api.github.com/repos/" + ENV.GITHUB + "/" + repo + "/tags";
 		log.info(url);
 		return restTemplate.getForObject(url, GitTag[].class);
 	}

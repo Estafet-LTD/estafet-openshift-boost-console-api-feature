@@ -20,7 +20,7 @@ import org.springframework.jms.support.converter.SimpleMessageConverter;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
 
-import com.estafet.openshift.boost.console.api.feature.util.ENV;
+import com.estafet.openshift.boost.commons.lib.env.ENV;
 
 import io.opentracing.Tracer;
 import io.opentracing.contrib.jms.spring.TracingJmsTemplate;
@@ -51,7 +51,7 @@ public class Application extends SpringBootServletInitializer {
 
 	@Bean
 	public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder) {
-		return restTemplateBuilder.basicAuthorization(ENV.getGithubUser(), ENV.getGithubPwd()).build();
+		return restTemplateBuilder.basicAuthorization(ENV.GITHUB_USER, ENV.GITHUB_PASSWORD).build();
 	}
 
 	@Bean

@@ -2,6 +2,8 @@ package com.estafet.openshift.boost.console.api.feature.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.estafet.openshift.boost.commons.lib.env.ENV;
 import com.estafet.openshift.boost.console.api.feature.dao.CommitDAO;
 import com.estafet.openshift.boost.console.api.feature.dao.EnvDAO;
 import com.estafet.openshift.boost.console.api.feature.dao.EnvFeatureDAO;
@@ -23,8 +26,6 @@ import com.estafet.openshift.boost.console.api.feature.model.Repo;
 import com.estafet.openshift.boost.console.api.feature.model.Version;
 import com.estafet.openshift.boost.console.api.feature.openshift.BuildConfigParser;
 import com.estafet.openshift.boost.console.api.feature.openshift.OpenShiftClient;
-import com.estafet.openshift.boost.console.api.feature.util.ENV;
-import com.estafet.openshift.boost.console.api.feature.util.RepoUtil;
 import com.estafet.openshift.boost.messages.environments.Environment;
 import com.estafet.openshift.boost.messages.environments.EnvironmentApp;
 import com.openshift.restclient.model.IBuildConfig;
@@ -132,7 +133,16 @@ public class EnvironmentService {
 	}
 
 	private String getRepo(IBuildConfig buildConfig) {
-		return RepoUtil.getRepoFromURL(ENV.getGithub(), new BuildConfigParser(buildConfig).getGitRepository());
+		String repoUrl = new BuildConfigParser(buildConfig).getGitRepository();
+		log.info("repoURL - " + repoUrl);
+		String githubUri = Pattern.quote("https://github.com/");
+		String githubOrg = Pattern.quote(ENV.GITHUB + "/");
+		Pattern r = Pattern.compile("(" + githubUri + ")(" + githubOrg + ")(.+)");
+		log.info("pattern - " + r.pattern());
+		Matcher m = r.matcher(repoUrl); 
+		m.find();
+		String repo = m.group(3);
+		return repo;
 	}
 
 	private void updateEnvFeatures(Environment envMessage) {
