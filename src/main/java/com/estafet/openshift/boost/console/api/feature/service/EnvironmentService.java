@@ -200,7 +200,7 @@ public class EnvironmentService {
 	private List<EnvironmentDTO> getEnvironments(String envId, List<EnvironmentDTO> envs) {
 		Env env = envDAO.getEnv(envId);
 		envs.add(env.getEnvironmentDTO());
-		if (env.getNext() != null) {
+		if (!env.getNext().equals("prod")) {
 			return getEnvironments(env.getNext(), envs);
 		} else {
 			Env green = envDAO.getEnv("green");
