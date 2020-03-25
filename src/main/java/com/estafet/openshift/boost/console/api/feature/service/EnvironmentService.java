@@ -102,6 +102,7 @@ public class EnvironmentService {
 					.setNext(envMessage.getNext())
 					.setTested(envMessage.getTested())
 					.setUpdatedDate(envMessage.getUpdatedDate())
+					.setDisplayName(envMessage.getDisplayName())
 					.setName(envMessage.getName())
 					.build();
 			envDAO.createEnv(env);

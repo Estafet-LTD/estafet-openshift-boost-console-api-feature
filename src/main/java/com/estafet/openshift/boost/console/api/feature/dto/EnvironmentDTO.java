@@ -6,6 +6,7 @@ import java.util.List;
 public class EnvironmentDTO {
 
 	private String name;
+	private String displayName;
 	private String updatedDate;
 	private Boolean live;
 	private Boolean tested;
@@ -16,6 +17,14 @@ public class EnvironmentDTO {
 		features.add(feature);
 	}
 	
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
+
 	public Boolean getTested() {
 		return tested;
 	}
@@ -64,10 +73,16 @@ public class EnvironmentDTO {
 
 		private String name;
 		private String updatedDate;
+		private String displayName;
 		private Boolean live;
 		private Boolean tested;
 		
 		private EnvironmentDTOBuilder() { }
+
+		public EnvironmentDTOBuilder setDisplayName(String displayName) {
+			this.displayName = displayName;
+			return this;
+		}
 
 		public EnvironmentDTOBuilder setTested(Boolean tested) {
 			this.tested = tested;
@@ -93,6 +108,7 @@ public class EnvironmentDTO {
 			EnvironmentDTO dto = new EnvironmentDTO();
 			dto.setLive(live);
 			dto.setName(name);
+			dto.setDisplayName(displayName);
 			dto.setUpdatedDate(updatedDate);
 			dto.setTested(tested);
 			return dto;

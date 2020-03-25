@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
-    <changeSet author="Dennis (generated)" id="1585007380596-1">
+    <changeSet author="Dennis (generated)" id="1585140874572-1">
         <createSequence sequenceName="env_feature_seq"/>
     </changeSet>
-    <changeSet author="Dennis (generated)" id="1585007380596-2">
+    <changeSet author="Dennis (generated)" id="1585140874572-2">
         <createSequence sequenceName="env_microservice_id_seq"/>
     </changeSet>
-    <changeSet author="Dennis (generated)" id="1585007380596-3">
+    <changeSet author="Dennis (generated)" id="1585140874572-3">
         <createSequence sequenceName="repo_commit_id_seq"/>
     </changeSet>
-    <changeSet author="Dennis (generated)" id="1585007380596-4">
+    <changeSet author="Dennis (generated)" id="1585140874572-4">
         <createTable tableName="env">
             <column name="env_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="display" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
             <column name="live" type="BOOL"/>
@@ -22,7 +25,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Dennis (generated)" id="1585007380596-5">
+    <changeSet author="Dennis (generated)" id="1585140874572-5">
         <createTable tableName="env_feature">
             <column name="env_feature_id" type="BIGINT">
                 <constraints nullable="false"/>
@@ -39,7 +42,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Dennis (generated)" id="1585007380596-6">
+    <changeSet author="Dennis (generated)" id="1585140874572-6">
         <createTable tableName="env_microservice">
             <column name="env_microservice_id" type="BIGINT">
                 <constraints nullable="false"/>
@@ -56,7 +59,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Dennis (generated)" id="1585007380596-7">
+    <changeSet author="Dennis (generated)" id="1585140874572-7">
         <createTable tableName="feature">
             <column name="feature_id" type="VARCHAR(255)">
                 <constraints nullable="false"/>
@@ -67,7 +70,7 @@
             <column name="url" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet author="Dennis (generated)" id="1585007380596-8">
+    <changeSet author="Dennis (generated)" id="1585140874572-8">
         <createTable tableName="repo">
             <column name="repo_id" type="VARCHAR(255)">
                 <constraints nullable="false"/>
@@ -78,7 +81,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Dennis (generated)" id="1585007380596-9">
+    <changeSet author="Dennis (generated)" id="1585140874572-9">
         <createTable tableName="repo_commit">
             <column name="matched_type" type="VARCHAR(31)">
                 <constraints nullable="false"/>
@@ -96,49 +99,49 @@
             <column name="feature_id" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet author="Dennis (generated)" id="1585007380596-10">
+    <changeSet author="Dennis (generated)" id="1585140874572-10">
         <addPrimaryKey columnNames="env_feature_id" constraintName="env_feature_pkey" tableName="env_feature"/>
     </changeSet>
-    <changeSet author="Dennis (generated)" id="1585007380596-11">
+    <changeSet author="Dennis (generated)" id="1585140874572-11">
         <addPrimaryKey columnNames="env_microservice_id" constraintName="env_microservice_pkey" tableName="env_microservice"/>
     </changeSet>
-    <changeSet author="Dennis (generated)" id="1585007380596-12">
+    <changeSet author="Dennis (generated)" id="1585140874572-12">
         <addPrimaryKey columnNames="env_id" constraintName="env_pkey" tableName="env"/>
     </changeSet>
-    <changeSet author="Dennis (generated)" id="1585007380596-13">
+    <changeSet author="Dennis (generated)" id="1585140874572-13">
         <addPrimaryKey columnNames="feature_id" constraintName="feature_pkey" tableName="feature"/>
     </changeSet>
-    <changeSet author="Dennis (generated)" id="1585007380596-14">
+    <changeSet author="Dennis (generated)" id="1585140874572-14">
         <addPrimaryKey columnNames="repo_commit_id" constraintName="repo_commit_pkey" tableName="repo_commit"/>
     </changeSet>
-    <changeSet author="Dennis (generated)" id="1585007380596-15">
+    <changeSet author="Dennis (generated)" id="1585140874572-15">
         <addPrimaryKey columnNames="repo_id" constraintName="repo_pkey" tableName="repo"/>
     </changeSet>
-    <changeSet author="Dennis (generated)" id="1585007380596-16">
+    <changeSet author="Dennis (generated)" id="1585140874572-16">
         <addUniqueConstraint columnNames="env_id, feature_id" constraintName="env_feature_key" tableName="env_feature"/>
     </changeSet>
-    <changeSet author="Dennis (generated)" id="1585007380596-17">
+    <changeSet author="Dennis (generated)" id="1585140874572-17">
         <addUniqueConstraint columnNames="env_id, microservice" constraintName="env_microservice_key" tableName="env_microservice"/>
     </changeSet>
-    <changeSet author="Dennis (generated)" id="1585007380596-18">
+    <changeSet author="Dennis (generated)" id="1585140874572-18">
         <addUniqueConstraint columnNames="microservice" constraintName="microservice_key" tableName="repo"/>
     </changeSet>
-    <changeSet author="Dennis (generated)" id="1585007380596-19">
+    <changeSet author="Dennis (generated)" id="1585140874572-19">
         <addUniqueConstraint columnNames="repo_id, sha" constraintName="repo_commit_key" tableName="repo_commit"/>
     </changeSet>
-    <changeSet author="Dennis (generated)" id="1585007380596-20">
+    <changeSet author="Dennis (generated)" id="1585140874572-20">
         <addForeignKeyConstraint baseColumnNames="feature_id" baseTableName="repo_commit" constraintName="commit_to_feature_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="feature_id" referencedTableName="feature"/>
     </changeSet>
-    <changeSet author="Dennis (generated)" id="1585007380596-21">
+    <changeSet author="Dennis (generated)" id="1585140874572-21">
         <addForeignKeyConstraint baseColumnNames="repo_id" baseTableName="repo_commit" constraintName="commit_to_repo_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="repo_id" referencedTableName="repo"/>
     </changeSet>
-    <changeSet author="Dennis (generated)" id="1585007380596-22">
+    <changeSet author="Dennis (generated)" id="1585140874572-22">
         <addForeignKeyConstraint baseColumnNames="env_id" baseTableName="env_feature" constraintName="env_feature_to_env_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="env_id" referencedTableName="env"/>
     </changeSet>
-    <changeSet author="Dennis (generated)" id="1585007380596-23">
+    <changeSet author="Dennis (generated)" id="1585140874572-23">
         <addForeignKeyConstraint baseColumnNames="feature_id" baseTableName="env_feature" constraintName="env_feature_to_feature_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="feature_id" referencedTableName="feature"/>
     </changeSet>
-    <changeSet author="Dennis (generated)" id="1585007380596-24">
+    <changeSet author="Dennis (generated)" id="1585140874572-24">
         <addForeignKeyConstraint baseColumnNames="env_id" baseTableName="env_microservice" constraintName="microservice_to_env_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="env_id" referencedTableName="env"/>
     </changeSet>
 </databaseChangeLog>

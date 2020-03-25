@@ -29,6 +29,9 @@ public class Env {
 	@Column(name = "ENV_ID", nullable = false)
 	private String name;
 
+	@Column(name = "DISPLAY", nullable = false)
+	private String displayName;
+	
 	@Column(name = "UPDATED_DATE", nullable = false)
 	private String updatedDate;
 
@@ -93,6 +96,14 @@ public class Env {
 			}
 		}
 
+	}
+
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
 	}
 
 	public Set<EnvFeature> getEnvFeatures() {
@@ -169,6 +180,8 @@ public class Env {
 	public EnvironmentDTO getEnvironmentDTO() {
 		EnvironmentDTO dto = EnvironmentDTO.builder()
 								.setLive(live)
+								.setTested(tested)
+								.setDisplayName(displayName)
 								.setName(name)
 								.setUpdatedDate(updatedDate)
 								.build();
@@ -217,12 +230,18 @@ public class Env {
 	public static class EnvBuilder {
 
 		private String name;
+		private String displayName;
 		private Boolean live;
 		private String updatedDate;
 		private Boolean tested;
 		private String next;
 		
 		private EnvBuilder() {}
+
+		public EnvBuilder setDisplayName(String displayName) {
+			this.displayName = displayName;
+			return this;
+		}
 
 		public EnvBuilder setTested(Boolean tested) {
 			this.tested = tested;
@@ -253,6 +272,7 @@ public class Env {
 			Env env = new Env();
 			env.setLive(live);
 			env.setName(name);
+			env.setDisplayName(displayName);
 			env.setUpdatedDate(updatedDate);
 			env.setNext(next);
 			env.setTested(tested);
