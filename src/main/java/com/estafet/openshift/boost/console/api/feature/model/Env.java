@@ -80,6 +80,7 @@ public class Env {
 		this.live = other.live;
 		this.next = other.next;
 		this.tested = other.tested;
+		this.updatedDate = other.updatedDate;
 		return this;
 	}
 
