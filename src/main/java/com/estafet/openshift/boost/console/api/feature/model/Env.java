@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import com.estafet.openshift.boost.console.api.feature.dto.EnvironmentDTO;
 import com.estafet.openshift.boost.console.api.feature.dto.FeatureDTOComparator;
+import com.estafet.openshift.boost.messages.environments.Environment;
 import com.estafet.openshift.boost.messages.environments.EnvironmentApp;
 
 @Entity
@@ -73,6 +74,14 @@ public class Env {
 	public void setLive(Boolean live) {
 		this.live = live;
 	}
+	
+	public Env merge(Env other) {
+		this.displayName = other.displayName;
+		this.live = other.live;
+		this.next = other.next;
+		this.tested = other.tested;
+		return this;
+	}
 
 	public void updateMicroservice(EnvironmentApp app, Repo repo) {
 		if (getMicroservice(app.getName()) == null) {
@@ -95,7 +104,6 @@ public class Env {
 				log.info("deployed date updated - " + app.getName());
 			}
 		}
-
 	}
 
 	public String getDisplayName() {
@@ -190,6 +198,17 @@ public class Env {
 		}
 		Collections.sort(dto.getFeatures(), new FeatureDTOComparator());
 		return dto;
+	}
+	
+	public static Env getEnv(Environment envMessage) {
+		return Env.builder()
+				.setLive(envMessage.getLive())
+				.setNext(envMessage.getNext())
+				.setTested(envMessage.getTested())
+				.setUpdatedDate(envMessage.getUpdatedDate())
+				.setDisplayName(envMessage.getDisplayName())
+				.setName(envMessage.getName())
+				.build();
 	}
 
 	@Override

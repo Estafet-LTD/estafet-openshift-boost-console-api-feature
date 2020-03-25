@@ -53,7 +53,7 @@ public class EnvironmentService {
 	@Transactional
 	public void processEnvMessage(Environment envMessage) {
 		log.info("env - " + envMessage.getName());
-		if (createEnv(envMessage)) {
+		if (updateEnv(envMessage)) {
 			updateRepos(envMessage);
 			updateMicroservices(envMessage);
 			updateEnvFeatures(envMessage);
@@ -94,24 +94,17 @@ public class EnvironmentService {
 		return null;
 	}
 
-	private boolean createEnv(Environment envMessage) {
+	private boolean updateEnv(Environment envMessage) {
 		Env env = envDAO.getEnv(envMessage.getName());
 		if (env == null) {
-			env = Env.builder()
-					.setLive(envMessage.getLive())
-					.setNext(envMessage.getNext())
-					.setTested(envMessage.getTested())
-					.setUpdatedDate(envMessage.getUpdatedDate())
-					.setDisplayName(envMessage.getDisplayName())
-					.setName(envMessage.getName())
-					.build();
-			envDAO.createEnv(env);
+			envDAO.createEnv(Env.getEnv(envMessage));
 			log.info("created env - " + envMessage.getName());
 			return true;
-		} else {
-			log.info("already exists env - " + envMessage.getName());
-			return !env.getUpdatedDate().equals(envMessage.getUpdatedDate());
+		} else if (!env.getUpdatedDate().equals(envMessage.getUpdatedDate())) {
+			log.info("env changed - " + envMessage.getName());
+			envDAO.updateEnv(env.merge(Env.getEnv(envMessage)));
 		}
+		return false;
 	}
 
 	private void updateRepos(Environment env) {
