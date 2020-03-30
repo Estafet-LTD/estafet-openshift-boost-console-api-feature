@@ -9,12 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.estafet.openshift.boost.commons.lib.date.DateUtils;
 import com.estafet.openshift.boost.console.api.feature.dao.CommitDAO;
-import com.estafet.openshift.boost.console.api.feature.dao.EnvDAO;
 import com.estafet.openshift.boost.console.api.feature.dao.FeatureDAO;
 import com.estafet.openshift.boost.console.api.feature.dao.RepoDAO;
-import com.estafet.openshift.boost.console.api.feature.model.Env;
 import com.estafet.openshift.boost.console.api.feature.model.Feature;
 import com.estafet.openshift.boost.console.api.feature.model.Matched;
 import com.estafet.openshift.boost.console.api.feature.model.Repo;
@@ -27,9 +24,6 @@ public class FeatureService {
 
 	@Autowired
 	private GithubService githubService;
-
-	@Autowired
-	private EnvDAO envDAO;
 
 	@Autowired
 	private FeatureDAO featureDAO;
@@ -58,14 +52,6 @@ public class FeatureService {
 					.setRepo(repo)
 					.build();
 			commitDAO.createRepoCommit(matched);
-		}
-		updateEnvs();
-	}
-
-	private void updateEnvs() {
-		for (Env env : envDAO.getEnvs()) {
-			env.setUpdatedDate(DateUtils.newDate());
-			envDAO.updateEnv(env);
 		}
 	}
 

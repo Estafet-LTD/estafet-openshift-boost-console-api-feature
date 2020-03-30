@@ -56,8 +56,8 @@ public class EnvironmentService {
 		if (updateEnv(envMessage)) {
 			updateRepos(envMessage);
 			updateMicroservices(envMessage);
-			updateEnvFeatures(envMessage);
 		}
+		updateEnvFeatures(envMessage);
 		updateMigrationDate(envMessage);
 	}
 
