@@ -56,8 +56,8 @@ public class EnvironmentService {
 		if (updateEnv(envMessage)) {
 			updateRepos(envMessage);
 			updateMicroservices(envMessage);
+			updateEnvFeatures(envMessage);
 		}
-		updateEnvFeatures(envMessage);
 		updateMigrationDate(envMessage);
 	}
 
@@ -103,6 +103,7 @@ public class EnvironmentService {
 		} else if (!env.getUpdatedDate().equals(envMessage.getUpdatedDate())) {
 			log.info("env changed - " + envMessage.getName());
 			envDAO.updateEnv(env.merge(Env.getEnv(envMessage)));
+			return true;
 		}
 		return false;
 	}
