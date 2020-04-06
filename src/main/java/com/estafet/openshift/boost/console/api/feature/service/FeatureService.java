@@ -26,7 +26,7 @@ public class FeatureService {
 	private static final Logger log = LoggerFactory.getLogger(FeatureService.class);
 
 	@Autowired
-	private GithubService githubService;
+	private GitService gitService;
 
 	@Autowired
 	private EnvDAO envDAO;
@@ -50,7 +50,7 @@ public class FeatureService {
 		}
 		Repo repo = repoDAO.getRepo(message.getRepo());
 		if (!getRepoFeatures(message).contains(feature)) {
-			String version = githubService.getVersionForCommit(repo.getName(), message.getCommitId());
+			String version = gitService.getVersionForCommit(repo.getName(), message.getCommitId());
 			Matched matched = Matched.builder()
 					.setFeature(feature)
 					.setSha(message.getCommitId())

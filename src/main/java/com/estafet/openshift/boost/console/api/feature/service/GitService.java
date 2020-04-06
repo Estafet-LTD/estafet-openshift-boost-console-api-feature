@@ -23,9 +23,9 @@ import com.estafet.openshift.boost.console.api.feature.message.GitTag;
 import com.estafet.openshift.boost.console.api.feature.model.Repo;
 
 @Service
-public class GithubService {
+public class GitService {
 
-	private static final Logger log = LoggerFactory.getLogger(GithubService.class);
+	private static final Logger log = LoggerFactory.getLogger(GitService.class);
 
 	@Autowired
 	private RestTemplate restTemplate;
