@@ -169,6 +169,7 @@ public class EnvironmentService {
 		log.info("feature - " + feature.toString());
 		log.info("matchedVersion - " + matchedVersion.toString());
 		log.info("microserviceVersion - " + microserviceVersion.toString());
+		log.info("isLessThanOrEqual - " + matchedVersion.isLessThanOrEqual(microserviceVersion));
 		if (matchedVersion.isLessThanOrEqual(microserviceVersion)) {
 			if (env.getName().equals("build") || env.getName().equals("test")) {
 				log.info("build or test matched");
