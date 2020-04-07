@@ -142,7 +142,6 @@ public class EnvironmentService {
 
 	private void updateEnvFeatures(Environment envMessage) {
 		log.info("update EnvFeatures for env - " + envMessage.getName());
-		log.info(envMessage.toJSON());
 		Env env = envDAO.getEnv(envMessage.getName());
 		for (EnvMicroservice envMicroservice : env.getMicroservices()) {
 			for (Matched matched : commitDAO.getMatchedForMicroservice(envMicroservice.getMicroservice())) {
@@ -150,10 +149,14 @@ public class EnvironmentService {
 				if (!env.getFeatures().contains(feature)) {
 					Version matchedVersion = new Version(matched.getVersion());
 					Version microserviceVersion = new Version(envMicroservice.getVersion());
+					log.info("env - " + env.toString());
+					log.info("feature - " + feature.toString());
 					log.info("matchedVersion - " + matchedVersion.toString());
 					log.info("microserviceVersion - " + microserviceVersion.toString());
 					if (envMessage.getName().equals("build") || envMessage.getName().equals("test") 
 							|| (matchedVersion.isLessThanOrEqual(microserviceVersion) && feature.getStatus().equals("Done"))) {
+						log.info("adding new - " + feature.toString());
+						log.info("to env - " + env.toString());
 						EnvFeature envFeature = EnvFeature.builder()
 								.setFeature(feature)
 								.setDeployedDate(envMicroservice.getDeployedDate())
