@@ -9,8 +9,10 @@ public class Version {
 	private final int revision;
 
 	private final boolean snapshot;
+	private String version;
 
 	public Version(String version) {
+		this.version = version;
 		if (version.endsWith("-SNAPSHOT")) {
 			version = version.replaceAll("\\-SNAPSHOT", "");
 			snapshot = true;
@@ -36,6 +38,10 @@ public class Version {
 			return false;
 		}
 		return true;
+	}
+	
+	public String toString() {
+		return version;
 	}
 
 }
