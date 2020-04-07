@@ -16,6 +16,13 @@ public class VersionTest {
 	}
 	
 	@Test
+	public void testIsLessThanOrEqualRevisionTrue_2() {
+		Version v1 = new Version("0.0.1");
+		Version v2 = new Version("1.1.0");
+		assertTrue(v1.isLessThanOrEqual(v2));
+	}
+	
+	@Test
 	public void testIsLessThanOrEqualMinorTrue() {
 		Version v1 = new Version("1.1.0");
 		Version v2 = new Version("1.2.0");

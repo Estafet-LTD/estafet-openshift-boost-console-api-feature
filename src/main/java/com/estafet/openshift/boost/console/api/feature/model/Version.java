@@ -30,16 +30,31 @@ public class Version {
 	}
 
 	public boolean isLessThanOrEqual(Version other) {
-		if (major > other.major) {
-			return false;
-		} else if (minor > other.minor) {
-			return false;
-		} else if (revision > other.revision) {
-			return false;
-		}
-		return true;
+		return compareMajor(other);
 	}
 	
+	private boolean compareMajor(Version other) {
+		if (major < other.major) {
+			return true;
+		} else if (major == other.major) {
+			return compareMinor(other);
+		}
+		return false;
+	}
+	
+	private boolean compareMinor(Version other) {
+		if (minor < other.minor) {
+			return true;
+		} else if (minor == other.minor) {
+			return compareRevision(other);
+		}
+		return false;
+	}
+
+	private boolean compareRevision(Version other) {
+		return revision <= other.revision;
+	}
+
 	public String toString() {
 		return version;
 	}

@@ -165,17 +165,17 @@ public class EnvironmentService {
 	}
 
 	private boolean isNewEnvFeature(Env env, Feature feature, Version matchedVersion, Version microserviceVersion) {
-		log.info("env - " + env.toString());
-		log.info("feature - " + feature.toString());
-		log.info("matchedVersion - " + matchedVersion.toString());
-		log.info("microserviceVersion - " + microserviceVersion.toString());
-		log.info("isLessThanOrEqual - " + matchedVersion.isLessThanOrEqual(microserviceVersion));
+		log.debug("env - " + env.toString());
+		log.debug("feature - " + feature.toString());
+		log.debug("matchedVersion - " + matchedVersion.toString());
+		log.debug("microserviceVersion - " + microserviceVersion.toString());
+		log.debug("isLessThanOrEqual - " + matchedVersion.isLessThanOrEqual(microserviceVersion));
 		if (matchedVersion.isLessThanOrEqual(microserviceVersion)) {
 			if (env.getName().equals("build") || env.getName().equals("test")) {
-				log.info("build or test matched");
+				log.debug("build or test matched");
 				return true;
 			} else if (feature.getStatus().equals("Done")) {
-				log.info("Another env matched");
+				log.debug("Another env matched");
 				return true;
 			}
 		} 
