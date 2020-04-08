@@ -32,6 +32,7 @@ public class CommitService {
 	private Unmatched createUnmatched(UnmatchedCommitMessage message, Repo repo) {
 		return Unmatched.builder()
 						.setRepo(repo)
+						.setMessage(message.getMessage())
 						.setSha(message.getCommitId())
 						.build();
 	}

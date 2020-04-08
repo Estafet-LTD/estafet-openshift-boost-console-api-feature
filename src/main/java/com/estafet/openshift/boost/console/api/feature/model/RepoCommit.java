@@ -31,9 +31,20 @@ public abstract class RepoCommit {
 	@Column(name = "SHA", nullable = false)
 	private String sha;
 	
+	@Column(name = "MESSAGE", nullable = false)
+	private String message;
+	
 	@ManyToOne
 	@JoinColumn(name = "REPO_ID", nullable = false, referencedColumnName = "REPO_ID", foreignKey = @ForeignKey(name = "COMMIT_TO_REPO_FK"))
 	private Repo repo;
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
 
 	public Long getId() {
 		return id;

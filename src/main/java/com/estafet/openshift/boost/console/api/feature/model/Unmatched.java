@@ -14,10 +14,15 @@ public class Unmatched extends RepoCommit {
 	public static class UnmatchedBuilder {
 
 		private String sha;
-
 		private Repo repo;
+		private String message;
 		
 		private UnmatchedBuilder() { }
+
+		public UnmatchedBuilder setMessage(String message) {
+			this.message = message;
+			return this;
+		}
 
 		public UnmatchedBuilder setSha(String sha) {
 			this.sha = sha;
@@ -32,6 +37,7 @@ public class Unmatched extends RepoCommit {
 		public Unmatched build() {
 			Unmatched unmatched = new Unmatched();
 			unmatched.setSha(sha);
+			unmatched.setMessage(message);
 			repo.addCommit(unmatched);
 			return unmatched;
 		}

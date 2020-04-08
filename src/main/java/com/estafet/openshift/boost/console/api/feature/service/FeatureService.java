@@ -53,6 +53,7 @@ public class FeatureService {
 			String version = gitService.getVersionForCommit(repo.getName(), message.getCommitId());
 			Matched matched = Matched.builder()
 					.setFeature(feature)
+					.setMessage(message.getMessage())
 					.setSha(message.getCommitId())
 					.setVersion(version)
 					.setRepo(repo)

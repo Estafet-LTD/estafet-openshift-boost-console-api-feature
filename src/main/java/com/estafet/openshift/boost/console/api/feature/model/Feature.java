@@ -19,16 +19,16 @@ public class Feature {
 	@Column(name = "FEATURE_ID", nullable = false)
 	private String featureId;
 
-	@Column(name = "TITLE", nullable = true)
+	@Column(name = "TITLE", nullable = false)
 	private String title;
 
 	@Column(name = "DESCRIPTION", nullable = true)
 	private String description;
 
-	@Column(name = "STATUS", nullable = true)
+	@Column(name = "STATUS", nullable = false)
 	private String status;
 
-	@Column(name = "URL", nullable = true)
+	@Column(name = "URL", nullable = false)
 	private String url;
 
 	@OneToMany(mappedBy = "feature", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

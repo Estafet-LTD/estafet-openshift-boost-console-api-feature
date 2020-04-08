@@ -7,6 +7,8 @@ import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.estafet.openshift.boost.messages.features.CommitMessage;
+
 @Entity
 @DiscriminatorValue("MATCHED")
 public class Matched extends RepoCommit {
@@ -34,6 +36,14 @@ public class Matched extends RepoCommit {
 		this.feature = feature;
 	}
 	
+	public CommitMessage getCommitMessage() {
+		return CommitMessage.builder()
+				.setCommitId(getSha())
+				.setMessage(getMessage())
+				.setRepo(getRepo().getName())
+				.build();
+	}
+	
 	public static MatchedBuilder builder() {
 		return new MatchedBuilder();
 	}
@@ -41,15 +51,18 @@ public class Matched extends RepoCommit {
 	public static class MatchedBuilder {
 
 		private Feature feature;
-		
 		private String sha;
-		
 		private String version;
-		
 		private Repo repo;
+		private String message;
 		
 		public MatchedBuilder() { }
 		
+		public MatchedBuilder setMessage(String message) {
+			this.message = message;
+			return this;
+		}
+
 		public MatchedBuilder setRepo(Repo repo) {
 			this.repo = repo;
 			return this;
@@ -76,6 +89,7 @@ public class Matched extends RepoCommit {
 			repo.addCommit(matched);
 			matched.setSha(sha);
 			matched.setVersion(version);
+			matched.setMessage(message);
 			return matched;
 		}
 		
