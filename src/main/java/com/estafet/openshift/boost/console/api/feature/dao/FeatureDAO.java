@@ -35,5 +35,9 @@ public class FeatureDAO {
 	public void create(Feature feature) {
 		entityManager.persist(feature);
 	}
+	
+	public void update(Feature feature) {
+		entityManager.merge(feature);
+	}
 
 }

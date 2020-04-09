@@ -59,6 +59,9 @@ public class FeatureService {
 					.setRepo(repo)
 					.build();
 			commitDAO.createRepoCommit(matched);
+		} else {
+			feature.update(createFeature(message));
+			featureDAO.update(feature);
 		}
 		updateEnvs();
 	}
