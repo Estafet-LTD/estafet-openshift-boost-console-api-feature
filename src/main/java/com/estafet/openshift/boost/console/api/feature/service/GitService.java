@@ -11,7 +11,6 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -46,7 +45,6 @@ public class GitService {
 		return getRepoCommits(repo, null);
 	}
 	
-	@Cacheable(cacheNames = { "commits" })
 	public List<GitCommit> getRepoCommits(String repo, String since) {
 		List<GitCommit> commits = new ArrayList<GitCommit>();
 		List<GitCommit> pageCommits = new ArrayList<GitCommit>();
@@ -106,7 +104,6 @@ public class GitService {
 		return commitTagMap; 
 	}
 
-	@Cacheable(cacheNames = { "tags" })
 	public GitTag[] getGitTags(String repo) {
 		String url = "https://api.github.com/repos/" + ENV.GITHUB + "/" + repo + "/tags";
 		log.info(url);
