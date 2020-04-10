@@ -37,7 +37,7 @@ public class CommitScheduler {
 			for (GitCommit gitCommit : gitService.getLastestRepoCommits(repo.getName())) {
 				RepoCommit commit = repo.getCommit(gitCommit.getSha());
 				if (commit == null || (commit instanceof Matched && !((Matched)commit).getFeature().getStatus().equals("DONE"))) {
-					commitProducer.sendMessage(gitCommit.createCommitMessage(repo.getName()));
+					commitProducer.sendMessage(gitCommit.getCommitMessage(repo.getName()));
 				}
 			}
 		}

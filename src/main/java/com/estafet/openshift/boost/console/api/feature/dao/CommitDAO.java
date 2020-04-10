@@ -1,5 +1,6 @@
 package com.estafet.openshift.boost.console.api.feature.dao;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -8,6 +9,7 @@ import javax.persistence.TypedQuery;
 
 import org.springframework.stereotype.Repository;
 
+import com.estafet.openshift.boost.console.api.feature.model.CommitDate;
 import com.estafet.openshift.boost.console.api.feature.model.Matched;
 import com.estafet.openshift.boost.console.api.feature.model.RepoCommit;
 
@@ -19,6 +21,17 @@ public class CommitDAO {
 
 	public void createRepoCommit(RepoCommit commit) {
 		entityManager.persist(commit);
+	}
+	
+	public void createCommitDate(CommitDate commitDate) {
+		entityManager.persist(commitDate);
+	}
+	
+	public List<CommitDate> getCommtDatesByRepo(String repo) {
+		TypedQuery<CommitDate> query = entityManager.createQuery("select c from CommitDate where c.repo.name = ?1", CommitDate.class);
+		List<CommitDate> dates = query.setParameter(1, repo).getResultList();
+		Collections.sort(dates, new CommitDateComparator());
+		return dates;
 	}
 	
 	public List<Matched> getMatchedForMicroservice(String microservice) {

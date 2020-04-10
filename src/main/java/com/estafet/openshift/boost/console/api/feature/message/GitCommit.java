@@ -3,6 +3,8 @@ package com.estafet.openshift.boost.console.api.feature.message;
 
 import java.util.List;
 
+import com.estafet.openshift.boost.console.api.feature.model.CommitDate;
+import com.estafet.openshift.boost.console.api.feature.model.Repo;
 import com.estafet.openshift.boost.messages.features.CommitMessage;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -131,11 +133,19 @@ public class GitCommit {
         this.parents = parents;
     }
     
-    public CommitMessage createCommitMessage(String repo) {
+    public CommitMessage getCommitMessage(String repo) {
     	return CommitMessage.builder()
     			.setCommitId(sha)
     			.setMessage(commit.getMessage())
     			.setRepo(repo)
+    			.build();
+    }
+    
+    public CommitDate getCommitDate(Repo repo) {
+    	return CommitDate.builder()
+    			.setCommitedDate(commit.getCommitter().getDate())
+    			.setRepo(repo)
+    			.setSha(sha)
     			.build();
     }
 
