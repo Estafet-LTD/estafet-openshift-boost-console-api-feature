@@ -28,7 +28,7 @@ public class CommitDAO {
 	}
 	
 	public List<CommitDate> getCommtDatesByRepo(String repo) {
-		TypedQuery<CommitDate> query = entityManager.createQuery("select c from CommitDate where c.repo.name = ?1", CommitDate.class);
+		TypedQuery<CommitDate> query = entityManager.createQuery("select c from CommitDate c where c.repo.name = ?1", CommitDate.class);
 		List<CommitDate> dates = query.setParameter(1, repo).getResultList();
 		Collections.sort(dates, new CommitDateComparator());
 		return dates;
