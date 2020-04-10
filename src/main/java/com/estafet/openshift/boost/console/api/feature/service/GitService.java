@@ -71,12 +71,8 @@ public class GitService {
 		}
 		return dates;
 	}
-
-	public List<GitCommit> getRepoCommits(String repo) {
-		return getRepoCommits(repo, null);
-	}
 	
-	public List<GitCommit> getRepoCommits(String repo, String since) {
+	private List<GitCommit> getRepoCommits(String repo, String since) {
 		List<GitCommit> commits = new ArrayList<GitCommit>();
 		List<GitCommit> pageCommits = new ArrayList<GitCommit>();
 		int page = 1;
@@ -105,7 +101,7 @@ public class GitService {
 		return commitTagMap; 
 	}
 
-	public GitTag[] getGitTags(String repo) {
+	private GitTag[] getGitTags(String repo) {
 		String url = "https://api.github.com/repos/" + ENV.GITHUB + "/" + repo + "/tags";
 		log.info(url);
 		return restTemplate.getForObject(url, GitTag[].class);
