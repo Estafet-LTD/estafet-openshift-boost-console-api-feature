@@ -2,7 +2,7 @@ create sequence COMMIT_DATE_ID_SEQ start 1 increment 1;
 create sequence ENV_FEATURE_SEQ start 1 increment 1;
 create sequence ENV_MICROSERVICE_ID_SEQ start 1 increment 1;
 create sequence REPO_COMMIT_ID_SEQ start 1 increment 1;
-create table COMMIT_DATE (COMMIT_DATE_ID int8 not null, COMMITTED_DATE varchar(255) not null, SHA varchar(255) not null, REPO_ID varchar(255) not null, primary key (COMMIT_DATE_ID));
+create table COMMIT_DATE (COMMIT_DATE_ID int8 not null, COMMITTED_DATE varchar(255) not null, SHA varchar(255) not null, TAG varchar(255) not null, REPO_ID varchar(255) not null, primary key (COMMIT_DATE_ID));
 create table ENV (ENV_ID varchar(255) not null, DISPLAY varchar(255) not null, LIVE boolean, NEXT varchar(255), TESTED boolean, UPDATED_DATE varchar(255) not null, primary key (ENV_ID));
 create table ENV_FEATURE (ENV_FEATURE_ID int8 not null, DEPLOYED_DATE varchar(255) not null, MIGRATED_DATE varchar(255), ENV_ID varchar(255) not null, FEATURE_ID varchar(255) not null, primary key (ENV_FEATURE_ID));
 create table ENV_MICROSERVICE (ENV_MICROSERVICE_ID int8 not null, DEPLOYED_DATE varchar(255), MICROSERVICE varchar(255) not null, VERSION varchar(255) not null, ENV_ID varchar(255) not null, primary key (ENV_MICROSERVICE_ID));

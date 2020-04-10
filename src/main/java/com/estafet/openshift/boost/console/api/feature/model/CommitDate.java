@@ -33,9 +33,20 @@ public class CommitDate {
 	@Column(name = "COMMITTED_DATE", nullable = false)
 	private String commitedDate;
 	
+	@Column(name = "TAG", nullable = false)
+	private String tag;
+	
 	@ManyToOne
 	@JoinColumn(name = "REPO_ID", nullable = false, referencedColumnName = "REPO_ID", foreignKey = @ForeignKey(name = "COMMIT_DATE_TO_REPO_FK"))
 	private Repo repo;
+
+	public String getTag() {
+		return tag;
+	}
+
+	public void setTag(String tag) {
+		this.tag = tag;
+	}
 
 	public Long getId() {
 		return id;

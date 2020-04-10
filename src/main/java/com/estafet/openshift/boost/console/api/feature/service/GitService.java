@@ -3,10 +3,8 @@ package com.estafet.openshift.boost.console.api.feature.service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,9 +46,30 @@ public class GitService {
 	}
 	
 	private void updateCommitDates(Repo repo, List<GitCommit> commits) {
-		for (GitCommit commit : commits) {
-			commitDAO.createCommitDate(commit.getCommitDate(repo));
+		if (!commits.isEmpty()) {
+			List<CommitDate> dates = getCommitDates(repo, commits);
+			GitTag[] gitTags = getGitTags(repo.getName());
+			Map<String, String> tags = commitTagMap(gitTags);
+			String tag = gitTags.length > 0 ? gitTags[0].getName() : "0.0.0"; 
+			for (CommitDate date : dates) {
+				String nextTag = tags.get(date.getSha());	
+				if (tag != null) {
+					date.setTag(tag);
+					tag = nextTag;
+				} else {
+					date.setTag(tag);
+				}
+				commitDAO.createCommitDate(date);
+			}
 		}
+	}
+
+	private List<CommitDate> getCommitDates(Repo repo, List<GitCommit> commits) {
+		List<CommitDate> dates = new ArrayList<CommitDate>(commits.size());
+		for (GitCommit commit : commits) {
+			dates.add(commit.getCommitDate(repo));
+		}
+		return dates;
 	}
 
 	public List<GitCommit> getRepoCommits(String repo) {
@@ -76,36 +95,6 @@ public class GitService {
 		}
 		log.info(url);
 		return Arrays.asList(restTemplate.getForObject(url, GitCommit[].class));
-	}
-
-	public String getVersionForCommit(String repo, String commitId) {
-		GitTag[] gitTags = getGitTags(repo);
-		Map<String, Set<String>> commits = getGitCommitsByTags(repo);
-		for (GitTag gitTag : gitTags) {
-			if (commits.get(gitTag.getName()).contains(commitId)) {
-				return gitTag.getName();
-			}
-		}
-		throw new RuntimeException("Cannot find version for commit id " + commitId + " in repo " + repo);
-	}
-
-	public Map<String, Set<String>> getGitCommitsByTags(String repo) {
-		GitTag[] gitTags = getGitTags(repo);
-		Map<String, String> commitTagMap = commitTagMap(gitTags);
-		Map<String, Set<String>> result = new HashMap<String, Set<String>>();
-		Set<String> commitSet = null;
-		for (CommitDate commit : commitDAO.getCommtDatesByRepo(repo)) {
-			if (commitTagMap.get(commit.getSha()) != null) {
-				commitSet = new HashSet<String>();
-				result.put(commitTagMap.get(commit.getSha()), commitSet);
-			}
-			if (commitSet == null) {
-				log.warn("Cannot find corresponding tag for - commit " + commit.getSha() + " for repo " + repo);
-			} else {
-				commitSet.add(commit.getSha());	
-			}
-		}
-		return result;
 	}
 	
 	private Map<String, String> commitTagMap(GitTag[] gitTags) {

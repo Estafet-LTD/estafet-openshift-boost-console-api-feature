@@ -47,4 +47,10 @@ public class CommitDAO {
 		return commits.isEmpty() ? null : commits.get(0);
 	}
 
+	public String getVersionForCommit(String repo, String sha) {
+		TypedQuery<CommitDate> query = entityManager.createQuery("select c from CommitDate c where c.repo.name = ?1 and c.sha = ?2", CommitDate.class);
+		List<CommitDate> commits = query.setParameter(1, repo).setParameter(2, sha).getResultList();
+		return commits.isEmpty() ? null : commits.get(0).getTag();
+	}
+
 }
