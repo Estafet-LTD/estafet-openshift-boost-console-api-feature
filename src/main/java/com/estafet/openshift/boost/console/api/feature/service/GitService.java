@@ -20,6 +20,7 @@ import com.estafet.openshift.boost.console.api.feature.message.GitCommit;
 import com.estafet.openshift.boost.console.api.feature.message.GitTag;
 import com.estafet.openshift.boost.console.api.feature.model.CommitDate;
 import com.estafet.openshift.boost.console.api.feature.model.Repo;
+import com.estafet.openshift.boost.console.api.feature.model.Version;
 
 @Service
 public class GitService {
@@ -50,10 +51,10 @@ public class GitService {
 			List<CommitDate> dates = getCommitDates(repo, commits);
 			GitTag[] gitTags = getGitTags(repo.getName());
 			Map<String, String> tags = commitTagMap(gitTags);
-			String tag = gitTags.length > 0 ? gitTags[0].getName() : "0.0.0"; 
+			String tag = gitTags.length > 0 ? new Version(gitTags[0].getName()).increment().toString() : "0.0.0"; 
 			for (CommitDate date : dates) {
 				String nextTag = tags.get(date.getSha());	
-				if (tag != null) {
+				if (nextTag != null) {
 					date.setTag(tag);
 					tag = nextTag;
 				} else {

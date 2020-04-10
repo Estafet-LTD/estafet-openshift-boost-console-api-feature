@@ -4,9 +4,9 @@ import java.util.StringTokenizer;
 
 public class Version {
 
-	private final int major;
-	private final int minor;
-	private final int revision;
+	private int major;
+	private int minor;
+	private int revision;
 
 	private final boolean snapshot;
 	private String version;
@@ -53,6 +53,11 @@ public class Version {
 
 	private boolean compareRevision(Version other) {
 		return revision <= other.revision;
+	}
+	
+	public Version increment() {
+		revision++;
+		return this;
 	}
 
 	public String toString() {
