@@ -51,7 +51,7 @@ public class GitService {
 			List<CommitDate> dates = getCommitDates(repo, commits);
 			GitTag[] gitTags = getGitTags(repo.getName());
 			Map<String, String> tags = commitTagMap(gitTags);
-			String tag = gitTags.length > 0 ? new Version(gitTags[0].getName()).increment().toString() : "0.0.0"; 
+			String tag = gitTags.length > 0 ? nextVersion(gitTags) : "0.0.0"; 
 			for (CommitDate date : dates) {
 				String nextTag = tags.get(date.getSha());	
 				if (nextTag != null) {
@@ -63,6 +63,10 @@ public class GitService {
 				commitDAO.createCommitDate(date);
 			}
 		}
+	}
+
+	private String nextVersion(GitTag[] gitTags) {
+		return new Version(gitTags[0].getName()).increment().toString();
 	}
 
 	private List<CommitDate> getCommitDates(Repo repo, List<GitCommit> commits) {

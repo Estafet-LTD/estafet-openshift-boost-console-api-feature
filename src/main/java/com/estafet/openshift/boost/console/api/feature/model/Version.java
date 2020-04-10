@@ -4,15 +4,12 @@ import java.util.StringTokenizer;
 
 public class Version {
 
-	private int major;
-	private int minor;
+	private final int major;
+	private final int minor;
 	private int revision;
-
 	private final boolean snapshot;
-	private String version;
 
 	public Version(String version) {
-		this.version = version;
 		if (version.endsWith("-SNAPSHOT")) {
 			version = version.replaceAll("\\-SNAPSHOT", "");
 			snapshot = true;
@@ -61,7 +58,16 @@ public class Version {
 	}
 
 	public String toString() {
-		return version;
+		StringBuilder builder = new StringBuilder();
+		builder.append(major);
+		builder.append(".");
+		builder.append(minor);
+		builder.append(".");
+		builder.append(revision);
+		if (snapshot) {
+			builder.append("-SNAPSHOT");
+		}
+		return builder.toString();
 	}
 
 }
