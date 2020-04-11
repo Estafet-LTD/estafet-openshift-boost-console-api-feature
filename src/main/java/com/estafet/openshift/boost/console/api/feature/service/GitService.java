@@ -37,16 +37,15 @@ public class GitService {
 	private CommitDAO commitDAO;
 
 	@Transactional
-	public List<GitCommit> getLastestRepoCommits(String repoId) {
+	public List<RepoCommit> getLastestRepoCommits(String repoId) {
 		Repo repo = repoDAO.getRepo(repoId);
 		List<GitCommit> commits = getRepoCommits(repoId, repo.getLastDate());
 		repo.setLastDate(commits.get(0).getCommit().getCommitter().getDate());
 		repoDAO.updateRepo(repo);
-		updateCommitDates(repo, commits);
-		return commits;
+		return createRepoCommits(repo, commits);
 	}
 	
-	private void updateCommitDates(Repo repo, List<GitCommit> commits) {
+	private List<RepoCommit> createRepoCommits(Repo repo, List<GitCommit> commits) {
 		if (!commits.isEmpty()) {
 			List<RepoCommit> repoCommits = getRepoCommits(repo, commits);
 			GitTag[] gitTags = getGitTags(repo.getName());
@@ -62,6 +61,9 @@ public class GitService {
 				}
 				commitDAO.createRepoCommit(repoCommit);
 			}
+			return repoCommits;
+		} else {
+			return new ArrayList<RepoCommit>();
 		}
 	}
 

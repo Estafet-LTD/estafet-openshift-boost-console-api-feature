@@ -1,7 +1,5 @@
 package com.estafet.openshift.boost.console.api.feature.dao;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -31,8 +29,8 @@ public class CommitDAO {
 	}
 	
 	public List<RepoCommit> getMatchedForMicroservice(String microservice) {
-		TypedQuery<Matched> query = entityManager
-				.createQuery("select m from Matched m where m.repo.microservice = ?1", Matched.class);
+		TypedQuery<RepoCommit> query = entityManager
+				.createQuery("select c from RepoCommit c where c.repo.microservice = ?1 and c.feature is not null", RepoCommit.class);
 		return query.setParameter(1, microservice).getResultList();
 	}
 	

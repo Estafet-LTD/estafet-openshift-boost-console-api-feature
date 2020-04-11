@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.estafet.openshift.boost.console.api.feature.dao.FeatureDAO;
 import com.estafet.openshift.boost.console.api.feature.dao.RepoDAO;
 import com.estafet.openshift.boost.console.api.feature.jms.CommitProducer;
-import com.estafet.openshift.boost.console.api.feature.message.GitCommit;
 import com.estafet.openshift.boost.console.api.feature.model.Feature;
 import com.estafet.openshift.boost.console.api.feature.model.Repo;
 import com.estafet.openshift.boost.console.api.feature.model.RepoCommit;
@@ -33,11 +32,8 @@ public class CommitScheduler {
 	@Scheduled(fixedRate = 60000)
 	public void execute() {
 		for (Repo repo : repoDAO.getRepos()) {
-			for (GitCommit gitCommit : gitService.getLastestRepoCommits(repo.getName())) {
-				RepoCommit commit = repo.getCommit(gitCommit.getSha());
-				if (commit == null || (commit.getFeature() != null && !commit.getFeature().getStatus().equals("DONE"))) {
-					commitProducer.sendMessage(gitCommit.getCommitMessage(repo.getName()));
-				}
+			for (RepoCommit commit : gitService.getLastestRepoCommits(repo.getName())) {
+				commitProducer.sendMessage(commit.getCommitMessage());
 			}
 		}
 		for (Feature feature : featureDAO.getIncompleteFeatures()) {
