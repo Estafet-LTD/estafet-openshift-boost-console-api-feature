@@ -1,8 +1,10 @@
 package com.estafet.openshift.boost.console.api.feature.model;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
@@ -10,6 +12,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -40,6 +44,9 @@ public class EnvFeature {
 
 	@Column(name = "MIGRATED_DATE", nullable = true)
 	private String migratedDate;
+	
+	@Column(name = "PARTIAL", nullable = false)
+	private boolean partial = true;
 
 	@ManyToOne
 	@JoinColumn(name = "FEATURE_ID", nullable = false, referencedColumnName = "FEATURE_ID", foreignKey = @ForeignKey(name = "ENV_FEATURE_TO_FEATURE_FK"))
@@ -48,6 +55,30 @@ public class EnvFeature {
 	@ManyToOne
 	@JoinColumn(name = "ENV_ID", nullable = false, referencedColumnName = "ENV_ID", foreignKey = @ForeignKey(name = "ENV_FEATURE_TO_ENV_FK"))
 	private Env env;
+	
+	@ManyToMany(cascade = { CascadeType.ALL })
+	@JoinTable(name = "ENV_FEATURE_ENV_MICROSERVICE",
+		joinColumns = @JoinColumn(name = "ENV_FEATURE_ID"),
+		inverseJoinColumns = @JoinColumn(name = "ENV_MICROSERVICE_ID")
+	)
+	private Set<EnvMicroservice> microservices = new HashSet<EnvMicroservice>();
+
+	public void addMicroservice(EnvMicroservice envMicroservice) {
+		microservices.add(envMicroservice);
+		envMicroservice.getFeatures().add(this);
+	}
+	
+	public boolean isPartial() {
+		return partial;
+	}
+
+	public void setPartial(boolean partial) {
+		this.partial = partial;
+	}
+
+	public Set<EnvMicroservice> getMicroservices() {
+		return microservices;
+	}
 
 	public String getDeployedDate() {
 		return deployedDate;
@@ -88,9 +119,9 @@ public class EnvFeature {
 	}
 
 	public String calculateDeployedDate() {
-		Set<Matched> matches = getFeature().getMatched();
+		Set<RepoCommit> matches = getFeature().getMatched();
 		String minDeployedDate = null;
-		for (Matched matched : matches) {
+		for (RepoCommit matched : matches) {
 			String microservice = matched.getRepo().getMicroservice();
 			EnvMicroservice envMicroservice = env.getMicroservice(microservice);
 			Date deployedDate = DateUtils.getDate(envMicroservice.getDeployedDate());
@@ -146,21 +177,13 @@ public class EnvFeature {
 
 	public static class EnvFeatureBuilder {
 		
-		private String deployedDate;
-
+		private EnvMicroservice envMicroservice;
 		private Feature feature;
-		
-		private Env env;
 
 		private EnvFeatureBuilder() { }
 		
-		public EnvFeatureBuilder setEnv(Env env) {
-			this.env = env;
-			return this;
-		}
-
-		public EnvFeatureBuilder setDeployedDate(String deployedDate) {
-			this.deployedDate = deployedDate;
+		public EnvFeatureBuilder setEnvMicroservice(EnvMicroservice envMicroservice) {
+			this.envMicroservice = envMicroservice;
 			return this;
 		}
 
@@ -170,11 +193,12 @@ public class EnvFeature {
 		}
 		
 		public EnvFeature build() {
-			nullCheck("deployedDate", "feature", "env");
+			nullCheck("envMicroservice", "feature");
 			EnvFeature envFeature = new EnvFeature();
 			feature.addEnvFeature(envFeature);
-			env.addEnvFeature(envFeature);
-			envFeature.setDeployedDate(deployedDate);
+			envMicroservice.getEnv().addEnvFeature(envFeature);
+			envFeature.addMicroservice(envMicroservice);
+			envFeature.setDeployedDate(envMicroservice.getDeployedDate());
 			log.info("new envFeature object - " + envFeature);
 			return envFeature;
 		}

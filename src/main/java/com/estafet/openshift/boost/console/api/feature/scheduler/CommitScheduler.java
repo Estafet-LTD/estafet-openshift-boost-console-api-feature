@@ -10,7 +10,6 @@ import com.estafet.openshift.boost.console.api.feature.dao.RepoDAO;
 import com.estafet.openshift.boost.console.api.feature.jms.CommitProducer;
 import com.estafet.openshift.boost.console.api.feature.message.GitCommit;
 import com.estafet.openshift.boost.console.api.feature.model.Feature;
-import com.estafet.openshift.boost.console.api.feature.model.Matched;
 import com.estafet.openshift.boost.console.api.feature.model.Repo;
 import com.estafet.openshift.boost.console.api.feature.model.RepoCommit;
 import com.estafet.openshift.boost.console.api.feature.service.GitService;
@@ -36,13 +35,13 @@ public class CommitScheduler {
 		for (Repo repo : repoDAO.getRepos()) {
 			for (GitCommit gitCommit : gitService.getLastestRepoCommits(repo.getName())) {
 				RepoCommit commit = repo.getCommit(gitCommit.getSha());
-				if (commit == null || (commit instanceof Matched && !((Matched)commit).getFeature().getStatus().equals("DONE"))) {
+				if (commit == null || (commit.getFeature() != null && !commit.getFeature().getStatus().equals("DONE"))) {
 					commitProducer.sendMessage(gitCommit.getCommitMessage(repo.getName()));
 				}
 			}
 		}
 		for (Feature feature : featureDAO.getIncompleteFeatures()) {
-			for (Matched matched : feature.getMatched()) {
+			for (RepoCommit matched : feature.getMatched()) {
 				commitProducer.sendMessage(matched.getCommitMessage());
 			}
 		}

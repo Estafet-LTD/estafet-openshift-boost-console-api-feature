@@ -32,12 +32,12 @@ public class Feature {
 	private String url;
 
 	@OneToMany(mappedBy = "feature", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private Set<Matched> matched = new HashSet<Matched>();
+	private Set<RepoCommit> matched = new HashSet<RepoCommit>();
 
 	@OneToMany(mappedBy = "feature", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<EnvFeature> envFeatures = new HashSet<EnvFeature>();
 
-	public void addMatched(Matched matched) {
+	public void addMatched(RepoCommit matched) {
 		this.matched.add(matched);
 		matched.setFeature(this);
 	}
@@ -47,11 +47,11 @@ public class Feature {
 		envFeature.setFeature(this);
 	}
 
-	public Set<Matched> getMatched() {
+	public Set<RepoCommit> getMatched() {
 		return matched;
 	}
 
-	public void setMatched(Set<Matched> matched) {
+	public void setMatched(Set<RepoCommit> matched) {
 		this.matched = matched;
 	}
 

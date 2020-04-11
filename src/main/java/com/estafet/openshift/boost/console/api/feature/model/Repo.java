@@ -29,9 +29,6 @@ public class Repo {
 	
 	@OneToMany(mappedBy = "repo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<RepoCommit> commits = new HashSet<RepoCommit>();
-	
-	@OneToMany(mappedBy = "repo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private Set<CommitDate> dates = new HashSet<CommitDate>();
 
 	public RepoCommit getCommit(String commitId) {
 		for (RepoCommit commit : commits) {
@@ -40,11 +37,6 @@ public class Repo {
 			}
 		}
 		return null;
-	}
-
-	public void addDate(CommitDate date) {
-		dates.add(date);
-		date.setRepo(this);
 	}
 	
 	public void addCommit(RepoCommit repoCommit) {

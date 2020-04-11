@@ -21,8 +21,8 @@ import com.estafet.openshift.boost.console.api.feature.model.Env;
 import com.estafet.openshift.boost.console.api.feature.model.EnvFeature;
 import com.estafet.openshift.boost.console.api.feature.model.EnvMicroservice;
 import com.estafet.openshift.boost.console.api.feature.model.Feature;
-import com.estafet.openshift.boost.console.api.feature.model.Matched;
 import com.estafet.openshift.boost.console.api.feature.model.Repo;
+import com.estafet.openshift.boost.console.api.feature.model.RepoCommit;
 import com.estafet.openshift.boost.console.api.feature.model.Version;
 import com.estafet.openshift.boost.console.api.feature.openshift.BuildConfigParser;
 import com.estafet.openshift.boost.console.api.feature.openshift.OpenShiftClient;
@@ -144,18 +144,19 @@ public class EnvironmentService {
 		log.info("update EnvFeatures for env - " + envMessage.getName());
 		Env env = envDAO.getEnv(envMessage.getName());
 		for (EnvMicroservice envMicroservice : env.getMicroservices()) {
-			for (Matched matched : commitDAO.getMatchedForMicroservice(envMicroservice.getMicroservice())) {
+			for (RepoCommit matched : commitDAO.getMatchedForMicroservice(envMicroservice.getMicroservice())) {
 				Feature feature = matched.getFeature();
-				if (!env.getFeatures().contains(feature)) {
-					Version matchedVersion = new Version(matched.getVersion());
-					Version microserviceVersion = new Version(envMicroservice.getVersion());
-					if (isNewEnvFeature(env, feature, matchedVersion, microserviceVersion)) {
+				if (isEnvFeature(env, feature, matched, envMicroservice)) {
+					if (!env.getFeatures().contains(feature)) {
 						EnvFeature envFeature = EnvFeature.builder()
 								.setFeature(feature)
-								.setDeployedDate(envMicroservice.getDeployedDate())
-								.setEnv(env)
+								.setEnvMicroservice(envMicroservice)
 								.build();
 						envFeatureDAO.create(envFeature);
+					} else {
+						EnvFeature envFeature = env.getEnvFeature(feature.getFeatureId());
+						envFeature.addMicroservice(envMicroservice);
+						envFeatureDAO.update(envFeature);
 					}
 				}
 			}
@@ -164,7 +165,9 @@ public class EnvironmentService {
 		envDAO.updateEnv(env);
 	}
 
-	private boolean isNewEnvFeature(Env env, Feature feature, Version matchedVersion, Version microserviceVersion) {
+	private boolean isEnvFeature(Env env, Feature feature, RepoCommit matched, EnvMicroservice envMicroservice) {
+		Version matchedVersion = new Version(matched.getTag());
+		Version microserviceVersion = new Version(envMicroservice.getVersion());
 		log.debug("env - " + env.toString());
 		log.debug("feature - " + feature.toString());
 		log.debug("matchedVersion - " + matchedVersion.toString());

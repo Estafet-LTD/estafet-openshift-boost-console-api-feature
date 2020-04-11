@@ -18,8 +18,8 @@ import com.estafet.openshift.boost.console.api.feature.dao.CommitDAO;
 import com.estafet.openshift.boost.console.api.feature.dao.RepoDAO;
 import com.estafet.openshift.boost.console.api.feature.message.GitCommit;
 import com.estafet.openshift.boost.console.api.feature.message.GitTag;
-import com.estafet.openshift.boost.console.api.feature.model.CommitDate;
 import com.estafet.openshift.boost.console.api.feature.model.Repo;
+import com.estafet.openshift.boost.console.api.feature.model.RepoCommit;
 import com.estafet.openshift.boost.console.api.feature.model.Version;
 
 @Service
@@ -48,19 +48,19 @@ public class GitService {
 	
 	private void updateCommitDates(Repo repo, List<GitCommit> commits) {
 		if (!commits.isEmpty()) {
-			List<CommitDate> dates = getCommitDates(repo, commits);
+			List<RepoCommit> repoCommits = getRepoCommits(repo, commits);
 			GitTag[] gitTags = getGitTags(repo.getName());
 			Map<String, String> tags = commitTagMap(gitTags);
 			String tag = gitTags.length > 0 ? nextVersion(gitTags) : "0.0.0"; 
-			for (CommitDate date : dates) {
-				String nextTag = tags.get(date.getSha());	
+			for (RepoCommit repoCommit : repoCommits) {
+				String nextTag = tags.get(repoCommit.getSha());	
 				if (nextTag != null) {
-					date.setTag(tag);
+					repoCommit.setTag(tag);
 					tag = nextTag;
 				} else {
-					date.setTag(tag);
+					repoCommit.setTag(tag);
 				}
-				commitDAO.createCommitDate(date);
+				commitDAO.createRepoCommit(repoCommit);
 			}
 		}
 	}
@@ -69,12 +69,12 @@ public class GitService {
 		return new Version(gitTags[0].getName()).increment().toString();
 	}
 
-	private List<CommitDate> getCommitDates(Repo repo, List<GitCommit> commits) {
-		List<CommitDate> dates = new ArrayList<CommitDate>(commits.size());
+	private List<RepoCommit> getRepoCommits(Repo repo, List<GitCommit> commits) {
+		List<RepoCommit> repoCommits = new ArrayList<RepoCommit>(commits.size());
 		for (GitCommit commit : commits) {
-			dates.add(commit.getCommitDate(repo));
+			repoCommits.add(commit.getRepoCommit(repo));
 		}
-		return dates;
+		return repoCommits;
 	}
 	
 	private List<GitCommit> getRepoCommits(String repo, String since) {
