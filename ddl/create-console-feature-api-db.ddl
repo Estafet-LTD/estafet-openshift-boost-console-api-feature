@@ -5,7 +5,6 @@ create table ENV (ENV_ID varchar(255) not null, DISPLAY varchar(255) not null, L
 create table ENV_FEATURE (ENV_FEATURE_ID int8 not null, DEPLOYED_DATE varchar(255) not null, MIGRATED_DATE varchar(255), PARTIAL boolean not null, ENV_ID varchar(255) not null, FEATURE_ID varchar(255) not null, primary key (ENV_FEATURE_ID));
 create table ENV_FEATURE_MICROSERVICE (ENV_FEATURE_ID int8 not null, ENV_MICROSERVICE_ID int8 not null, primary key (ENV_FEATURE_ID, ENV_MICROSERVICE_ID));
 create table ENV_MICROSERVICE (ENV_MICROSERVICE_ID int8 not null, DEPLOYED_DATE varchar(255), MICROSERVICE varchar(255) not null, VERSION varchar(255) not null, ENV_ID varchar(255) not null, primary key (ENV_MICROSERVICE_ID));
-create table ENV_MICROSERVICE_ENV_FEATURE (EnvMicroservice_ENV_MICROSERVICE_ID int8 not null, features_ENV_FEATURE_ID int8 not null, primary key (EnvMicroservice_ENV_MICROSERVICE_ID, features_ENV_FEATURE_ID));
 create table FEATURE (FEATURE_ID varchar(255) not null, DESCRIPTION varchar(255), STATUS varchar(255) not null, TITLE varchar(255) not null, URL varchar(255) not null, primary key (FEATURE_ID));
 create table REPO (REPO_ID varchar(255) not null, LAST_DATE varchar(255), MICROSERVICE varchar(255) not null, primary key (REPO_ID));
 create table REPO_COMMIT (REPO_COMMIT_ID int8 not null, COMMITTED_DATE varchar(255) not null, MESSAGE varchar(255) not null, SHA varchar(255) not null, TAG varchar(255) not null, FEATURE_ID varchar(255), REPO_ID varchar(255) not null, primary key (REPO_COMMIT_ID));
@@ -18,7 +17,5 @@ alter table ENV_FEATURE add constraint ENV_FEATURE_TO_FEATURE_FK foreign key (FE
 alter table ENV_FEATURE_MICROSERVICE add constraint ENV_MS_ID_ENV_FEATURE_MS_FK foreign key (ENV_MICROSERVICE_ID) references ENV_MICROSERVICE;
 alter table ENV_FEATURE_MICROSERVICE add constraint ENV_FEATURE_ID_ENV_FEATURE_MS_FK foreign key (ENV_FEATURE_ID) references ENV_FEATURE;
 alter table ENV_MICROSERVICE add constraint MICROSERVICE_TO_ENV_FK foreign key (ENV_ID) references ENV;
-alter table ENV_MICROSERVICE_ENV_FEATURE add constraint FKldeyrs7gxpc6glsxgy1wigwen foreign key (features_ENV_FEATURE_ID) references ENV_FEATURE;
-alter table ENV_MICROSERVICE_ENV_FEATURE add constraint FKh7havl742esackfdj41mi8xtk foreign key (EnvMicroservice_ENV_MICROSERVICE_ID) references ENV_MICROSERVICE;
 alter table REPO_COMMIT add constraint COMMIT_TO_FEATURE_FK foreign key (FEATURE_ID) references FEATURE;
 alter table REPO_COMMIT add constraint COMMIT_TO_REPO_FK foreign key (REPO_ID) references REPO;
