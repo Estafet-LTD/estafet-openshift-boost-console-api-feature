@@ -57,9 +57,9 @@ public class EnvFeature {
 	private Env env;
 	
 	@ManyToMany(cascade = { CascadeType.ALL })
-	@JoinTable(name = "ENV_FEATURE_ENV_MICROSERVICE",
-		joinColumns = @JoinColumn(name = "ENV_FEATURE_ID"),
-		inverseJoinColumns = @JoinColumn(name = "ENV_MICROSERVICE_ID")
+	@JoinTable(name = "ENV_FEATURE_MICROSERVICE",
+		joinColumns = @JoinColumn(name = "ENV_FEATURE_ID", foreignKey = @ForeignKey(name = "ENV_FEATURE_ID_ENV_FEATURE_MS_FK")),
+		inverseJoinColumns = @JoinColumn(name = "ENV_MICROSERVICE_ID", foreignKey = @ForeignKey(name = "ENV_MS_ID_ENV_FEATURE_MS_FK"))
 	)
 	private Set<EnvMicroservice> microservices = new HashSet<EnvMicroservice>();
 

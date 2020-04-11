@@ -1,7 +1,7 @@
 alter table ENV_FEATURE drop constraint ENV_FEATURE_TO_ENV_FK;
 alter table ENV_FEATURE drop constraint ENV_FEATURE_TO_FEATURE_FK;
-alter table ENV_FEATURE_ENV_MICROSERVICE drop constraint FKnqj46cu1i26puc6gtd8sn74bc;
-alter table ENV_FEATURE_ENV_MICROSERVICE drop constraint FKrboektlfioex0s08u4ps2fu9l;
+alter table ENV_FEATURE_MICROSERVICE drop constraint ENV_MS_ID_ENV_FEATURE_MS_FK;
+alter table ENV_FEATURE_MICROSERVICE drop constraint ENV_FEATURE_ID_ENV_FEATURE_MS_FK;
 alter table ENV_MICROSERVICE drop constraint MICROSERVICE_TO_ENV_FK;
 alter table ENV_MICROSERVICE_ENV_FEATURE drop constraint FKldeyrs7gxpc6glsxgy1wigwen;
 alter table ENV_MICROSERVICE_ENV_FEATURE drop constraint FKh7havl742esackfdj41mi8xtk;
@@ -9,7 +9,7 @@ alter table REPO_COMMIT drop constraint COMMIT_TO_FEATURE_FK;
 alter table REPO_COMMIT drop constraint COMMIT_TO_REPO_FK;
 drop table if exists ENV cascade;
 drop table if exists ENV_FEATURE cascade;
-drop table if exists ENV_FEATURE_ENV_MICROSERVICE cascade;
+drop table if exists ENV_FEATURE_MICROSERVICE cascade;
 drop table if exists ENV_MICROSERVICE cascade;
 drop table if exists ENV_MICROSERVICE_ENV_FEATURE cascade;
 drop table if exists FEATURE cascade;
