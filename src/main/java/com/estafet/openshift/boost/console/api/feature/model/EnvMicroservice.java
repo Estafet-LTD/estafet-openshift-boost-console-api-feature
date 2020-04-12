@@ -36,7 +36,7 @@ public class EnvMicroservice {
 	@Column(name = "DEPLOYED_DATE", nullable = true)
 	private String deployedDate;
 	
-	@ManyToMany
+	@ManyToMany(mappedBy = "microservices")
 	Set<EnvFeature> features = new HashSet<EnvFeature>();
 
 	@ManyToOne
