@@ -30,7 +30,7 @@ public class CommitDAO {
 	
 	public List<RepoCommit> getMatchedForMicroservice(String microservice) {
 		TypedQuery<RepoCommit> query = entityManager
-				.createQuery("select c from RepoCommit c where c.repo.microservice = :microservice and c.feature is not null", RepoCommit.class);
+				.createNamedQuery("getMatchedForMicroservice", RepoCommit.class);
 		return query.setParameter("microservice", microservice).getResultList();
 	}
 	
@@ -38,8 +38,9 @@ public class CommitDAO {
 		log.info("repo - " + repo);
 		log.info("sha - " + sha);
 		TypedQuery<RepoCommit> query = entityManager
-				.createQuery("select c from RepoCommit c where c.repo.name = :repo and c.sha = :sha", RepoCommit.class);
+				.createNamedQuery("getCommit", RepoCommit.class);
 		List<RepoCommit> commits = query.setParameter("repo", repo).setParameter("sha", sha).getResultList();
+		log.info("commits retrieved - " + commits.toString());
 		return commits.isEmpty() ? null : commits.get(0);
 	}
 
