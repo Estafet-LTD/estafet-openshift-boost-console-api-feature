@@ -59,7 +59,9 @@ public class GitService {
 				} else {
 					repoCommit.setTag(tag);
 				}
-				commitDAO.createRepoCommit(repoCommit);
+				if (commitDAO.getCommit(repo.getName(), repoCommit.getSha()) == null) {
+					commitDAO.createRepoCommit(repoCommit);	
+				}
 			}
 			return repoCommits;
 		} else {

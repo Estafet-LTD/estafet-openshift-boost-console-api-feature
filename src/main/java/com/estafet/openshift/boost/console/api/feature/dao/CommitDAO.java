@@ -24,10 +24,6 @@ public class CommitDAO {
 		entityManager.merge(commit);
 	}
 	
-	public RepoCommit getMatched(String commitId) {
-		return entityManager.find(RepoCommit.class, commitId);
-	}
-	
 	public List<RepoCommit> getMatchedForMicroservice(String microservice) {
 		TypedQuery<RepoCommit> query = entityManager
 				.createQuery("select c from RepoCommit c where c.repo.microservice = ?1 and c.feature is not null", RepoCommit.class);
