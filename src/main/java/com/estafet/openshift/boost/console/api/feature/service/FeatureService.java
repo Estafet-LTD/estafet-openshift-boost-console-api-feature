@@ -1,6 +1,7 @@
 package com.estafet.openshift.boost.console.api.feature.service;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -37,6 +38,11 @@ public class FeatureService {
 	@Autowired
 	private CommitDAO commitDAO;
 
+	@Transactional(readOnly = true)
+	public List<Feature> getIncompleteFeatures() {
+		return featureDAO.getIncompleteFeatures();
+	}
+	
 	@Transactional
 	public void processFeature(FeatureMessage message) {
 		log.info(message.toJSON());
