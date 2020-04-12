@@ -3,7 +3,6 @@ package com.estafet.openshift.boost.console.api.feature.message;
 
 import java.util.List;
 
-import com.estafet.openshift.boost.console.api.feature.model.Repo;
 import com.estafet.openshift.boost.console.api.feature.model.RepoCommit;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -132,10 +131,9 @@ public class GitCommit {
         this.parents = parents;
     }
     
-    public RepoCommit getRepoCommit(Repo repo) {
+    public RepoCommit getRepoCommit() {
     	return RepoCommit.builder()
     			.setCommitedDate(commit.getCommitter().getDate())
-    			.setRepo(repo)
     			.setSha(sha)
     			.setMessage(commit.getMessage())
     			.build();

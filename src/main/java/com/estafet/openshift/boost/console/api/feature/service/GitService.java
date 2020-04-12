@@ -37,9 +37,8 @@ public class GitService {
 	private CommitDAO commitDAO;
 
 	@Transactional
-	public List<RepoCommit> getLastestRepoCommits(String repoId) {
-		Repo repo = repoDAO.getRepo(repoId);
-		List<GitCommit> commits = getRepoCommits(repoId, repo.getLastDate());
+	public List<RepoCommit> getLastestRepoCommits(Repo repo) {
+		List<GitCommit> commits = getRepoCommits(repo.getName(), repo.getLastDate());
 		repo.setLastDate(commits.get(0).getCommit().getCommitter().getDate());
 		repoDAO.updateRepo(repo);
 		return createRepoCommits(repo, commits);
@@ -47,13 +46,13 @@ public class GitService {
 	
 	private List<RepoCommit> createRepoCommits(Repo repo, List<GitCommit> commits) {
 		if (!commits.isEmpty()) {
-			List<RepoCommit> repoCommits = getRepoCommits(repo, commits);
+			List<RepoCommit> repoCommits = getRepoCommits(commits);
 			GitTag[] gitTags = getGitTags(repo.getName());
 			Map<String, String> tags = commitTagMap(gitTags);
 			String tag = gitTags.length > 0 ? nextVersion(gitTags) : "0.0.0"; 
 			for (RepoCommit repoCommit : repoCommits) {
 				log.info("commit - " + repoCommit.toString());
-				if (!commitDAO.commitExists(repoCommit)) {
+				if (!repo.containsSha(repoCommit.getSha())) {
 					String nextTag = tags.get(repoCommit.getSha());	
 					if (nextTag != null) {
 						repoCommit.setTag(tag);
@@ -61,7 +60,7 @@ public class GitService {
 					} else {
 						repoCommit.setTag(tag);
 					}
-					commitDAO.createRepoCommit(repoCommit);	
+					addCommit(repo, repoCommit);	
 				}
 			}
 			return repoCommits;
@@ -70,14 +69,19 @@ public class GitService {
 		}
 	}
 
+	private void addCommit(Repo repo, RepoCommit repoCommit) {
+		repo.addCommit(repoCommit);
+		commitDAO.createRepoCommit(repoCommit);
+	}
+
 	private String nextVersion(GitTag[] gitTags) {
 		return new Version(gitTags[0].getName()).increment().toString();
 	}
 
-	private List<RepoCommit> getRepoCommits(Repo repo, List<GitCommit> commits) {
+	private List<RepoCommit> getRepoCommits(List<GitCommit> commits) {
 		List<RepoCommit> repoCommits = new ArrayList<RepoCommit>(commits.size());
 		for (GitCommit commit : commits) {
-			repoCommits.add(commit.getRepoCommit(repo));
+			repoCommits.add(commit.getRepoCommit());
 		}
 		return repoCommits;
 	}

@@ -30,7 +30,7 @@ public class CommitScheduler {
 	@Scheduled(fixedRate = 60000)
 	public void execute() {
 		for (Repo repo : repoDAO.getRepos()) {
-			for (RepoCommit commit : gitService.getLastestRepoCommits(repo.getName())) {
+			for (RepoCommit commit : gitService.getLastestRepoCommits(repo)) {
 				commitProducer.sendMessage(commit.getCommitMessage());
 			}
 		}

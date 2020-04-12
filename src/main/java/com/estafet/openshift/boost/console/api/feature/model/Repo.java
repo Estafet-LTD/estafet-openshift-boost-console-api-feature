@@ -129,4 +129,13 @@ public class Repo {
 				+ commits + "]";
 	}
 
+	public boolean containsSha(String sha) {
+		for (RepoCommit commit : commits) {
+			if (commit.getSha().equals(sha)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 }
