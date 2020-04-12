@@ -168,17 +168,10 @@ public class EnvironmentService {
 	private boolean isEnvFeature(Env env, Feature feature, RepoCommit matched, EnvMicroservice envMicroservice) {
 		Version matchedVersion = new Version(matched.getTag());
 		Version microserviceVersion = new Version(envMicroservice.getVersion());
-		log.debug("env - " + env.toString());
-		log.debug("feature - " + feature.toString());
-		log.debug("matchedVersion - " + matchedVersion.toString());
-		log.debug("microserviceVersion - " + microserviceVersion.toString());
-		log.debug("isLessThanOrEqual - " + matchedVersion.isLessThanOrEqual(microserviceVersion));
 		if (matchedVersion.isLessThanOrEqual(microserviceVersion)) {
 			if (env.getName().equals("build") || env.getName().equals("test")) {
-				log.debug("build or test matched");
 				return true;
 			} else if (feature.getStatus().equals("Done")) {
-				log.debug("Another env matched");
 				return true;
 			}
 		} 
