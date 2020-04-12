@@ -30,15 +30,6 @@ public class Repo {
 	@OneToMany(mappedBy = "repo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<RepoCommit> commits = new HashSet<RepoCommit>();
 
-	public RepoCommit getCommit(String commitId) {
-		for (RepoCommit commit : commits) {
-			if (commit.getSha().equals(commitId)) {
-				return commit;
-			}
-		}
-		return null;
-	}
-	
 	public void addCommit(RepoCommit repoCommit) {
 		commits.add(repoCommit);
 		repoCommit.setRepo(this);

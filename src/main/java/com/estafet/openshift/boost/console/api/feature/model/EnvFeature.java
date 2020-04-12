@@ -45,8 +45,8 @@ public class EnvFeature {
 	@Column(name = "MIGRATED_DATE", nullable = true)
 	private String migratedDate;
 	
-	@Column(name = "PARTIAL", nullable = false)
-	private boolean partial = true;
+	@Column(name = "PARTIAL", nullable = true)
+	private Boolean partial;
 
 	@ManyToOne
 	@JoinColumn(name = "FEATURE_ID", nullable = false, referencedColumnName = "FEATURE_ID", foreignKey = @ForeignKey(name = "ENV_FEATURE_TO_FEATURE_FK"))
@@ -68,11 +68,11 @@ public class EnvFeature {
 		envMicroservice.getFeatures().add(this);
 	}
 	
-	public boolean isPartial() {
+	public Boolean isPartial() {
 		return partial;
 	}
 
-	public void setPartial(boolean partial) {
+	public void setPartial(Boolean partial) {
 		this.partial = partial;
 	}
 
