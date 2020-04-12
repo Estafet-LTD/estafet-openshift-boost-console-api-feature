@@ -162,7 +162,6 @@ public class RepoCommit {
 	public static class RepoCommitBuilder {
 
 		private String sha;
-		private Repo repo;
 		private String message;
 		private String commitedDate;
 		
@@ -178,11 +177,6 @@ public class RepoCommit {
 			return this;
 		}
 
-		public RepoCommitBuilder setRepo(Repo repo) {
-			this.repo = repo;
-			return this;
-		}
-
 		public RepoCommitBuilder setSha(String sha) {
 			this.sha = sha;
 			return this;
@@ -190,7 +184,6 @@ public class RepoCommit {
 		
 		public RepoCommit build() {
 			RepoCommit commit = new RepoCommit();
-			repo.addCommit(commit);
 			commit.setSha(sha);
 			commit.setMessage(message);
 			commit.setCommitedDate(commitedDate);
