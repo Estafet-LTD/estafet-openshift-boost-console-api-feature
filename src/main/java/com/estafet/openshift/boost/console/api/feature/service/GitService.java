@@ -37,8 +37,9 @@ public class GitService {
 	private CommitDAO commitDAO;
 
 	@Transactional
-	public List<RepoCommit> getLastestRepoCommits(Repo repo) {
-		List<GitCommit> commits = getRepoCommits(repo.getName(), repo.getLastDate());
+	public List<RepoCommit> getLastestRepoCommits(String repoId) {
+		Repo repo = repoDAO.getRepo(repoId);
+		List<GitCommit> commits = getRepoCommits(repoId, repo.getLastDate());
 		repo.setLastDate(commits.get(0).getCommit().getCommitter().getDate());
 		repoDAO.updateRepo(repo);
 		return createRepoCommits(repo, commits);
