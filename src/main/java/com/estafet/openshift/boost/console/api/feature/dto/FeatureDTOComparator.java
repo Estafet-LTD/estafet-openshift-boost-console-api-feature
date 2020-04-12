@@ -7,7 +7,7 @@ public class FeatureDTOComparator implements Comparator<FeatureDTO> {
 	@Override
 	public int compare(FeatureDTO feature1, FeatureDTO feature2) {
 		if (feature1.getWaitingSince() == null && feature2.getWaitingSince() == null) {
-			return feature1.getFeatureId().compareTo(feature2.getFeatureId());
+			return feature2.getFeatureId().compareTo(feature1.getFeatureId());
 		} else if (feature1.getWaitingSince() != null && feature2.getWaitingSince() == null) {
 			return -1;
 		} else if (feature2.getWaitingSince() != null && feature1.getWaitingSince() == null) {
