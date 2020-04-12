@@ -192,12 +192,4 @@ public class RepoCommit {
 		
 	}
 
-	@Override
-	public String toString() {
-		return "RepoCommit [id=" + id + ", sha=" + sha + ", commitedDate=" + commitedDate + ", tag=" + tag
-				+ ", message=" + message + ", repo=" + repo.getName() + "]";
-	}	
-	
-	
-
 }
