@@ -31,7 +31,7 @@ public class Feature {
 	@Column(name = "URL", nullable = false)
 	private String url;
 
-	@OneToMany(mappedBy = "feature", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "feature", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<RepoCommit> matched = new HashSet<RepoCommit>();
 
 	@OneToMany(mappedBy = "feature", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

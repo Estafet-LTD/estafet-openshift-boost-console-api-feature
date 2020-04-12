@@ -26,13 +26,13 @@ public class CommitDAO {
 	
 	public List<RepoCommit> getMatchedForMicroservice(String microservice) {
 		TypedQuery<RepoCommit> query = entityManager
-				.createNamedQuery("getMatchedForMicroservice", RepoCommit.class);
+				.createQuery("select c from RepoCommit c where c.repo.microservice = :microservice and c.feature is not null", RepoCommit.class);
 		return query.setParameter("microservice", microservice).getResultList();
 	}
 	
 	public RepoCommit getCommit(String repo, String sha) {
 		TypedQuery<RepoCommit> query = entityManager
-				.createNamedQuery("getCommit", RepoCommit.class);
+				.createQuery("select c from RepoCommit c where c.repo.name = :repo and c.sha = :sha", RepoCommit.class);
 		List<RepoCommit> commits = query.setParameter("repo", repo).setParameter("sha", sha).getResultList();
 		return commits.isEmpty() ? null : commits.get(0);
 	}

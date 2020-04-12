@@ -4,14 +4,13 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -20,12 +19,6 @@ import com.estafet.openshift.boost.commons.lib.date.DateUtils;
 import com.estafet.openshift.boost.messages.features.CommitMessage;
 
 @Entity
-@NamedQueries({
-    @NamedQuery(name="getMatchedForMicroservice",
-                query="select c from RepoCommit c where c.repo.microservice = :microservice and c.feature is not null"),
-    @NamedQuery(name="getCommit",
-                query="select c from RepoCommit c where c.repo.name = :repo and c.sha = :sha"),
-}) 
 @Table(name = "REPO_COMMIT", uniqueConstraints = {
 		@UniqueConstraint(columnNames = {"REPO_ID", "SHA"}, name = "REPO_COMMIT_KEY") })
 public class RepoCommit {
@@ -52,7 +45,7 @@ public class RepoCommit {
 	@JoinColumn(name = "FEATURE_ID", nullable = true, referencedColumnName = "FEATURE_ID", foreignKey = @ForeignKey(name = "COMMIT_TO_FEATURE_FK"))
 	private Feature feature;
 		
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "REPO_ID", nullable = false, referencedColumnName = "REPO_ID", foreignKey = @ForeignKey(name = "COMMIT_TO_REPO_FK"))
 	private Repo repo;
 
