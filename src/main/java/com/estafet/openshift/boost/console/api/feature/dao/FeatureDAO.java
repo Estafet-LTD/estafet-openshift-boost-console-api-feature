@@ -22,14 +22,14 @@ public class FeatureDAO {
 
 	public List<Feature> getFeaturesByRepo(String repo, String sha) {
 		TypedQuery<Feature> query = entityManager.createQuery(
-				"select f from Feature f JOIN f.matched m where m.repo.name = ?1 and m.sha = ?2", Feature.class);
-		return query.setParameter(1, repo).setParameter(2, sha).getResultList();
+				"select f from Feature f JOIN f.matched m where m.repo.name = :repo and m.sha = :sha", Feature.class);
+		return query.setParameter("repo", repo).setParameter("sha", sha).getResultList();
 	}
 	
 	public List<Feature> getIncompleteFeatures() {
 		TypedQuery<Feature> query = entityManager.createQuery(
-				"select f from Feature f where f.status <> ?1", Feature.class);
-		return query.setParameter(1, "Done").getResultList();
+				"select f from Feature f where f.status <> :status", Feature.class);
+		return query.setParameter("status", "Done").getResultList();
 	}
 
 	public void create(Feature feature) {

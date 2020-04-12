@@ -32,8 +32,8 @@ public class EnvFeatureDAO {
 	
 	public List<EnvFeature> getNewEnvFeatures(String env) {
 		TypedQuery<EnvFeature> query = entityManager
-				.createQuery("select f from EnvFeature f where f.env.name = ?1 and f.migratedDate IS NULL", EnvFeature.class);
-		return query.setParameter(1, env).getResultList();
+				.createQuery("select f from EnvFeature f where f.env.name = :env and f.migratedDate IS NULL", EnvFeature.class);
+		return query.setParameter("env", env).getResultList();
 	}
 	
 }

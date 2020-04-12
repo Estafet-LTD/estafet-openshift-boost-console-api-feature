@@ -26,15 +26,19 @@ public class CommitDAO {
 	
 	public List<RepoCommit> getMatchedForMicroservice(String microservice) {
 		TypedQuery<RepoCommit> query = entityManager
-				.createQuery("select c from RepoCommit c where c.repo.microservice = ?1 and c.feature is not null", RepoCommit.class);
-		return query.setParameter(1, microservice).getResultList();
+				.createQuery("select c from RepoCommit c where c.repo.microservice = :microservice and c.feature is not null", RepoCommit.class);
+		return query.setParameter("microservice", microservice).getResultList();
 	}
 	
 	public RepoCommit getCommit(String repo, String sha) {
 		TypedQuery<RepoCommit> query = entityManager
-				.createQuery("select c from RepoCommit c where c.repo.name = ?1 and c.sha = ?2", RepoCommit.class);
-		List<RepoCommit> commits = query.setParameter(1, repo).setParameter(2, sha).getResultList();
+				.createQuery("select c from RepoCommit c where c.repo.name = :repo and c.sha = :sha", RepoCommit.class);
+		List<RepoCommit> commits = query.setParameter("repo", repo).setParameter("sha", sha).getResultList();
 		return commits.isEmpty() ? null : commits.get(0);
+	}
+
+	public boolean commitExists(RepoCommit repoCommit) {
+		return getCommit(repoCommit.getRepo().getName(), repoCommit.getSha()) != null;
 	}
 
 }

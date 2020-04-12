@@ -53,7 +53,7 @@ public class GitService {
 			String tag = gitTags.length > 0 ? nextVersion(gitTags) : "0.0.0"; 
 			for (RepoCommit repoCommit : repoCommits) {
 				log.info("commit - " + repoCommit.toString());
-				if (commitDAO.getCommit(repoCommit.getRepo().getName(), repoCommit.getSha()) == null) {
+				if (!commitDAO.commitExists(repoCommit)) {
 					String nextTag = tags.get(repoCommit.getSha());	
 					if (nextTag != null) {
 						repoCommit.setTag(tag);

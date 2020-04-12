@@ -35,8 +35,8 @@ public class RepoDAO {
 	
 	public Repo getRepoByMicroservice(String microservice) {
 		TypedQuery<Repo> query = entityManager
-				.createQuery("select r from Repo r where r.microservice = ?1", Repo.class);
-		return query.setParameter(1, microservice).getSingleResult();
+				.createQuery("select r from Repo r where r.microservice = :microservice", Repo.class);
+		return query.setParameter("microservice", microservice).getSingleResult();
 	}
 
 }
