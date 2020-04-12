@@ -46,6 +46,7 @@ public class GitService {
 	}
 	
 	private List<RepoCommit> createRepoCommits(Repo repo, List<GitCommit> commits) {
+		List<RepoCommit> result = new ArrayList<RepoCommit>();
 		if (!commits.isEmpty()) {
 			List<RepoCommit> repoCommits = getRepoCommits(commits);
 			GitTag[] gitTags = getGitTags(repo.getName());
@@ -60,18 +61,17 @@ public class GitService {
 					} else {
 						repoCommit.setTag(tag);
 					}
-					addCommit(repo, repoCommit);	
+					result.add(saveCommit(repo, repoCommit));	
 				}
 			}
-			return repoCommits;
-		} else {
-			return new ArrayList<RepoCommit>();
 		}
+		return result;
 	}
 
-	private void addCommit(Repo repo, RepoCommit repoCommit) {
+	private RepoCommit saveCommit(Repo repo, RepoCommit repoCommit) {
 		repo.addCommit(repoCommit);
 		commitDAO.createRepoCommit(repoCommit);
+		return repoCommit;
 	}
 
 	private String nextVersion(GitTag[] gitTags) {
