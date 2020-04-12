@@ -189,6 +189,14 @@ public class RepoCommit {
 			return commit;
 		}
 		
+	}
+
+	@Override
+	public String toString() {
+		return "RepoCommit [id=" + id + ", sha=" + sha + ", commitedDate=" + commitedDate + ", tag=" + tag
+				+ ", message=" + message + ", feature=" + feature + ", repo=" + repo + "]";
 	}	
+	
+	
 
 }

@@ -123,4 +123,10 @@ public class Repo {
 		
 	}
 
+	@Override
+	public String toString() {
+		return "Repo [name=" + name + ", microservice=" + microservice + ", lastDate=" + lastDate + ", commits="
+				+ commits + "]";
+	}
+
 }
