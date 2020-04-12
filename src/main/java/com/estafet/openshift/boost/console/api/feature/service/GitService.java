@@ -52,14 +52,14 @@ public class GitService {
 			Map<String, String> tags = commitTagMap(gitTags);
 			String tag = gitTags.length > 0 ? nextVersion(gitTags) : "0.0.0"; 
 			for (RepoCommit repoCommit : repoCommits) {
-				String nextTag = tags.get(repoCommit.getSha());	
-				if (nextTag != null) {
-					repoCommit.setTag(tag);
-					tag = nextTag;
-				} else {
-					repoCommit.setTag(tag);
-				}
 				if (commitDAO.getCommit(repo.getName(), repoCommit.getSha()) == null) {
+					String nextTag = tags.get(repoCommit.getSha());	
+					if (nextTag != null) {
+						repoCommit.setTag(tag);
+						tag = nextTag;
+					} else {
+						repoCommit.setTag(tag);
+					}
 					commitDAO.createRepoCommit(repoCommit);	
 				}
 			}
