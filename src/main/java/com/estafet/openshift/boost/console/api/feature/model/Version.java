@@ -16,10 +16,18 @@ public class Version {
 		} else {
 			snapshot = false;
 		}
+		version = replaceVersionCharacter(version);
 		StringTokenizer tokenizer = new StringTokenizer(version, ".");
 		major = Integer.parseInt(tokenizer.nextToken());
 		minor = Integer.parseInt(tokenizer.nextToken());
 		revision = Integer.parseInt(tokenizer.nextToken());
+	}
+
+	private String replaceVersionCharacter(String version) {
+		if(version.contains("v")){
+			version = version.replace("v", "");
+		}
+		return version;
 	}
 
 	public boolean isSnapshot() {
