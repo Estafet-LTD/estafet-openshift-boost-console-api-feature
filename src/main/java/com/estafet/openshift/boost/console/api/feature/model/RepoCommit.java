@@ -178,7 +178,7 @@ public class RepoCommit {
 		public RepoCommit build() {
 			RepoCommit commit = new RepoCommit();
 			commit.setSha(sha);
-			commit.setMessage(message);
+			commit.setMessage(message == null ? null : message.length() > 255 ? message.substring(0,255) : message);
 			commit.setCommitedDate(commitedDate);
 			return commit;
 		}
