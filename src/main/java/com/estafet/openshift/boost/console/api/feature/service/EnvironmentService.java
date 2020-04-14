@@ -89,7 +89,7 @@ public class EnvironmentService {
 				return envDAO.getEnv(env.getNext());	
 			}
 		} else if (env.getName().equals("green") || env.getName().equals("blue")) {
-			return env.getLive() ? envDAO.getLiveEnv() : envDAO.getStagingEnv();
+			return envDAO.getLiveEnv();
 		}
 		return null;
 	}
