@@ -145,9 +145,19 @@ public class EnvFeature {
 				.setFeatureId(feature.getFeatureId())
 				.setStatus(feature.getStatus())
 				.setTitle(feature.getTitle())
+				.setPromoteStatus(promoteStatus())
 				.setPromoted(migratedDate != null)
 				.setWaitingSince(migratedDate == null ? deployedDate : null)
 				.build();
+	}
+
+	private String promoteStatus() {
+		if (partial == null) {
+			return "NOT_PROMOTED";
+		} else if (partial) {
+			return "PARTIALLY_PROMOTED";
+		}
+		return "FULLY_PROMOTED";
 	}
 
 	@Override

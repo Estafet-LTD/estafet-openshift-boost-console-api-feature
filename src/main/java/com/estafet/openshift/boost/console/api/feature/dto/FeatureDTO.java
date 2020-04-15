@@ -7,18 +7,21 @@ import com.estafet.openshift.boost.commons.lib.date.DateUtils;
 public class FeatureDTO {
 
 	private String featureId;
-
 	private String title;
-
 	private String description;
-
 	private String status;
-
 	private boolean promoted;
-
 	private String waitingSince;
-	
 	private String url;
+	private String promoteStatus;
+
+	public String getPromoteStatus() {
+		return promoteStatus;
+	}
+
+	public void setPromoteStatus(String promoteStatus) {
+		this.promoteStatus = promoteStatus;
+	}
 
 	public String getUrl() {
 		return url;
@@ -87,20 +90,20 @@ public class FeatureDTO {
 	public static class FeatureDTOBuilder {
 
 		private String featureId;
-
 		private String title;
-
 		private String description;
-
 		private String status;
-
 		private boolean promoted;
-
 		private String waitingSince;
-		
 		private String url;
+		private String promoteStatus;
 		
 		private FeatureDTOBuilder() { }
+
+		public FeatureDTOBuilder setPromoteStatus(String promoteStatus) {
+			this.promoteStatus = promoteStatus;
+			return this;
+		}
 
 		public FeatureDTOBuilder setUrl(String url) {
 			this.url = url;
@@ -146,6 +149,7 @@ public class FeatureDTO {
 			dto.setStatus(status);
 			dto.setTitle(title);
 			dto.setWaitingSince(waitingSince);
+			dto.setPromoteStatus(promoteStatus);
 			return dto;
 		}
 		
