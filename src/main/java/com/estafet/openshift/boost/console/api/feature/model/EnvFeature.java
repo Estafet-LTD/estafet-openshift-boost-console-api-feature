@@ -220,5 +220,37 @@ public class EnvFeature {
 		}
 		
 	}
+
+	public boolean isPartiallyPromoted(EnvFeature prevEnvFeature) {
+		for (EnvMicroservice prevEnvMicroservice : prevEnvFeature.getMicroservices()) {
+			if (!containsEnvMicroservice(prevEnvMicroservice)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private EnvMicroservice getEnvMicroservice(String name) {
+		for (EnvMicroservice envMicroservice : microservices) {
+			if (envMicroservice.getMicroservice().equals(name)) {
+				return envMicroservice;
+			}
+		}
+		return null;
+	}
+
+	private boolean containsEnvMicroservice(EnvMicroservice prevEnvMicroservice) {
+		EnvMicroservice envMicroservice = getEnvMicroservice(prevEnvMicroservice.getMicroservice());
+		if (envMicroservice == null) {
+			return false;	
+		}
+		Version version = new Version(envMicroservice.getVersion());
+		Version prevVersion = new Version(prevEnvMicroservice.getVersion());
+		if (version.isLessThan(prevVersion)) {
+			return false;
+		} else {
+			return true;
+		}
+	}
 	
 }

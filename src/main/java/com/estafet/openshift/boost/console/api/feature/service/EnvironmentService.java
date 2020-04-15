@@ -59,12 +59,51 @@ public class EnvironmentService {
 			updateEnvFeatures(envMessage);
 		}
 		updateMigrationDate(envMessage);
+		updatePartialPromoted(envMessage);
 	}
 
+	private void updatePartialPromoted(Environment envMessage) {
+		Env env = envDAO.getEnv(envMessage.getName());
+		log.info("env - " + env.toString());
+		if (env.getLive() != null && env.getLive()) {
+			for (EnvFeature envFeature : env.getEnvFeatures()) {
+				envFeature.setPartial(false);
+				envFeatureDAO.update(envFeature);
+			}
+		} else {
+			Env nextEnv = nextUnResolvedEnv(env);
+			if (nextEnv != null) {
+				log.info("nextEnv - " + nextEnv.toString());
+				List<EnvFeature> envFeatures = envFeatureDAO.getUnResolvedEnvFeatures(envMessage.getName());
+				for (EnvFeature envFeature : envFeatures) {
+					log.info("envFeature - " + envFeature.toString());
+					EnvFeature nextEnvFeature = nextEnv.getEnvFeature(envFeature.getFeature().getFeatureId());
+					log.info("nextEnvFeature - " + nextEnvFeature);
+					if (nextEnvFeature != null) {
+						nextEnvFeature.setPartial(nextEnvFeature.isPartiallyPromoted(envFeature));
+						envFeatureDAO.update(nextEnvFeature);
+					}
+				}			
+			}			
+		}
+	}
+	
+	private Env nextUnResolvedEnv(Env env) {
+		log.info(env.toString());
+		if (env.getNext() != null) {
+			if (env.getNext().equals("prod")) {
+				return envDAO.getStagingEnv();	
+			} else {
+				return envDAO.getEnv(env.getNext());	
+			}
+		}
+		return null;
+	}
+	
 	private void updateMigrationDate(Environment envMessage) {
 		Env env = envDAO.getEnv(envMessage.getName());
 		log.info("env - " + env.toString());
-		Env nextEnv = nextEnv(env);
+		Env nextEnv = nextMigratedEnv(env);
 		if (nextEnv != null) {
 			log.info("nextEnv - " + nextEnv.toString());
 			List<EnvFeature> envFeatures = envFeatureDAO.getNewEnvFeatures(envMessage.getName());
@@ -80,7 +119,7 @@ public class EnvironmentService {
 		}
 	}
 
-	private Env nextEnv(Env env) {
+	private Env nextMigratedEnv(Env env) {
 		log.info(env.toString());
 		if (env.getNext() != null) {
 			if (env.getNext().equals("prod")) {

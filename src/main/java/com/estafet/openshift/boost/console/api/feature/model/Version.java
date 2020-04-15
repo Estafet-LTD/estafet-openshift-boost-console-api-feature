@@ -34,29 +34,45 @@ public class Version {
 		return snapshot;
 	}
 
-	public boolean isLessThanOrEqual(Version other) {
-		return compareMajor(other);
+	public boolean isLessThan(Version other) {
+		if (major < other.major) {
+			return true;
+		} else {
+			return compareLessThanMinor(other);
+		}
 	}
-	
-	private boolean compareMajor(Version other) {
+
+	private boolean compareLessThanMinor(Version other) {
+		if (minor < other.minor) {
+			return true;
+		} else  {
+			return compareLessThanRevision(other);
+		}
+	}
+
+	private boolean compareLessThanRevision(Version other) {
+		return revision < other.revision;
+	}
+
+	public boolean isLessThanOrEqual(Version other) {
 		if (major < other.major) {
 			return true;
 		} else if (major == other.major) {
-			return compareMinor(other);
-		}
-		return false;
-	}
-	
-	private boolean compareMinor(Version other) {
-		if (minor < other.minor) {
-			return true;
-		} else if (minor == other.minor) {
-			return compareRevision(other);
+			return compareLessThanOrEqualMinor(other);
 		}
 		return false;
 	}
 
-	private boolean compareRevision(Version other) {
+	private boolean compareLessThanOrEqualMinor(Version other) {
+		if (minor < other.minor) {
+			return true;
+		} else if (minor == other.minor) {
+			return compareLessThanOrEqualRevision(other);
+		}
+		return false;
+	}
+
+	private boolean compareLessThanOrEqualRevision(Version other) {
 		return revision <= other.revision;
 	}
 	

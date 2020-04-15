@@ -36,4 +36,10 @@ public class EnvFeatureDAO {
 		return query.setParameter("env", env).getResultList();
 	}
 	
+	public List<EnvFeature> getUnResolvedEnvFeatures(String env) {
+		TypedQuery<EnvFeature> query = entityManager
+				.createQuery("select f from EnvFeature f where f.env.name = :env and (f.partial IS NULL or f.feature.status <> 'Done')", EnvFeature.class);
+		return query.setParameter("env", env).getResultList();
+	}
+	
 }
