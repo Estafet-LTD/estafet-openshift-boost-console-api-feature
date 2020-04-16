@@ -83,6 +83,10 @@ public class Env {
 		return live != null && !live.booleanValue();
 	}
 	
+	public boolean isPreProd() {
+		return next != null && next.equals("prod");
+	}
+	
 	public Env merge(Env other) {
 		this.displayName = other.displayName;
 		this.live = other.live;

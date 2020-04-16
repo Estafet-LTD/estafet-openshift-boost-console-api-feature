@@ -92,7 +92,7 @@ public class EnvironmentService {
 
 	private Env nextUnResolvedEnv(Env env) {
 		log.info("nextUnResolvedEnv" + env.toString());
-		if (env.getNext().equals("prod")) {
+		if (env.isPreProd()) {
 			return envDAO.getStagingEnv();
 		} else if (env.isStaging()) {
 			return envDAO.getLiveEnv();
