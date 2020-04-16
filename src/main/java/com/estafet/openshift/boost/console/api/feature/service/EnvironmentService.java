@@ -92,14 +92,12 @@ public class EnvironmentService {
 
 	private Env nextUnResolvedEnv(Env env) {
 		log.info("nextUnResolvedEnv" + env.toString());
-		if (env.getNext() != null) {
-			if (env.getNext().equals("prod")) {
-				return envDAO.getStagingEnv();
-			} else if (env.isStaging()) {
-				return envDAO.getLiveEnv();
-			} else if (!env.isLive()) {
-				return envDAO.getEnv(env.getNext());
-			}
+		if (env.getNext().equals("prod")) {
+			return envDAO.getStagingEnv();
+		} else if (env.isStaging()) {
+			return envDAO.getLiveEnv();
+		} else if (!env.isLive()) {
+			return envDAO.getEnv(env.getNext());
 		}
 		log.info("nothing for" + env.toString());
 		return null;
