@@ -78,13 +78,12 @@ public class EnvironmentService {
 		Env nextEnv = nextUnResolvedEnv(env);
 		if (nextEnv != null) {
 			log.info("nextEnv - " + nextEnv.toString());
-			List<EnvFeature> envFeatures = envFeatureDAO.getUnResolvedEnvFeatures(envMessage.getName());
-			for (EnvFeature envFeature : envFeatures) {
-				log.info("envFeature - " + envFeature.toString());
-				EnvFeature nextEnvFeature = nextEnv.getEnvFeature(envFeature.getFeature().getFeatureId());
-				log.info("nextEnvFeature - " + nextEnvFeature);
-				if (nextEnvFeature != null) {
-					nextEnvFeature.setPromoteStatus(nextEnvFeature.calculatePromoteStatus(envFeature).getValue());
+			for (EnvFeature nextEnvFeature : envFeatureDAO.getUnResolvedEnvFeatures(nextEnv.getName())) {
+				log.info("nextEnvFeature - " + nextEnvFeature.toString());
+				EnvFeature envFeature = env.getEnvFeature(nextEnvFeature.getFeature().getFeatureId());
+				log.info("envFeature - " + envFeature);
+				if (envFeature != null) {
+					nextEnvFeature.updatePromoteStatus(envFeature);
 					envFeatureDAO.update(nextEnvFeature);
 				}
 			}

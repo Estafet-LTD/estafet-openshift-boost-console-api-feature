@@ -215,15 +215,17 @@ public class EnvFeature {
 		
 	}
 
-	public PromoteStatus calculatePromoteStatus(EnvFeature prevEnvFeature) {
+	public void updatePromoteStatus(EnvFeature prevEnvFeature) {
 		for (EnvMicroservice prevEnvMicroservice : prevEnvFeature.getMicroservices()) {
 			if (migratedDate == null) {
-				return PromoteStatus.NOT_PROMOTED;
+				setPromoteStatus(PromoteStatus.NOT_PROMOTED.getValue());
+				return;
 			} else if (!includesEnvMicroservice(prevEnvMicroservice)) {
-				return PromoteStatus.PARTIALLY_PROMOTED;
+				setPromoteStatus(PromoteStatus.PARTIALLY_PROMOTED.getValue());
+				return;
 			}
 		}
-		return PromoteStatus.FULLY_PROMOTED;
+		setPromoteStatus(PromoteStatus.FULLY_PROMOTED.getValue());
 	}
 	
 	private EnvMicroservice getEnvMicroservice(String name) {
