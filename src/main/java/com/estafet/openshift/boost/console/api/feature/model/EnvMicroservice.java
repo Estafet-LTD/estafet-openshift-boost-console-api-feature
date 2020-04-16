@@ -139,7 +139,20 @@ public class EnvMicroservice {
 			envMicroservice.setVersion(version);
 			return envMicroservice;
 		}
-
+	}
+	
+	public boolean isGreaterOrEqualThan(EnvMicroservice other) {
+		if (microservice.equals(other.microservice)) {
+			return new Version(version).isGreaterOrEqualThan(new Version(other.version));
+		}
+		throw new RuntimeException("Canot compare " + microservice + " with " + other);
+	}
+	
+	public boolean isLessThanOrEqual(EnvMicroservice other) {
+		if (microservice.equals(other.microservice)) {
+			return new Version(version).isLessThanOrEqual(new Version(other.version));
+		}
+		throw new RuntimeException("Canot compare " + microservice + " with " + other);
 	}
 
 }

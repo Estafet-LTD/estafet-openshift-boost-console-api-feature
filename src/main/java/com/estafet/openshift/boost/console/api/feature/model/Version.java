@@ -34,24 +34,26 @@ public class Version {
 		return snapshot;
 	}
 
-	public boolean isLessThan(Version other) {
-		if (major < other.major) {
+	public boolean isGreaterOrEqualThan(Version other) {
+		if (major > other.major) {
 			return true;
-		} else {
-			return compareLessThanMinor(other);
+		} else if (major == other.major) {
+			return compareGreaterOrEqualThanMinor(other);
 		}
+		return false;
 	}
 
-	private boolean compareLessThanMinor(Version other) {
-		if (minor < other.minor) {
+	private boolean compareGreaterOrEqualThanMinor(Version other) {
+		if (minor >= other.minor) {
 			return true;
-		} else  {
-			return compareLessThanRevision(other);
+		} else if (major == other.major) {
+			return compareGreaterOrEqualThanRevision(other);
 		}
+		return false;
 	}
 
-	private boolean compareLessThanRevision(Version other) {
-		return revision < other.revision;
+	private boolean compareGreaterOrEqualThanRevision(Version other) {
+		return revision >= other.revision;
 	}
 
 	public boolean isLessThanOrEqual(Version other) {

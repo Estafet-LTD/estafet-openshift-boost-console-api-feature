@@ -219,7 +219,7 @@ public class EnvFeature {
 		for (EnvMicroservice prevEnvMicroservice : prevEnvFeature.getMicroservices()) {
 			if (migratedDate == null) {
 				return PromoteStatus.NOT_PROMOTED;
-			} else if (!containsEnvMicroservice(prevEnvMicroservice)) {
+			} else if (!includesEnvMicroservice(prevEnvMicroservice)) {
 				return PromoteStatus.PARTIALLY_PROMOTED;
 			}
 		}
@@ -235,18 +235,12 @@ public class EnvFeature {
 		return null;
 	}
 
-	private boolean containsEnvMicroservice(EnvMicroservice prevEnvMicroservice) {
+	private boolean includesEnvMicroservice(EnvMicroservice prevEnvMicroservice) {
 		EnvMicroservice envMicroservice = getEnvMicroservice(prevEnvMicroservice.getMicroservice());
 		if (envMicroservice == null) {
 			return false;	
 		}
-		Version version = new Version(envMicroservice.getVersion());
-		Version prevVersion = new Version(prevEnvMicroservice.getVersion());
-		if (version.isLessThan(prevVersion)) {
-			return false;
-		} else {
-			return true;
-		}
+		return envMicroservice.isGreaterOrEqualThan(prevEnvMicroservice);
 	}
 	
 }
