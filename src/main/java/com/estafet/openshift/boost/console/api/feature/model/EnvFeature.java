@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
@@ -12,8 +11,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -45,8 +42,8 @@ public class EnvFeature {
 	@Column(name = "MIGRATED_DATE", nullable = true)
 	private String migratedDate;
 	
-	@Column(name = "PARTIAL", nullable = true)
-	private Boolean partial;
+	@Column(name = "PROMOTE_STATUS", nullable = false)
+	private String promoteStatus = PromoteStatus.NOT_PROMOTED.getValue();
 
 	@ManyToOne
 	@JoinColumn(name = "FEATURE_ID", nullable = false, referencedColumnName = "FEATURE_ID", foreignKey = @ForeignKey(name = "ENV_FEATURE_TO_FEATURE_FK"))
@@ -55,29 +52,13 @@ public class EnvFeature {
 	@ManyToOne
 	@JoinColumn(name = "ENV_ID", nullable = false, referencedColumnName = "ENV_ID", foreignKey = @ForeignKey(name = "ENV_FEATURE_TO_ENV_FK"))
 	private Env env;
-	
-	@ManyToMany(cascade = { CascadeType.ALL })
-	@JoinTable(name = "ENV_FEATURE_MICROSERVICE",
-		joinColumns = @JoinColumn(name = "ENV_FEATURE_ID", foreignKey = @ForeignKey(name = "ENV_FEATURE_ID_ENV_FEATURE_MS_FK")),
-		inverseJoinColumns = @JoinColumn(name = "ENV_MICROSERVICE_ID", foreignKey = @ForeignKey(name = "ENV_MS_ID_ENV_FEATURE_MS_FK"))
-	)
-	private Set<EnvMicroservice> microservices = new HashSet<EnvMicroservice>();
 
-	public void addMicroservice(EnvMicroservice envMicroservice) {
-		microservices.add(envMicroservice);
-		envMicroservice.getFeatures().add(this);
-	}
-	
-	public Boolean isPartial() {
-		return partial;
+	public String getPromoteStatus() {
+		return promoteStatus;
 	}
 
-	public void setPartial(Boolean partial) {
-		this.partial = partial;
-	}
-
-	public Set<EnvMicroservice> getMicroservices() {
-		return microservices;
+	public void setPromoteStatus(String promoteStatus) {
+		this.promoteStatus = promoteStatus;
 	}
 
 	public String getDeployedDate() {
@@ -118,12 +99,19 @@ public class EnvFeature {
 				+ ", feature=" + feature + ", env=" + env + "]";
 	}
 
-	public String calculateDeployedDate() {
+	private Set<EnvMicroservice> getMicroservices() {
+		Set<EnvMicroservice> microservices = new HashSet<EnvMicroservice>();
 		Set<RepoCommit> matches = getFeature().getMatched();
-		String minDeployedDate = null;
 		for (RepoCommit matched : matches) {
 			String microservice = matched.getRepo().getMicroservice();
-			EnvMicroservice envMicroservice = env.getMicroservice(microservice);
+			microservices.add(env.getMicroservice(microservice));
+		}
+		return microservices;
+	}
+	
+	public String calculateDeployedDate() {
+		String minDeployedDate = null;
+		for (EnvMicroservice envMicroservice : getMicroservices()) {
 			Date deployedDate = DateUtils.getDate(envMicroservice.getDeployedDate());
 			minDeployedDate = minDeployedDate == null
 					|| deployedDate.before(DateUtils.getDate(minDeployedDate))
@@ -145,19 +133,10 @@ public class EnvFeature {
 				.setFeatureId(feature.getFeatureId())
 				.setStatus(feature.getStatus())
 				.setTitle(feature.getTitle())
-				.setPromoteStatus(promoteStatus())
+				.setPromoteStatus(promoteStatus)
 				.setPromoted(migratedDate != null)
 				.setWaitingSince(migratedDate == null ? deployedDate : null)
 				.build();
-	}
-
-	private String promoteStatus() {
-		if (partial == null) {
-			return "NOT_PROMOTED";
-		} else if (partial) {
-			return "PARTIALLY_PROMOTED";
-		}
-		return "FULLY_PROMOTED";
 	}
 
 	@Override
@@ -187,13 +166,19 @@ public class EnvFeature {
 
 	public static class EnvFeatureBuilder {
 		
-		private EnvMicroservice envMicroservice;
 		private Feature feature;
+		private Env env;
+		private String deployedDate;
 
 		private EnvFeatureBuilder() { }
 		
-		public EnvFeatureBuilder setEnvMicroservice(EnvMicroservice envMicroservice) {
-			this.envMicroservice = envMicroservice;
+		public EnvFeatureBuilder setEnv(Env env) {
+			this.env = env;
+			return this;
+		}
+
+		public EnvFeatureBuilder setDeployedDate(String deployedDate) {
+			this.deployedDate = deployedDate;
 			return this;
 		}
 
@@ -203,12 +188,11 @@ public class EnvFeature {
 		}
 		
 		public EnvFeature build() {
-			nullCheck("envMicroservice", "feature");
+			nullCheck("envMicroservice", "feature", "env", "deployedDate");
 			EnvFeature envFeature = new EnvFeature();
 			feature.addEnvFeature(envFeature);
-			envMicroservice.getEnv().addEnvFeature(envFeature);
-			envFeature.addMicroservice(envMicroservice);
-			envFeature.setDeployedDate(envMicroservice.getDeployedDate());
+			env.addEnvFeature(envFeature);
+			envFeature.setDeployedDate(deployedDate);
 			log.info("new envFeature object - " + envFeature);
 			return envFeature;
 		}
@@ -231,17 +215,19 @@ public class EnvFeature {
 		
 	}
 
-	public boolean isPartiallyPromoted(EnvFeature prevEnvFeature) {
+	public PromoteStatus calculatePromoteStatus(EnvFeature prevEnvFeature) {
 		for (EnvMicroservice prevEnvMicroservice : prevEnvFeature.getMicroservices()) {
-			if (!containsEnvMicroservice(prevEnvMicroservice)) {
-				return true;
+			if (migratedDate == null) {
+				return PromoteStatus.NOT_PROMOTED;
+			} else if (!containsEnvMicroservice(prevEnvMicroservice)) {
+				return PromoteStatus.PARTIALLY_PROMOTED;
 			}
 		}
-		return false;
+		return PromoteStatus.FULLY_PROMOTED;
 	}
 	
 	private EnvMicroservice getEnvMicroservice(String name) {
-		for (EnvMicroservice envMicroservice : microservices) {
+		for (EnvMicroservice envMicroservice : getMicroservices()) {
 			if (envMicroservice.getMicroservice().equals(name)) {
 				return envMicroservice;
 			}

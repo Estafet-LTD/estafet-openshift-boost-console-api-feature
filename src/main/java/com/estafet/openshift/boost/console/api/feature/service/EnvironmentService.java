@@ -21,6 +21,7 @@ import com.estafet.openshift.boost.console.api.feature.model.Env;
 import com.estafet.openshift.boost.console.api.feature.model.EnvFeature;
 import com.estafet.openshift.boost.console.api.feature.model.EnvMicroservice;
 import com.estafet.openshift.boost.console.api.feature.model.Feature;
+import com.estafet.openshift.boost.console.api.feature.model.PromoteStatus;
 import com.estafet.openshift.boost.console.api.feature.model.Repo;
 import com.estafet.openshift.boost.console.api.feature.model.RepoCommit;
 import com.estafet.openshift.boost.console.api.feature.model.Version;
@@ -59,18 +60,28 @@ public class EnvironmentService {
 			updateEnvFeatures(envMessage);
 		}
 		updateMigrationDate(envMessage);
-		updatePartialPromoted(envMessage);
+		updatePromoteStatus(envMessage);
 	}
 
-	private void updatePartialPromoted(Environment envMessage) {
+	private void updatePromoteStatus(Environment envMessage) {
 		Env env = envDAO.getEnv(envMessage.getName());
 		log.info("env - " + env.toString());
 		if (env.getLive() != null && env.getLive()) {
 			for (EnvFeature envFeature : env.getEnvFeatures()) {
-				envFeature.setPartial(false);
-				envFeatureDAO.update(envFeature);
+				if (PromoteStatus.valueOf(envFeature.getPromoteStatus()) != PromoteStatus.FULLY_PROMOTED) {
+					envFeature.setPromoteStatus(PromoteStatus.FULLY_PROMOTED.getValue());
+					envFeatureDAO.update(envFeature);	
+				}
 			}
 		} else {
+			if (env.getName().equals("build")) {
+				for (EnvFeature envFeature : env.getEnvFeatures()) {
+					if (envFeature.getMigratedDate() != null && PromoteStatus.valueOf(envFeature.getPromoteStatus()) != PromoteStatus.FULLY_PROMOTED) {
+						envFeature.setPromoteStatus(PromoteStatus.FULLY_PROMOTED.getValue());
+						envFeatureDAO.update(envFeature);		
+					}
+				}
+			}
 			Env nextEnv = nextUnResolvedEnv(env);
 			if (nextEnv != null) {
 				log.info("nextEnv - " + nextEnv.toString());
@@ -80,7 +91,7 @@ public class EnvironmentService {
 					EnvFeature nextEnvFeature = nextEnv.getEnvFeature(envFeature.getFeature().getFeatureId());
 					log.info("nextEnvFeature - " + nextEnvFeature);
 					if (nextEnvFeature != null) {
-						nextEnvFeature.setPartial(nextEnvFeature.isPartiallyPromoted(envFeature));
+						nextEnvFeature.setPromoteStatus(nextEnvFeature.calculatePromoteStatus(envFeature).getValue());
 						envFeatureDAO.update(nextEnvFeature);
 					}
 				}			
@@ -189,13 +200,10 @@ public class EnvironmentService {
 					if (!env.getFeatures().contains(feature)) {
 						EnvFeature envFeature = EnvFeature.builder()
 								.setFeature(feature)
-								.setEnvMicroservice(envMicroservice)
+								.setDeployedDate(envMicroservice.getDeployedDate())
+								.setEnv(env)
 								.build();
 						envFeatureDAO.create(envFeature);
-					} else {
-						EnvFeature envFeature = env.getEnvFeature(feature.getFeatureId());
-						envFeature.addMicroservice(envMicroservice);
-						envFeatureDAO.update(envFeature);
 					}
 				}
 			}

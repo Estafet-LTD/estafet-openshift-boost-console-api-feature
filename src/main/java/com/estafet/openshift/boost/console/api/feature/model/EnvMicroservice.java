@@ -1,8 +1,5 @@
 package com.estafet.openshift.boost.console.api.feature.model;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
@@ -10,7 +7,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -35,17 +31,10 @@ public class EnvMicroservice {
 
 	@Column(name = "DEPLOYED_DATE", nullable = true)
 	private String deployedDate;
-	
-	@ManyToMany(mappedBy = "microservices")
-	Set<EnvFeature> features = new HashSet<EnvFeature>();
 
 	@ManyToOne
 	@JoinColumn(name = "ENV_ID", nullable = false, referencedColumnName = "ENV_ID", foreignKey = @ForeignKey(name = "MICROSERVICE_TO_ENV_FK"))
 	private Env env;
-
-	public Set<EnvFeature> getFeatures() {
-		return features;
-	}
 
 	public String getDeployedDate() {
 		return deployedDate;
