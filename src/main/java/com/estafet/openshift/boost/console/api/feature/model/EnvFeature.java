@@ -188,7 +188,7 @@ public class EnvFeature {
 		}
 		
 		public EnvFeature build() {
-			nullCheck("envMicroservice", "feature", "env", "deployedDate");
+			nullCheck("feature", "env", "deployedDate");
 			EnvFeature envFeature = new EnvFeature();
 			feature.addEnvFeature(envFeature);
 			env.addEnvFeature(envFeature);
