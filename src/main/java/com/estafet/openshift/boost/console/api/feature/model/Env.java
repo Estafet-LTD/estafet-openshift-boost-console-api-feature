@@ -75,6 +75,14 @@ public class Env {
 		this.live = live;
 	}
 	
+	public boolean isLive() {
+		return live != null && live;
+	}
+	
+	public boolean isStaging() {
+		return live != null && !live;
+	}
+	
 	public Env merge(Env other) {
 		this.displayName = other.displayName;
 		this.live = other.live;
