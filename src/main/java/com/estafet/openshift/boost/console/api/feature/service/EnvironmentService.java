@@ -91,7 +91,7 @@ public class EnvironmentService {
 	}
 
 	private Env nextUnResolvedEnv(Env env) {
-		log.info(env.toString());
+		log.info("nextUnResolvedEnv" + env.toString());
 		if (env.getNext() != null) {
 			if (env.getNext().equals("prod")) {
 				return envDAO.getStagingEnv();
@@ -101,6 +101,7 @@ public class EnvironmentService {
 				return envDAO.getEnv(env.getNext());
 			}
 		}
+		log.info("nothing for" + env.toString());
 		return null;
 	}
 

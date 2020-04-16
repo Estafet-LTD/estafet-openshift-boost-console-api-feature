@@ -76,11 +76,11 @@ public class Env {
 	}
 	
 	public boolean isLive() {
-		return live != null && live;
+		return live != null && live.booleanValue();
 	}
 	
 	public boolean isStaging() {
-		return live != null && !live;
+		return live != null && !live.booleanValue();
 	}
 	
 	public Env merge(Env other) {
