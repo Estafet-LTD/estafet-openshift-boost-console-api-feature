@@ -75,18 +75,25 @@ public class EnvironmentService {
 				}
 			}
 		}
-		Env nextEnv = nextUnResolvedEnv(env);
-		if (nextEnv != null) {
-			log.info("nextEnv - " + nextEnv.toString());
-			for (EnvFeature nextEnvFeature : envFeatureDAO.getUnResolvedEnvFeatures(nextEnv.getName())) {
-				log.info("nextEnvFeature - " + nextEnvFeature.toString());
-				EnvFeature envFeature = env.getEnvFeature(nextEnvFeature.getFeature().getFeatureId());
-				log.info("envFeature - " + envFeature);
-				if (envFeature != null) {
-					nextEnvFeature.updatePromoteStatus(envFeature);
-					envFeatureDAO.update(nextEnvFeature);
-				}
+		if (env.isLive()) {
+			for (EnvFeature envFeature : envFeatureDAO.getUnResolvedEnvFeatures(env.getName())) {
+				envFeature.setPromoteStatus(PromoteStatus.FULLY_PROMOTED.getValue());
+				envFeatureDAO.update(envFeature);
 			}
+		} else {
+			Env nextEnv = nextUnResolvedEnv(env);
+			if (nextEnv != null) {
+				log.info("nextEnv - " + nextEnv.toString());
+				for (EnvFeature nextEnvFeature : envFeatureDAO.getUnResolvedEnvFeatures(nextEnv.getName())) {
+					log.info("nextEnvFeature - " + nextEnvFeature.toString());
+					EnvFeature envFeature = env.getEnvFeature(nextEnvFeature.getFeature().getFeatureId());
+					log.info("envFeature - " + envFeature);
+					if (envFeature != null) {
+						nextEnvFeature.updatePromoteStatus(envFeature);
+						envFeatureDAO.update(nextEnvFeature);
+					}
+				}
+			}			
 		}
 	}
 
