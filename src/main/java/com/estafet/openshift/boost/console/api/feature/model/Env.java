@@ -112,7 +112,7 @@ public class Env {
 				envMicroservice.setVersion(app.getVersion());
 				log.info("version updated - " + app.getName());
 			}
-			if (!envMicroservice.getDeployedDate().equals(app.getDeployedDate())) {
+			if (envMicroservice.getDeployedDate() == null || !envMicroservice.getDeployedDate().equals(app.getDeployedDate())) {
 				envMicroservice.setDeployedDate(app.getDeployedDate());
 				log.info("deployed date updated - " + app.getName());
 			}
