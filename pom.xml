@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.estafet.openshift.boost.console</groupId>
 	<artifactId>estafet-openshift-boost-console-api-feature</artifactId>
-	<version>0.0.2</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<name>estafet-openshift-boost-console-api-feature</name>
 
 	<parent>
@@ -42,8 +42,4 @@
 			<version>0.0.29</version>
 		</dependency>		
 	</dependencies>
-
-  <scm>
-    <tag>estafet-openshift-boost-console-api-feature-0.0.2</tag>
-  </scm>
 </project>
