@@ -2,4 +2,4 @@ setup:
   - name: create-postgres-db
     app: console-feature-api
     repo: estafet-openshift-boost-console-api-feature  
-    reset_db: false
+    reset_db: true
