@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import com.estafet.openshift.boost.commons.lib.env.ENV;
 import com.estafet.openshift.boost.console.api.feature.dao.CommitDAO;
 import com.estafet.openshift.boost.console.api.feature.dao.RepoDAO;
 import com.estafet.openshift.boost.console.api.feature.message.GitCommit;
@@ -39,7 +38,7 @@ public class GitService {
 	@Transactional
 	public List<RepoCommit> getLastestRepoCommits(String repoId) {
 		Repo repo = repoDAO.getRepo(repoId);
-		List<GitCommit> commits = getRepoCommits(repoId, repo.getLastDate());
+		List<GitCommit> commits = getRepoCommits(repo);
 		repo.setLastDate(commits.get(0).getCommit().getCommitter().getDate());
 		repoDAO.updateRepo(repo);
 		return createRepoCommits(repo, commits);
@@ -49,7 +48,7 @@ public class GitService {
 		List<RepoCommit> result = new ArrayList<RepoCommit>();
 		if (!commits.isEmpty()) {
 			List<RepoCommit> repoCommits = getRepoCommits(commits);
-			GitTag[] gitTags = getGitTags(repo.getName());
+			GitTag[] gitTags = getGitTags(repo);
 			Map<String, String> tags = commitTagMap(gitTags);
 			String tag = gitTags.length > 0 ? nextVersion(gitTags) : "0.0.0"; 
 			for (RepoCommit repoCommit : repoCommits) {
@@ -86,22 +85,22 @@ public class GitService {
 		return repoCommits;
 	}
 	
-	private List<GitCommit> getRepoCommits(String repo, String since) {
+	private List<GitCommit> getRepoCommits(Repo repo) {
 		List<GitCommit> commits = new ArrayList<GitCommit>();
 		List<GitCommit> pageCommits = new ArrayList<GitCommit>();
 		int page = 1;
 		do {
-			pageCommits = getRepoCommitsByPage(repo, since, page);
+			pageCommits = getRepoCommitsByPage(repo, page);
 			commits.addAll(pageCommits);
 			page++;
 		} while (!pageCommits.isEmpty());
 		return commits;
 	}
 	
-	private List<GitCommit> getRepoCommitsByPage(String repo, String since, int page) {
-		String url = "https://api.github.com/repos/" + ENV.GITHUB + "/" + repo + "/commits?page=" + page;
-		if (since != null) {
-			url += "&since=" + since; 
+	private List<GitCommit> getRepoCommitsByPage(Repo repo, int page) {
+		String url = "https://api.github.com/repos/" + repo.getOrg() + "/" + repo.getName() + "/commits?page=" + page;
+		if (repo.getLastDate() != null) {
+			url += "&since=" + repo.getLastDate(); 
 		}
 		log.info(url);
 		return Arrays.asList(restTemplate.getForObject(url, GitCommit[].class));
@@ -115,8 +114,8 @@ public class GitService {
 		return commitTagMap; 
 	}
 
-	private GitTag[] getGitTags(String repo) {
-		String url = "https://api.github.com/repos/" + ENV.GITHUB + "/" + repo + "/tags";
+	private GitTag[] getGitTags(Repo repo) {
+		String url = "https://api.github.com/repos/" + repo.getOrg() + "/" + repo.getName() + "/tags";
 		log.info(url);
 		return restTemplate.getForObject(url, GitTag[].class);
 	}

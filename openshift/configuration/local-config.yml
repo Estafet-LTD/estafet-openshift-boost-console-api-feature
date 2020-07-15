@@ -1,8 +1,6 @@
 config_map: 
   - name: OPENSHIFT_HOST_PORT
     value: "{{ openshift_host_port }}"   
-  - name: GITHUB
-    value: "{{ github.org }}"    
   - name: PRODUCT
     value: "{{ product.name }}"    
   - name: JBOSS_A_MQ_BROKER_URL

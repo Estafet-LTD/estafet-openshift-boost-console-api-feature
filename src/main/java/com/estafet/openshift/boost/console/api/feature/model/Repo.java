@@ -12,14 +12,20 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import com.estafet.openshift.boost.commons.lib.git.Git;
+
 @Entity
 @Table(name = "REPO", uniqueConstraints = {
-		@UniqueConstraint(columnNames = "MICROSERVICE", name = "MICROSERVICE_KEY") })
+		@UniqueConstraint(columnNames = "MICROSERVICE", name = "MICROSERVICE_KEY"), 
+		@UniqueConstraint(columnNames = "URL", name = "URL_KEY") })
 public class Repo {
 
 	@Id
 	@Column(name = "REPO_ID", nullable = false)
 	private String name;
+
+	@Column(name = "URL", nullable = false)
+	private String url;
 
 	@Column(name = "MICROSERVICE", nullable = false)
 	private String microservice;
@@ -35,6 +41,18 @@ public class Repo {
 		repoCommit.setRepo(this);
 	}
 
+	public String getOrg() {
+		return new Git(url).org();
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -98,16 +116,16 @@ public class Repo {
 	
 	public static class RepoBuilder {
 
-		private String name;
+		private String url;
 
 		private String microservice;
 
 		private RepoBuilder() {}
-		
-		public RepoBuilder setName(String name) {
-			this.name = name;
+
+		public RepoBuilder setUrl(String url) {
+			this.url = url;
 			return this;
-		}
+		}		
 
 		public RepoBuilder setMicroservice(String microservice) {
 			this.microservice = microservice;
@@ -116,7 +134,9 @@ public class Repo {
 
 		public Repo build() {
 			Repo repo = new Repo();
-			repo.setName(name);
+			Git git = new Git(url);
+			repo.setName(git.uri());
+			repo.setUrl(url);
 			repo.setMicroservice(microservice);
 			return repo;
 		}

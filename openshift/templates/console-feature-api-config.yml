@@ -76,12 +76,7 @@ objects:
                 valueFrom:
                   configMapKeyRef:
                     name: ${MICROSERVICE} 
-                    key: PRODUCT     
-              - name: GITHUB
-                valueFrom:
-                  configMapKeyRef:
-                    name: ${MICROSERVICE} 
-                    key: GITHUB                                      
+                    key: PRODUCT                                       
               - name: GITHUB_USER
                 valueFrom:
                   secretKeyRef:

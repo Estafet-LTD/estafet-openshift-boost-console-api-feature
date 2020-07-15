@@ -16,6 +16,11 @@ public class RepoDAO {
 	@PersistenceContext
 	private EntityManager entityManager;
 	
+	public Repo getRepoByURL(String url) {
+		TypedQuery<Repo> query = entityManager.createQuery("Select r from Repo r where r.url = :url", Repo.class);
+		return query.setParameter("url", url).getSingleResult();
+	}
+
 	public Repo getRepo(String repoId) {
 		return entityManager.find(Repo.class, repoId);
 	}
