@@ -5,11 +5,12 @@ create table ENV (ENV_ID varchar(255) not null, DISPLAY varchar(255) not null, L
 create table ENV_FEATURE (ENV_FEATURE_ID int8 not null, DEPLOYED_DATE varchar(255) not null, MIGRATED_DATE varchar(255), PROMOTE_STATUS varchar(255) not null, ENV_ID varchar(255) not null, FEATURE_ID varchar(255) not null, primary key (ENV_FEATURE_ID));
 create table ENV_MICROSERVICE (ENV_MICROSERVICE_ID int8 not null, DEPLOYED_DATE varchar(255), MICROSERVICE varchar(255) not null, VERSION varchar(255) not null, ENV_ID varchar(255) not null, primary key (ENV_MICROSERVICE_ID));
 create table FEATURE (FEATURE_ID varchar(255) not null, DESCRIPTION varchar(255), STATUS varchar(255) not null, TITLE varchar(255) not null, URL varchar(255) not null, primary key (FEATURE_ID));
-create table REPO (REPO_ID varchar(255) not null, LAST_DATE varchar(255), MICROSERVICE varchar(255) not null, primary key (REPO_ID));
+create table REPO (REPO_ID varchar(255) not null, LAST_DATE varchar(255), MICROSERVICE varchar(255) not null, URL varchar(255) not null, primary key (REPO_ID));
 create table REPO_COMMIT (REPO_COMMIT_ID int8 not null, COMMITTED_DATE varchar(255) not null, MESSAGE varchar(255) not null, SHA varchar(255) not null, TAG varchar(255) not null, FEATURE_ID varchar(255), REPO_ID varchar(255) not null, primary key (REPO_COMMIT_ID));
 alter table ENV_FEATURE add constraint ENV_FEATURE_KEY unique (ENV_ID, FEATURE_ID);
 alter table ENV_MICROSERVICE add constraint ENV_MICROSERVICE_KEY unique (ENV_ID, MICROSERVICE);
 alter table REPO add constraint MICROSERVICE_KEY unique (MICROSERVICE);
+alter table REPO add constraint URL_KEY unique (URL);
 alter table REPO_COMMIT add constraint REPO_COMMIT_KEY unique (REPO_ID, SHA);
 alter table ENV_FEATURE add constraint ENV_FEATURE_TO_ENV_FK foreign key (ENV_ID) references ENV;
 alter table ENV_FEATURE add constraint ENV_FEATURE_TO_FEATURE_FK foreign key (FEATURE_ID) references FEATURE;

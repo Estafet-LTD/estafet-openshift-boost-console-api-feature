@@ -45,6 +45,11 @@
 			<groupId>com.estafet.openshift.boost</groupId>
 			<artifactId>estafet-openshift-boost-messages-lib</artifactId>
 			<version>0.0.32</version>
-		</dependency>			
+		</dependency>
+		<dependency>
+			<groupId>com.estafet.openshift.boost</groupId>
+			<artifactId>estafet-openshift-boost-commons-lib</artifactId>
+			<version>0.0.16-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 </project>
