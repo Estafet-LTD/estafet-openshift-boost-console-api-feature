@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.estafet.openshift.boost.console.api.feature.model.Version;
+import com.estafet.boostcd.feature.api.model.Version;
 
 public class VersionTest {
 

@@ -1,6 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.estafet.openshift.boost.console</groupId>
 	<artifactId>feature-api</artifactId>
 	<version>0.0.8-SNAPSHOT</version>
 	<name>feature-api</name>
@@ -13,7 +12,7 @@
 
 	<properties>
 		<microservice>console-feature-api</microservice>
-		<entity.package>com.estafet.openshift.boost.console.api.feature.model</entity.package>
+		<entity.package>com.estafet.boostcd.feature.api.model</entity.package>
 	</properties>
 
 	<dependencies>
@@ -36,20 +35,28 @@
 					<artifactId>log4j</artifactId>
 				</exclusion>
 			</exclusions>			
+		</dependency>	
+		<dependency>
+			<groupId>com.estafet.boostcd</groupId>
+			<artifactId>commons-lib</artifactId>
+			<version>0.0.16-SNAPSHOT</version>
+		</dependency>	
+		<dependency>
+			<groupId>com.estafet.boostcd</groupId>
+			<artifactId>messages-lib</artifactId>
+			<version>0.0.33-SNAPSHOT</version>
+		</dependency>				
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
 		</dependency>		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-activemq</artifactId>
+		</dependency>			
 		<dependency>
 		    <groupId>com.googlecode.json-simple</groupId>
 		    <artifactId>json-simple</artifactId>
 		</dependency>						
-		<dependency>
-			<groupId>com.estafet.openshift.boost</groupId>
-			<artifactId>estafet-openshift-boost-messages-lib</artifactId>
-			<version>0.0.32</version>
-		</dependency>
-		<dependency>
-			<groupId>com.estafet.openshift.boost</groupId>
-			<artifactId>estafet-openshift-boost-commons-lib</artifactId>
-			<version>0.0.16-SNAPSHOT</version>
-		</dependency>
 	</dependencies>
 </project>
