@@ -1,5 +1,5 @@
 setup:
   - name: create-postgres-db
     app: feature-api
-    repo: https://github.com/boostcd/feature-api.git
+    repo: feature-api
     reset_db: true
