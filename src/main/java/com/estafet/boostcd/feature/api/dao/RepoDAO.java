@@ -18,7 +18,8 @@ public class RepoDAO {
 	
 	public Repo getRepoByURL(String url) {
 		TypedQuery<Repo> query = entityManager.createQuery("Select r from Repo r where r.url = :url", Repo.class);
-		return query.setParameter("url", url).getSingleResult();
+		List<Repo> repos = query.setParameter("url", url).getResultList();
+		return repos.isEmpty() ? null : repos.get(0);
 	}
 
 	public Repo getRepo(String repoId) {
