@@ -26,14 +26,14 @@ public class FeatureController {
 		return new API(appVersion);
 	}
 	
-	@GetMapping("/environment/{env}")
-	public EnvironmentDTO getEnvironment(@PathVariable String env) {
-		return environmentService.getEnvironment(env);
+	@GetMapping("/environment/{product}/{env}")
+	public EnvironmentDTO getEnvironment(@PathVariable String product, @PathVariable String env) {
+		return environmentService.getEnvironment(product, env);
 	}
 	
-	@GetMapping("/environments")
-	public List<EnvironmentDTO> getEnvironments() {
-		return environmentService.getEnvironments();
+	@GetMapping("/environments/{product}")
+	public List<EnvironmentDTO> getEnvironments(@PathVariable String product) {
+		return environmentService.getEnvironments(product);
 	}
 	
 }

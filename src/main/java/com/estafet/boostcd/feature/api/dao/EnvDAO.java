@@ -16,13 +16,15 @@ public class EnvDAO {
 	@PersistenceContext
 	private EntityManager entityManager;
 	
+	public Env getEnv(String productId, String env) {
+		TypedQuery<Env> query = entityManager.createQuery("Select e from Env e where e.name = :env and e.productId = :productId", Env.class);
+		List<Env> envs = query.setParameter("env", env).setParameter("productId", productId).getResultList();
+		return !envs.isEmpty() ? envs.get(0) : null;
+	}
+
 	@SuppressWarnings("unchecked")
 	public List<Env> getEnvs() {
 		return entityManager.createQuery("Select e from Env e").getResultList();
-	}
-	
-	public Env getEnv(String envId) {
-		return entityManager.find(Env.class, envId);
 	}
 	
 	public Env getLiveEnv() {

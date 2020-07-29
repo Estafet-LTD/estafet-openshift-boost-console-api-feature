@@ -7,7 +7,7 @@ import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
 
 import com.estafet.boostcd.feature.api.service.EnvironmentService;
-import com.estafet.openshift.boost.messages.environments.Environment;
+import com.estafet.openshift.boost.messages.environments.Environments;
 
 import io.opentracing.Tracer;
 
@@ -16,7 +16,7 @@ public class EnvConsumer {
 
 	public static final Logger log = LoggerFactory.getLogger(EnvironmentService.class);
 	
-	public final static String TOPIC = "env.topic";
+	public final static String TOPIC = "environments.topic";
 
 	@Autowired
 	private Tracer tracer;
@@ -28,7 +28,7 @@ public class EnvConsumer {
 	public void onMessage(String message) {
 		try {
 			log.info("Received message - " + message);
-			environmentService.processEnvMessage(Environment.fromJSON(message));
+			environmentService.processEnvMessage(Environments.fromJSON(message));
 		} finally {
 			if (tracer.activeSpan() != null) {
 				tracer.activeSpan().close();
