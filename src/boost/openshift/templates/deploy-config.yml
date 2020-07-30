@@ -34,9 +34,6 @@ parameters:
 - description: Defines docker registry
   name: DOCKER_IMAGE_LABEL
   required: true    
-- description: Defines the product that this template is related to
-  name: PRODUCT
-  required: true  
 objects:
 - apiVersion: v1
   kind: DeploymentConfig
@@ -62,12 +59,7 @@ objects:
           deploymentconfig: ${MICROSERVICE}
       spec:
         containers:
-          - env:
-              - name: PRODUCT
-                valueFrom:
-                  configMapKeyRef:
-                    name: ${MICROSERVICE} 
-                    key: PRODUCT                                       
+          - env:                                     
               - name: GITHUB_USER
                 valueFrom:
                   secretKeyRef:
