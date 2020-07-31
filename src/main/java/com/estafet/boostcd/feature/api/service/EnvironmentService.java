@@ -106,9 +106,9 @@ public class EnvironmentService {
 	private Env nextUnResolvedEnv(Env env) {
 		log.info("nextUnResolvedEnv" + env.toString());
 		if (env.isPreProd()) {
-			return envDAO.getStagingEnv();
+			return envDAO.getStagingEnv(env.getProduct().getProductId());
 		} else if (env.isStaging()) {
-			return envDAO.getLiveEnv();
+			return envDAO.getLiveEnv(env.getProduct().getProductId());
 		} else if (!env.isLive()) {
 			return envDAO.getEnv(env.getProduct().getProductId(), env.getNext());
 		}
@@ -141,12 +141,12 @@ public class EnvironmentService {
 		log.info(env.toString());
 		if (env.getNext() != null) {
 			if (env.getNext().equals("prod")) {
-				return envDAO.getStagingEnv();
+				return envDAO.getStagingEnv(env.getProduct().getProductId());
 			} else {
 				return envDAO.getEnv(env.getProduct().getProductId(), env.getNext());
 			}
 		} else if (env.getName().equals("green") || env.getName().equals("blue")) {
-			return envDAO.getLiveEnv();
+			return envDAO.getLiveEnv(env.getProduct().getProductId());
 		}
 		return null;
 	}

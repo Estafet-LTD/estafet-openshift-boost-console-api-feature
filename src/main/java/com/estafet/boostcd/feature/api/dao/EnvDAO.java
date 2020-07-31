@@ -15,9 +15,10 @@ public class EnvDAO {
 
 	@PersistenceContext
 	private EntityManager entityManager;
-	
+
 	public Env getEnv(String productId, String env) {
-		TypedQuery<Env> query = entityManager.createQuery("Select e from Env e where e.name = :env and e.productId = :productId", Env.class);
+		TypedQuery<Env> query = entityManager
+				.createQuery("Select e from Env e where e.name = :env and e.product.productId = :productId", Env.class);
 		List<Env> envs = query.setParameter("env", env).setParameter("productId", productId).getResultList();
 		return !envs.isEmpty() ? envs.get(0) : null;
 	}
@@ -26,22 +27,23 @@ public class EnvDAO {
 	public List<Env> getEnvs() {
 		return entityManager.createQuery("Select e from Env e").getResultList();
 	}
-	
-	public Env getLiveEnv() {
+
+	public Env getLiveEnv(String productId) {
 		TypedQuery<Env> query = entityManager
-				.createQuery("Select e from Env e where e.live = TRUE", Env.class);
-		List<Env> envs = query.getResultList();
+				.createQuery("Select e from Env e where e.live = TRUE and e.product.productId = :productId", Env.class);
+		List<Env> envs = query.setParameter("productId", productId).getResultList();
 		if (!envs.isEmpty()) {
 			return envs.get(0);
 		} else {
 			return null;
 		}
 	}
-	
-	public Env getStagingEnv() {
-		TypedQuery<Env> query = entityManager
-				.createQuery("Select e from Env e where e.live = FALSE and e.name IN ('green', 'blue')", Env.class);
-		List<Env> envs = query.getResultList();
+
+	public Env getStagingEnv(String productId) {
+		TypedQuery<Env> query = entityManager.createQuery(
+				"Select e from Env e where e.live = FALSE and e.name IN ('green', 'blue') and e.product.productId = :productId",
+				Env.class);
+		List<Env> envs = query.setParameter("productId", productId).getResultList();
 		if (!envs.isEmpty()) {
 			return envs.get(0);
 		} else {
@@ -54,7 +56,7 @@ public class EnvDAO {
 	}
 
 	public void createEnv(Env env) {
-		entityManager.persist(env);	
+		entityManager.persist(env);
 	}
-	
+
 }
