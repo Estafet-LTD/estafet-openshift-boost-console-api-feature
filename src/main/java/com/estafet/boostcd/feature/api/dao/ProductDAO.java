@@ -1,7 +1,5 @@
 package com.estafet.boostcd.feature.api.dao;
 
-import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -15,11 +13,6 @@ public class ProductDAO {
 	@PersistenceContext
 	private EntityManager entityManager;
 		
-	@SuppressWarnings("unchecked")
-	public List<Product> getProducts() {
-		return entityManager.createQuery("Select p from Product p").getResultList();
-	}
-	
 	public Product getProduct(String productId) {
 		return entityManager.find(Product.class, productId);
 	}
