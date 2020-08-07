@@ -54,7 +54,6 @@ public class EnvironmentService {
 	@Autowired
 	private EnvFeatureDAO envFeatureDAO;
 
-	@Transactional
 	public void processEnvMessage(Environments envsMessage) {
 		log.info("product - " + envsMessage.getProductId());
 		if (updateEnv(envsMessage)) {
@@ -66,6 +65,7 @@ public class EnvironmentService {
 		updatePromoteStatus(envsMessage);
 	}
 
+	@Transactional
 	private void updatePromoteStatus(Environments environments) {
 		for (Environment environment : environments.getEnvironments()) {
 			Env env = envDAO.getEnv(environments.getProductId(), environment.getName());
@@ -116,6 +116,7 @@ public class EnvironmentService {
 		return null;
 	}
 
+	@Transactional
 	private void updateMigrationDate(Environments environments) {
 		for (Environment environment : environments.getEnvironments()) {
 			Env env = envDAO.getEnv(environments.getProductId(), environment.getName());
@@ -151,6 +152,7 @@ public class EnvironmentService {
 		return null;
 	}
 
+	@Transactional
 	private boolean updateEnv(Environments environments) {
 		Product product = productDAO.getProduct(environments.getProductId());
 		if (product == null) {
@@ -174,6 +176,7 @@ public class EnvironmentService {
 		return false;
 	}
 
+	@Transactional
 	private void updateRepos(Environments environments) {
 		for (Environment environment : environments.getEnvironments()) {
 			log.info("updateRepos for env - " + environment.getName());
@@ -195,6 +198,7 @@ public class EnvironmentService {
 		return repo;
 	}
 
+	@Transactional
 	private void updateEnvFeatures(Environments environments) {
 		for (Environment environment : environments.getEnvironments()) {
 			log.info("update EnvFeatures for env - " + environment.getName());
