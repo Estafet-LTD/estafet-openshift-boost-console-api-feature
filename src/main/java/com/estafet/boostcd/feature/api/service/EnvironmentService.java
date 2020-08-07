@@ -239,12 +239,14 @@ public class EnvironmentService {
 		for (Environment environment : environments.getEnvironments()) {
 			log.info("updateMicroservices for env - " + environment.getName());
 			Env env = envDAO.getEnv(environments.getProductId(), environment.getName());
-			for (EnvironmentApp app : environment.getApps()) {
-				log.info("create envMicroservice for " + app.getName());
-				env.updateMicroservice(app, repoDAO.getRepoByMicroservice(app.getName()));
+			if (env != null) {
+				for (EnvironmentApp app : environment.getApps()) {
+					log.info("create envMicroservice for " + app.getName());
+					env.updateMicroservice(app, repoDAO.getRepoByMicroservice(app.getName()));
+				}
+				env.setUpdatedDate(environment.getUpdatedDate()); // reset the date
+				envDAO.updateEnv(env);	
 			}
-			env.setUpdatedDate(environment.getUpdatedDate()); // reset the date
-			envDAO.updateEnv(env);
 		}
 	}
 
