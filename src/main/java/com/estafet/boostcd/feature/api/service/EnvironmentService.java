@@ -66,7 +66,7 @@ public class EnvironmentService {
 	}
 
 	@Transactional
-	private void updatePromoteStatus(Environments environments) {
+	public void updatePromoteStatus(Environments environments) {
 		for (Environment environment : environments.getEnvironments()) {
 			Env env = envDAO.getEnv(environments.getProductId(), environment.getName());
 			log.info("env - " + env.toString());
@@ -117,7 +117,7 @@ public class EnvironmentService {
 	}
 
 	@Transactional
-	private void updateMigrationDate(Environments environments) {
+	public void updateMigrationDate(Environments environments) {
 		for (Environment environment : environments.getEnvironments()) {
 			Env env = envDAO.getEnv(environments.getProductId(), environment.getName());
 			log.info("env - " + env.toString());
@@ -153,7 +153,7 @@ public class EnvironmentService {
 	}
 
 	@Transactional
-	private boolean updateEnv(Environments environments) {
+	public boolean updateEnv(Environments environments) {
 		Product product = productDAO.getProduct(environments.getProductId());
 		if (product == null) {
 			product = Product.builder().setProductId(environments.getProductId()).build();
@@ -177,7 +177,7 @@ public class EnvironmentService {
 	}
 
 	@Transactional
-	private void updateRepos(Environments environments) {
+	public void updateRepos(Environments environments) {
 		for (Environment environment : environments.getEnvironments()) {
 			log.info("updateRepos for env - " + environment.getName());
 			for (EnvironmentApp app : environment.getApps()) {
@@ -199,7 +199,7 @@ public class EnvironmentService {
 	}
 
 	@Transactional
-	private void updateEnvFeatures(Environments environments) {
+	public void updateEnvFeatures(Environments environments) {
 		for (Environment environment : environments.getEnvironments()) {
 			log.info("update EnvFeatures for env - " + environment.getName());
 			Env env = envDAO.getEnv(environments.getProductId(), environment.getName());
