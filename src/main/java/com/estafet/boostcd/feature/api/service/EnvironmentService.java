@@ -200,20 +200,22 @@ public class EnvironmentService {
 		for (Environment environment : environments.getEnvironments()) {
 			log.info("update EnvFeatures for env - " + environment.getName());
 			Env env = envDAO.getEnv(environments.getProductId(), environment.getName());
-			for (EnvMicroservice envMicroservice : env.getMicroservices()) {
-				for (RepoCommit matched : commitDAO.getMatchedForMicroservice(envMicroservice.getMicroservice())) {
-					Feature feature = matched.getFeature();
-					if (isEnvFeature(env, feature, matched, envMicroservice)) {
-						if (!env.getFeatures().contains(feature)) {
-							EnvFeature envFeature = EnvFeature.builder().setFeature(feature)
-									.setDeployedDate(envMicroservice.getDeployedDate()).setEnv(env).build();
-							envFeatureDAO.create(envFeature);
+			if (env != null) {
+				for (EnvMicroservice envMicroservice : env.getMicroservices()) {
+					for (RepoCommit matched : commitDAO.getMatchedForMicroservice(envMicroservice.getMicroservice())) {
+						Feature feature = matched.getFeature();
+						if (isEnvFeature(env, feature, matched, envMicroservice)) {
+							if (!env.getFeatures().contains(feature)) {
+								EnvFeature envFeature = EnvFeature.builder().setFeature(feature)
+										.setDeployedDate(envMicroservice.getDeployedDate()).setEnv(env).build();
+								envFeatureDAO.create(envFeature);
+							}
 						}
 					}
 				}
+				env.setUpdatedDate(environment.getUpdatedDate());
+				envDAO.updateEnv(env);	
 			}
-			env.setUpdatedDate(environment.getUpdatedDate());
-			envDAO.updateEnv(env);
 		}
 	}
 
