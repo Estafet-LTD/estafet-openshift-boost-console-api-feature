@@ -54,6 +54,7 @@ public class EnvironmentService {
 	@Autowired
 	private EnvFeatureDAO envFeatureDAO;
 
+	@Transactional
 	public void processEnvMessage(Environments envsMessage) {
 		log.info("product - " + envsMessage.getProductId());
 		if (updateEnv(envsMessage)) {
@@ -65,7 +66,7 @@ public class EnvironmentService {
 		updatePromoteStatus(envsMessage);
 	}
 
-	@Transactional
+	
 	public void updatePromoteStatus(Environments environments) {
 		for (Environment environment : environments.getEnvironments()) {
 			Env env = envDAO.getEnv(environments.getProductId(), environment.getName());
@@ -116,7 +117,6 @@ public class EnvironmentService {
 		return null;
 	}
 
-	@Transactional
 	public void updateMigrationDate(Environments environments) {
 		for (Environment environment : environments.getEnvironments()) {
 			Env env = envDAO.getEnv(environments.getProductId(), environment.getName());
@@ -152,7 +152,6 @@ public class EnvironmentService {
 		return null;
 	}
 
-	@Transactional
 	public boolean updateEnv(Environments environments) {
 		Product product = productDAO.getProduct(environments.getProductId());
 		if (product == null) {
@@ -176,7 +175,6 @@ public class EnvironmentService {
 		return false;
 	}
 
-	@Transactional
 	public void updateRepos(Environments environments) {
 		for (Environment environment : environments.getEnvironments()) {
 			log.info("updateRepos for env - " + environment.getName());
@@ -198,7 +196,6 @@ public class EnvironmentService {
 		return repo;
 	}
 
-	@Transactional
 	public void updateEnvFeatures(Environments environments) {
 		for (Environment environment : environments.getEnvironments()) {
 			log.info("update EnvFeatures for env - " + environment.getName());
@@ -238,7 +235,6 @@ public class EnvironmentService {
 		return envDAO.getEnv(productId, env).getEnvironmentDTO();
 	}
 
-	@Transactional
 	public void updateMicroservices(Environments environments) {
 		for (Environment environment : environments.getEnvironments()) {
 			log.info("updateMicroservices for env - " + environment.getName());
